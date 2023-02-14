@@ -16,13 +16,10 @@ export default function Page() {
       if (todo.thingsToDo == myCb.thingsToDo) {
         todo.completed = !todo.completed; {/*Change the value to the opposite of what is stored*/ }
       }
-      return todo;
-      console.log(newThings)
-      setTodos(newThings);
-
-    })
-  }
-  console.log(todos)
+      return todo; //will give error if not returned as it is used for the elemet onClick
+    });
+    setTodos(newThings); //update the value of the new things when clicked upon
+  };
 
   return (
     <>
