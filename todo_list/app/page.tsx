@@ -24,50 +24,65 @@ export default function Page() {
 
 
   const addTodo = () => {
-    const newTodo = { todoText: todo, completed: false };
+    const newTodo = { toDoText: todo, completed: false };
     const newTodos = [...todos, newTodo];
     setTodos(newTodos);
     setTodo("");
   }
 
+  const deleteTodo = (meraTodo: any) => {
+    const newTodos = todos.filter((todo) => {
+      if (todo.toDoText == meraTodo.toDoText) return false;
+      return true;
+    });
+    console.log("old todos", todos, "new todos", newTodos);
+    setTodos(newTodos);
+  };
+
+
   return (
     <>
-      <div>
-
-        <h1 style={{ color: 'black', backgroundColor: 'whitesmoke' }}>Welcome to Todo List App</h1>
-
-        <input placeholder='Enter a task to add to the list' value={todo} onChange={(e) => { setTodo(e.target.value) }} style={{ backgroundColor: 'peachpuff' }} />
-        <button style={{ borderColor: 'darkblue' }} onClick={addTodo}> Add task</button>
-
-        <ul style={{ listStyle: 'none' }}>
-          {todos.map((elm) => {
-            return (
-              <>
-                <li
-                  style={{
-                    color: elm.completed ? 'green' : 'red',
-                    backgroundColor: 'gainsboro',
-                    listStyle: 'none',
-                  }}
-                  key={elm.toDoText}
-                >
-                  <input
-                    type="checkbox"
-                    checked={elm.completed}
-                    onChange={() => {
-                      onClickHandler(elm)
-                    }}
-                  />
-                  {elm.toDoText}
-
-                </li>
-              </>
-            )
-          })
-          }
-        </ul>
-      </div>
+      <div>Todo</div>
+      <input
+        placeholder="add todo text"
+        value={todo}
+        onChange={(e) => {
+          setTodo(e.target.value);
+        }}
+      />
+      <button onClick={addTodo}>Add</button>
+      <ul>
+        {todos.map((elm) => {
+          return (
+            <li
+              style={{
+                color: elm.completed ? "green" : "orange",
+                fontStyle: "oblique",
+                listStyle: "none",
+              }}
+              key={elm.toDoText}
+            >
+              <input
+                type="checkbox"
+                checked={elm.completed}
+                onChange={() => {
+                  onClickHandler(elm);
+                }}
+              />
+              {elm.toDoText}
+              <button
+                onClick={() => {
+                  deleteTodo(elm);
+                }}
+              >
+                {"  "}
+                Delete
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </>
-  )
+  );
 }
 
