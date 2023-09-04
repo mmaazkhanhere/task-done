@@ -55,7 +55,7 @@ export const POST = async (request: NextRequest) => {
             const response = NextResponse.json({ newUser });
 
             response.cookies.set({
-                name: 'authenticationToken',
+                name: 'authenticatedToken',
                 value: token,
                 path: '/'
             })

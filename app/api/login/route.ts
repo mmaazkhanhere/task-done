@@ -22,12 +22,10 @@ export const GET = async (request: NextResponse) => {
             .where(and(eq(userTable.username, username)))
             .limit(1);
 
-        console.log(existingUser);
 
         if (existingUser.length > 0) {
 
             const { password: hashedPasswordFromDB } = existingUser[0];
-            console.log(hashedPasswordFromDB)
 
             const passwordMatch = await new Promise((resolve, reject) => {
                 bcrypt.compare(password, hashedPasswordFromDB, (err, result) => {
@@ -62,7 +60,7 @@ export const GET = async (request: NextResponse) => {
             const response = NextResponse.json({ existingUser })
 
             response.cookies.set({
-                name: 'authenticationToken',
+                name: 'authenticatedToken',
                 value: token,
                 path: '/'
             })
