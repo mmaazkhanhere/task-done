@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { useRouter } from 'next/navigation'
+import axios from "axios"
 
 
 const logo = Rock_Salt({
@@ -25,7 +26,12 @@ const Login = () => {
     const [username, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [registerMessage, setRegisterMessage] = useState("")
+
+    const [registerMessage, setRegisterMessage] = useState<string>("");
+    const [emptyRegiser, setEmptyRegister] = useState<string>("");
+
+    const [loginMessage, setLoginMessage] = useState<string>("");
+    const [emptyLogin, setEmptyLogin] = useState<string>("")
 
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [matchingPassword, setMatchingPassword] = useState<boolean>(true);
@@ -75,25 +81,57 @@ const Login = () => {
     const handleRegister = async () => {
         try {
             setLoading(true);
-            const res = await fetch(`/api/register`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    customer_name: name,
-                    username: username,
-                    email: email,
-                    user_password: password
-                })
+            const res = await axios.post(`/api/register`, {
+
+                customer_name: name,
+                username: username,
+                email: email,
+                user_password: password
             });
-            if (res.status == 200) {
-                const result = await res.json();
+            if (res.status === 200) {
+                const result = await res.data;
                 router.push('/')
             }
-            else if (res.status == 320) {
+            else if (res.status == 406) {
+                setEmptyRegister("Detail missing! Fill the required fields.")
+            }
+            else if (res.status == 409) {
                 setRegisterMessage('User already exists! Please login.')
             }
             setLoading(false)
         } catch (error) {
             console.error("Error while passing user detail to api", error)
+        }
+    }
+
+    const handleLogin = async () => {
+
+        try {
+            setLoading(true);
+
+            const encodedUsername = encodeURIComponent(username);
+            const encodedPassword = encodeURIComponent(password);
+
+            const res = await fetch(`/api/login?username=${encodedUsername}&password=${encodedPassword}`, {
+                method: 'GET'
+            })
+
+            if (res.status == 200) {
+                const result = await res.json();
+                router.push('/');
+            }
+            else if (res.status == 406) {
+                setLoginMessage("Missing detail. Enter required fields")
+            }
+            else if (res.status == 404) {
+                setLoginMessage("User does not exist. Register with us.")
+            }
+            else if (res.status == 401) {
+                setLoginMessage("Incorrect username or password")
+            }
+            setLoading(false);
+        } catch (error) {
+
         }
     }
 
@@ -106,21 +144,46 @@ const Login = () => {
                         <h1 className={cn(`text-6xl lg:text-7xl`, logo.className)}>TaskDone</h1>
                         <div className='flex flex-col items-start justify-center bg-white rounded-xl 
                         w-full md:max-w-xl mx-auto gap-5 mt-20 p-8'>
+                            {/*message */}
                             <h2 className='text-lg self-center text-[14px]'>Sign in to your account</h2>
+                            {
+                                emptyLogin !== '' && <p className='text-red-500'>
+                                    {emptyLogin}
+                                </p>
+                            }
+                            {
+                                loginMessage !== '' && <p className='text-red-500'>
+                                    {loginMessage}
+                                </p>
+                            }
+                            {/*Username */}
                             <div className='flex flex-col items-start justify-center w-full'>
                                 <Label htmlFor='username'>Username</Label>
-                                <Input type='text' name='username' className='mt-3' />
+                                <Input
+                                    type='text'
+                                    onChange={handleUsername}
+                                    name='username'
+                                    required={true}
+                                    className='mt-3' />
                             </div>
+                            {/*Password */}
                             <div className='flex flex-col items-start justify-center w-full'>
                                 <Label htmlFor='password'>Password</Label>
                                 <Input name='password'
+                                    onChange={handlePassword}
+                                    required={true}
                                     type={showPassword ? 'text' : 'password'}
                                     className='mt-3'
                                 />
                             </div>
-                            <Button type='submit' variant='signin' >
+                            {/*Login button */}
+                            <Button type='submit'
+                                variant='signin'
+                                disabled={loading}
+                                onClick={handleLogin} >
                                 Login
                             </Button>
+                            {/*Register */}
                             <div className='flex flex-col lg:flex-row gap-2 lg:gap-0 items-center justify-between 
                             text-[14px] w-full text-gray-600'>
                                 <h2>New to TaskDone?</h2>
@@ -142,6 +205,13 @@ const Login = () => {
                         <div className='flex flex-col items-start justify-center bg-white rounded-xl 
                         w-full md:max-w-xl mx-auto gap-5 mt-14 p-8'>
                             <h2 className='text-lg self-center text-[14px]'>Become part of our family</h2>
+                            {/*Missing detail message */}
+                            {
+                                emptyRegiser !== "" && <p className='text-red-500'>
+                                    {emptyRegiser}
+                                </p>
+                            }
+                            {/*user exist message */}
                             {
                                 registerMessage !== "" && <p className='text-red-500'>
                                     {registerMessage}

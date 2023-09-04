@@ -8,12 +8,23 @@ import { getSecretKey } from "@/lib/auth"
 export const POST = async (request: NextRequest) => {
     try {
         const body = await request.json();
-        const hashedPassword = await bcrypt.hash(body.user_password, 12);
+
+        const hashedPassword: string = await new Promise((resolve, reject) => {
+            bcrypt.hash(body.user_password, 12, (err, hash) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(hash);
+                }
+            });
+        });
+        console.log(hashedPassword);
+
         const username = body.username;
         const email = body.email;
 
         if (!body.username || !body.customer_name || !body.email || !body.user_password) {
-            return new NextResponse("Missing Information", { status: 400 })
+            return new NextResponse("Missing Information", { status: 406 })
         }
 
         const existingUser = await db.select({ username: userTable.username })
@@ -22,7 +33,7 @@ export const POST = async (request: NextRequest) => {
             .limit(1);
 
         if (existingUser.length > 0) {
-            return new NextResponse("User already exists", { status: 320 })
+            return new NextResponse("User already exists", { status: 409 })
         }
         else {
             const newUser = await db.insert(userTable).values({
@@ -34,7 +45,7 @@ export const POST = async (request: NextRequest) => {
 
             const token = await new SignJWT({
                 username: username,
-                role: 'admin'
+                role: 'user'
             })
                 .setProtectedHeader({ alg: 'HS256' })
                 .setIssuedAt(new Date().getTime())
