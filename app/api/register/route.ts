@@ -1,36 +1,56 @@
 import { db, userTable } from "@/lib/drizzle";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcrypt';
+import { SignJWT } from "jose"
+import { getSecretKey } from "@/lib/auth"
 
 export const POST = async (request: NextRequest) => {
     try {
         const body = await request.json();
         const hashedPassword = await bcrypt.hash(body.user_password, 12);
-
-        console.log(body.username);
+        const username = body.username;
+        const email = body.email;
 
         if (!body.username || !body.customer_name || !body.email || !body.user_password) {
             return new NextResponse("Missing Information", { status: 400 })
         }
 
+        const existingUser = await db.select({ username: userTable.username })
+            .from(userTable)
+            .where(and(eq(userTable.username, username), eq(userTable.email, email)))
+            .limit(1);
 
-        // console.log("Before db.select()");
-        // const existingUser = await db.select({ username: body.username })
-        //     .from(userTable)
-        //     .where(eq(userTable.username, body.username))
-        //     .limit(1);
-        // console.log("After db.select()");
+        if (existingUser.length > 0) {
+            return new NextResponse("User already exists", { status: 320 })
+        }
+        else {
+            const newUser = await db.insert(userTable).values({
+                customer_name: body.customer_name,
+                username: body.username,
+                email: body.email,
+                user_password: hashedPassword
+            });
 
-        console.log("Before db.insert()");
-        const newUser = await db.insert(userTable).values({
-            customer_name: body.customer_name,
-            username: body.username,
-            email: body.email,
-            user_password: hashedPassword
-        });
-        console.log("After db.insert()");
-        return NextResponse.json({ newUser });
+            const token = await new SignJWT({
+                username: username,
+                role: 'admin'
+            })
+                .setProtectedHeader({ alg: 'HS256' })
+                .setIssuedAt(new Date().getTime())
+                .setExpirationTime('30m')
+                .sign(getSecretKey())
+
+            const response = NextResponse.json({ newUser });
+
+            response.cookies.set({
+                name: 'authenticationToken',
+                value: token,
+                path: '/'
+            })
+
+            return response;
+        }
     } catch (error) {
         console.error("Error while posting user details: ", error);
         throw new Error("Cannot post user details");

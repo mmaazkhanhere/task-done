@@ -25,9 +25,10 @@ const Login = () => {
     const [username, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [registerMessage, setRegisterMessage] = useState("")
 
     const [confirmPassword, setConfirmPassword] = useState<string>("");
-    const [matchingPassword, setMatchingPassword] = useState<boolean>(true)
+    const [matchingPassword, setMatchingPassword] = useState<boolean>(true);
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const router = useRouter()
@@ -83,9 +84,12 @@ const Login = () => {
                     user_password: password
                 })
             });
-            if (res.ok) {
-                router.push('/')
+            if (res.status == 200) {
                 const result = await res.json();
+                router.push('/')
+            }
+            else if (res.status == 320) {
+                setRegisterMessage('User already exists! Please login.')
             }
             setLoading(false)
         } catch (error) {
@@ -138,59 +142,77 @@ const Login = () => {
                         <div className='flex flex-col items-start justify-center bg-white rounded-xl 
                         w-full md:max-w-xl mx-auto gap-5 mt-14 p-8'>
                             <h2 className='text-lg self-center text-[14px]'>Become part of our family</h2>
+                            {
+                                registerMessage !== "" && <p className='text-red-500'>
+                                    {registerMessage}
+                                </p>
+                            }
+                            {/*Name */}
                             <div className='flex flex-col items-start justify-center w-full'>
                                 <Label htmlFor='name'>Name</Label>
                                 <Input type='text' name='name' value={name}
                                     placeholder='John Doe'
                                     onChange={handleName}
+                                    required
                                     className='mt-3'
                                 />
                             </div>
+                            {/*Username */}
                             <div className='flex flex-col items-start justify-center w-full'>
                                 <Label htmlFor='username'>Username</Label>
                                 <Input type='text' name='username'
                                     value={username}
                                     onChange={handleUsername}
                                     placeholder='johndoe'
+                                    required
                                     className='mt-3'
                                 />
                             </div>
+                            {/*Email */}
                             <div className='flex flex-col items-start justify-center w-full'>
                                 <Label htmlFor='email'>Email</Label>
                                 <Input type='email' value={email}
                                     name='email'
                                     placeholder='example@mail.com'
                                     onChange={handleEmail}
+                                    required
                                     className='mt-3'
                                 />
 
                             </div>
+                            {/*Password */}
                             <div className='flex flex-col items-start justify-center w-full'>
                                 <Label htmlFor='password'>Password</Label>
                                 <Input type='password'
                                     name='password'
                                     value={password}
                                     onChange={handlePassword}
+                                    required
                                     className='mt-3'
                                 />
                             </div>
+                            {/*Confirm Password */}
                             <div className='flex flex-col items-start justify-center w-full'>
                                 <Label htmlFor='confirmPassword'>Confirm Password</Label>
                                 <Input type='password'
                                     name='confrimPassword'
                                     value={confirmPassword}
                                     onChange={handleConfirmPassword}
+                                    required
                                     className='mt-3'
                                 />
                             </div>
+                            {/*Conditional to check if password matches */}
                             {
                                 matchingPassword === false && (
                                     <p className="text-red-500">Passwords do not match</p>
                                 )
                             }
+                            {/*Register Button */}
                             <Button type='submit' variant='signin' disabled={loading} onClick={handleRegister}>
                                 Register
                             </Button>
+                            {/*Login */}
                             <div className='flex items-center justify-center gap-5 text-[14px] w-full text-gray-600'>
                                 <h2>Already have account?</h2>
                                 <span className='underline cursor-pointer'
