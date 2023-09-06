@@ -49,7 +49,7 @@ export const POST = async (request: NextRequest) => {
             })
                 .setProtectedHeader({ alg: 'HS256' })
                 .setIssuedAt(new Date().getTime())
-                .setExpirationTime('30m')
+                .setExpirationTime('1h')
                 .sign(getSecretKey())
 
             const response = NextResponse.json({ newUser });
@@ -57,6 +57,12 @@ export const POST = async (request: NextRequest) => {
             response.cookies.set({
                 name: 'authenticatedToken',
                 value: token,
+                path: '/'
+            })
+
+            response.cookies.set({
+                name: 'username',
+                value: username,
                 path: '/'
             })
 

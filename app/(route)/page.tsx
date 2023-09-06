@@ -21,17 +21,17 @@ const Home = () => {
     }, [auth]);
 
     return (
-        <section>
+        <div>
             {
                 auth === null && (
-                    <div>
+                    <main>
                         <Header />
                         <AddToDo />
-                    </div>
+                    </main>
                 )
             }
 
-        </section>
+        </div>
     )
 }
 

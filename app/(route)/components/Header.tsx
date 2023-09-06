@@ -37,13 +37,23 @@ const Header = () => {
             </nav>
             <nav className='flex items-center justify-between  rounded-2xl
             p-2 gap-5 text-white'>
+                <div className='hidden md:flex items-center justify-between gap-4'>
+                    <p
+                        className='cursor-pointer md:text-lg xl:text-xl'>
+                        Task Pending
+                    </p>
+                    <p
+                        className='cursor-pointer md:text-lg xl:text-xl'>
+                        Task Remaining
+                    </p>
+                </div>
                 <Avatar onClick={handleShowMenu}>
                     <AvatarImage src="/avatar-placeholder.jpg" />
                 </Avatar>
             </nav>
             {
                 showMenu && (
-                    <div className='absolute w-32 right-0 top-20 border border-gray-600 rounded-xl
+                    <div className='absolute w-40 right-0 top-20 border border-gray-600 rounded-xl
                     bg-white z-20 p-1 flex flex-col items-start gap-2'>
                         <X
                             size={20}
@@ -51,8 +61,16 @@ const Header = () => {
                             className='cursor-pointer border-b-gray-200'
                         />
                         <p
+                            className='cursor-pointer px-2 w-full md:text-lg xl:text-xl'>
+                            Task Pending
+                        </p>
+                        <p
+                            className='cursor-pointer px-2 w-full md:text-lg xl:text-xl'>
+                            Task Remaining
+                        </p>
+                        <p
                             onClick={handleLogout}
-                            className='curosr-pointer px-2 w-full md:text-lg xl:text-xl'>
+                            className='cursor-pointer px-2 w-full md:text-lg xl:text-xl'>
                             Logout
                         </p>
                     </div>
