@@ -4,9 +4,8 @@ import { JWTPayload } from "jose";
 import { verifyJwtToken } from "@/lib/auth";
 
 const fromServer = async () => {
-    const cookies = require("next/headers").cookies;
-    const cookieList = cookies();
-    const { value: authenticatedToken } = cookieList.get("authenticationToken") ?? { value: null };
+    const cookies = new Cookies();
+    const authenticatedToken = cookies.get("authenticatedToken") ?? null;
     const verifiedToken = await verifyJwtToken(authenticatedToken);
     return verifiedToken
 }

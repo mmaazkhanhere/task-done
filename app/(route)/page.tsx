@@ -1,27 +1,35 @@
-import { useAuth } from '@/hooks/useAuth';
-import Link from 'next/link';
-import React from 'react'
+"use client"
 
-const Home = async () => {
-    const auth = await useAuth.fromServer();
-    console.log(auth)
+import { useAuth } from '@/hooks/useAuth';
+import React, { useEffect, useState } from 'react'
+import AddToDo from './components/AddToDo';
+import Header from './components/Header';
+import { JWTPayload } from 'jose';
+
+
+
+const Home = () => {
+
+    const [auth, setAuth] = useState<JWTPayload | null>();
+
+    useEffect(() => {
+        const fetchAuthStatus = async () => {
+            const authStatus = await useAuth.fromServer();
+            setAuth(authStatus);
+        }
+        fetchAuthStatus();
+    }, [auth]);
+
     return (
         <section>
-            <nav className="flex items-center justify-center gap-10">
-                <div className="text-2xl font-bold">
-                    <Link href="/">Logo</Link>
-                </div>
-                <div className="text-2xl">
-                    {auth ? (
-                        <Link href="/wallet">Create Wallet</Link>
-                    ) : (
-                        <div className="flex items-center justify-center gap-10">
-                            <Link href="/login">Login</Link>
-                            <Link href="/register">Register</Link>
-                        </div>
-                    )}
-                </div>
-            </nav>
+            {
+                auth === null && (
+                    <div>
+                        <Header />
+                        <AddToDo />
+                    </div>
+                )
+            }
 
         </section>
     )
