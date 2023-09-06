@@ -21,4 +21,15 @@ export const userTable = pgTable("users", {
     }).notNull(),
 });
 
+export const taskTable = pgTable("task", {
+    username: varchar("username", {
+        length: 255
+    }).notNull(),
+    taskAdded: varchar("taskAdded", {
+        length: 255
+    }).notNull(),
+    toComplete: timestamp("toComplete").notNull(),
+    createdAt: timestamp("createdAt").notNull()
+})
+
 export const db = drizzle(pool);

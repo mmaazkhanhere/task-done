@@ -15,7 +15,8 @@ export function useAuth() {
 
     const getVerifiedToken = async () => {
         const cookies = new Cookies();
-        const token = cookies.get("token") ?? null;
+        const token = cookies.get("authenticatedToken") ?? null;
+        console.log(token);
         const verifiedToken = await verifyJwtToken(token);
         setAuth(verifiedToken);
     };
