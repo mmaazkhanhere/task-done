@@ -1,21 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyJwtToken } from "./lib/auth";
 
-const authPages = ["/"]; // authentication related pages including /panel
-const isAuthPage = (url: string) => authPages.includes(url);
-/* checks if the page requires authentication 
-returns true if it requires authentication */
+const authPages = ["/login"]; // List of authentication-related pages
+const isAuthPage = (url: any) => authPages.includes(url);
 
 export async function middleware(request: any) {
-    const { nextUrl, cookies } = request; // extract nextUrl and cookies from the request
-    const { value: token } = cookies.get("authenticatedToken") ?? { value: null }; // access the token from cookies
+    const { nextUrl, cookies } = request;
+    const { value: token } = cookies.get("authenticatedToken") ?? { value: null };
 
     const hasVerifiedToken = token && await verifyJwtToken(token);
     const isAuthPageRequest = isAuthPage(nextUrl.pathname);
 
-    if (isAuthPageRequest) {
+    if (!isAuthPageRequest) {
+        // Redirect unauthenticated users to the login page
         if (!hasVerifiedToken) {
-            const loginUrl = new URL("/login", nextUrl.origin); // Construct absolute URL
+            const loginUrl = new URL("/login", nextUrl.origin);
             return NextResponse.redirect(loginUrl.href);
         }
     }
@@ -23,4 +22,4 @@ export async function middleware(request: any) {
     return NextResponse.next();
 }
 
-export const config = { matcher: ["/login"] };
+export const config = { matcher: ["/"] }; // Exclude the /login page
