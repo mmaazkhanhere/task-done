@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { Rock_Salt } from 'next/font/google'
-import { cn } from '@/lib/utils'
+import { cn } from '@/app/lib/utils'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'

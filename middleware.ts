@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyJwtToken } from "./lib/auth";
+import { verifyJwtToken } from "./app/lib/auth";
 
 const authPages = ["/login"]; // List of authentication-related pages
 const isAuthPage = (url: any) => authPages.includes(url);

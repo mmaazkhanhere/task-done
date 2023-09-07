@@ -1,7 +1,7 @@
 import Cookies from "universal-cookie"
 import React from "react";
 import { JWTPayload } from "jose";
-import { verifyJwtToken } from "@/lib/auth";
+import { verifyJwtToken } from "@/app/lib/auth";
 
 const fromServer = async () => {
     const cookies = new Cookies();

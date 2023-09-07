@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { Rock_Salt } from 'next/font/google'
-import { cn } from '@/lib/utils'
+import { cn } from '@/app/lib/utils'
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { X } from "lucide-react"
 import Cookies from 'universal-cookie'

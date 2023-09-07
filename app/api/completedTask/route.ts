@@ -1,4 +1,4 @@
-import { completedTaskTable, db } from "@/lib/drizzle";
+import { completedTaskTable, db } from "@/app/lib/drizzle";
 import { and, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 

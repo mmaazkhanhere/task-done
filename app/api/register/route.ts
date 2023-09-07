@@ -1,9 +1,9 @@
-import { db, userTable } from "@/lib/drizzle";
+import { db, userTable } from "@/app/lib/drizzle";
 import { and, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcrypt';
 import { SignJWT } from "jose"
-import { getSecretKey } from "@/lib/auth"
+import { getSecretKey } from "@/app/lib/auth"
 
 export const POST = async (request: NextRequest) => {
     try {
