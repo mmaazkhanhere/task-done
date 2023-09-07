@@ -60,8 +60,8 @@ const AddToDo = () => {
             }
 
             const res = await axios.post(`/api/addTask`, {
-                taskAdded: taskName,
-                toComplete: value
+                task_added: taskName,
+                due_date: value
             });
 
             console.log(res);

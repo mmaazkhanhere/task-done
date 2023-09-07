@@ -83,7 +83,7 @@ const Login = () => {
             setLoading(true);
             const res = await axios.post(`/api/register`, {
 
-                customer_name: name,
+                user_name: name,
                 username: username,
                 email: email,
                 user_password: password

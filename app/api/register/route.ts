@@ -18,12 +18,11 @@ export const POST = async (request: NextRequest) => {
                 }
             });
         });
-        console.log(hashedPassword);
 
         const username = body.username;
         const email = body.email;
 
-        if (!body.username || !body.customer_name || !body.email || !body.user_password) {
+        if (!body.username || !body.user_name || !body.email || !body.user_password) {
             return new NextResponse("Missing Information", { status: 406 })
         }
 
@@ -37,7 +36,7 @@ export const POST = async (request: NextRequest) => {
         }
         else {
             const newUser = await db.insert(userTable).values({
-                customer_name: body.customer_name,
+                user_name: body.user_name,
                 username: body.username,
                 email: body.email,
                 user_password: hashedPassword

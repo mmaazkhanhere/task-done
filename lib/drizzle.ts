@@ -7,29 +7,28 @@ const pool = new Pool({
 });
 
 export const userTable = pgTable("users", {
-    customer_name: varchar("customer_name", {
+    user_name: varchar("user_name", {
         length: 255
     }).notNull(),
     username: varchar("username", {
         length: 255
-    }).notNull(),
+    }).notNull().unique(),
     email: varchar("email", {
         length: 255
-    }).notNull(),
+    }).notNull().unique(),
     user_password: varchar("user_password", {
         length: 255
     }).notNull(),
 });
 
-export const taskTable = pgTable("task", {
+export const taskTable = pgTable("tasks", {
     username: varchar("username", {
         length: 255
     }).notNull(),
-    taskAdded: varchar("taskAdded", {
+    task_added: varchar("task_added", {
         length: 255
     }).notNull(),
-    toComplete: timestamp("toComplete").notNull(),
-    createdAt: timestamp("createdAt").notNull()
+    due_date: timestamp("due_date", { mode: 'string' }).notNull()
 })
 
 export const db = drizzle(pool);
