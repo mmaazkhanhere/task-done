@@ -6,6 +6,8 @@ import AddToDo from './components/AddToDo';
 import Header from './components/Header';
 import { JWTPayload } from 'jose';
 import ComingUpNext from './components/ComingUpNext';
+import TodoTask from './components/TodoTask';
+import TaskPending from './components/TaskPending';
 
 
 const Home = () => {
@@ -27,9 +29,9 @@ const Home = () => {
                     <main>
                         <Header />
                         <AddToDo />
-                        <div>
-                            <ComingUpNext />
-                        </div>
+                        <ComingUpNext />
+                        <TaskPending />
+                        <TodoTask />
                     </main>
                 )
             }
