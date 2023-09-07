@@ -1,5 +1,5 @@
 import { db, taskTable } from "@/lib/drizzle";
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (request: NextRequest) => {
@@ -43,5 +43,34 @@ export const POST = async (request: NextRequest) => {
     } catch (error) {
         console.error("Error while posting user details: ", error);
         throw new Error("Cannot post user details");
+    }
+}
+
+export const DELETE = async (request: NextRequest) => {
+    try {
+
+        const url = new URL(request.url);
+        const delete_task = url.searchParams.get("delete_item") as string;
+        const due_date = url.searchParams.get("due_time") as string;
+        console.log(delete_task);
+        const username = request.cookies.get("username")?.value ?? null;
+
+        if (!username) {
+            return new NextResponse("No user available", { status: 400 });
+        }
+
+        console.log(username);
+        console.log("Before deletion")
+
+        const taskDeleted = await db.select()
+            .from(taskTable)
+            .where(and(eq(taskTable.username, username), eq(taskTable.task_added, delete_task)))
+
+        console.log("After deletion")
+
+        return NextResponse.json(taskDeleted);
+
+    } catch (error) {
+        console.error("Error while deleteing task from the database: ", error);
     }
 }

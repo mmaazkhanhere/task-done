@@ -3,6 +3,7 @@ import { Rock_Salt } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { formatDate } from '@/app/utils/formatDate';
 import { Check } from 'lucide-react';
+import axios from 'axios';
 
 interface TaskToComplete {
     username: string;
@@ -19,6 +20,7 @@ const logo = Rock_Salt({
 const ComingUpNext = () => {
 
     const [task, setTask] = useState<TaskToComplete | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
     const [completed, setCompleted] = useState<boolean>(false);
 
     useEffect(() => {
@@ -46,7 +48,34 @@ const ComingUpNext = () => {
     }
 
     const handleComplete = async () => {
-        setCompleted(!completed);
+        try {
+            setLoading(true);
+            const encodedTask = encodeURIComponent(task.task_added);
+            const encodedTime = encodeURIComponent(task.due_date)
+            const req = await axios.delete(`/api/addTask?delete_item=${encodedTask}&due_time=${encodedTime}`);
+            if (req.status === 200) {
+                const result = await req.data;
+            }
+            setCompleted(true);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error while passing to do item to delete api call: ", error);
+        }
+    }
+
+    const handleCompleteTask = async () => {
+        try {
+            setLoading(true);
+            const req = await axios.post(`/api/completedTask`, {
+                task_completed: task.task_added
+            });
+            if (req.status === 200) {
+                const result = await req.data;
+            }
+            setLoading(false);
+        } catch (error) {
+            console.error("Error while passing to do item to delete api call: ", error);
+        }
     }
 
     return (
@@ -68,17 +97,20 @@ const ComingUpNext = () => {
                                     completed ? (
                                         <button className='w-8 h-8 rounded-full bg-white border
                                     flex items-center justify-center'
-                                            onClick={handleComplete}>
+                                        >
                                             <Check size={20} className='text-orange-500' />
                                         </button>
                                     ) : (
                                         <button className='w-8 h-8 rounded-full bg-white border'
-                                            onClick={handleComplete}
+                                            disabled={loading}
+                                            onClick={() => {
+                                                handleComplete(),
+                                                    handleCompleteTask()
+                                            }}
                                         />
                                     )
                                 }
                             </div>
-
                         </div>
                     </div>
                 )
