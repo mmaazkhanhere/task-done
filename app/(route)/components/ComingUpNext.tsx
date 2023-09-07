@@ -52,7 +52,10 @@ const ComingUpNext = () => {
             setLoading(true);
             const encodedTask = encodeURIComponent(task.task_added);
             const encodedTime = encodeURIComponent(task.due_date)
-            const req = await axios.delete(`/api/addTask?delete_item=${encodedTask}&due_time=${encodedTime}`);
+            const url = `/api/addTask?delete_item=${encodedTask}&due_time=${encodedTime}`;
+
+            const req = await axios.delete(url);
+
             if (req.status === 200) {
                 const result = await req.data;
             }

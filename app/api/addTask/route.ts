@@ -48,29 +48,23 @@ export const POST = async (request: NextRequest) => {
 
 export const DELETE = async (request: NextRequest) => {
     try {
-
         const url = new URL(request.url);
-        const delete_task = url.searchParams.get("delete_item") as string;
-        const due_date = url.searchParams.get("due_time") as string;
-        console.log(delete_task);
+        const deleteTask = url.searchParams.get("delete_item") as string;
         const username = request.cookies.get("username")?.value ?? null;
 
         if (!username) {
             return new NextResponse("No user available", { status: 400 });
         }
 
-        console.log(username);
-        console.log("Before deletion")
+        // Attempt to delete the task
+        const deletedCount = await db.delete(taskTable)
+            .where(and(eq(taskTable.username, username), eq(taskTable.task_added, deleteTask)));
 
-        const taskDeleted = await db.select()
-            .from(taskTable)
-            .where(and(eq(taskTable.username, username), eq(taskTable.task_added, delete_task)))
 
-        console.log("After deletion")
-
-        return NextResponse.json(taskDeleted);
-
+        // Task deleted successfully
+        return new NextResponse("Task deleted", { status: 200 });
     } catch (error) {
-        console.error("Error while deleteing task from the database: ", error);
+        console.error("Error while deleting task from the database: ", error);
+        return new NextResponse("Error deleting task", { status: 500 });
     }
 }
