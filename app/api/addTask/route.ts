@@ -17,6 +17,7 @@ export const GET = async (request: NextRequest) => {
         return NextResponse.json(taskToComplete);
     } catch (error) {
         console.error("Error while getting task in addTask api: ", error);
+        return new NextResponse("Internal Server Error", { status: 500 });
     }
 }
 
@@ -56,13 +57,11 @@ export const DELETE = async (request: NextRequest) => {
             return new NextResponse("No user available", { status: 400 });
         }
 
-        // Attempt to delete the task
-        const deletedCount = await db.delete(taskTable)
-            .where(and(eq(taskTable.username, username), eq(taskTable.task_added, deleteTask)));
+        const deletedTask = await db.delete(taskTable)
+            .where(and(eq(taskTable.username, username), eq(taskTable.task_added, deleteTask)))
+            .execute();
 
-
-        // Task deleted successfully
-        return new NextResponse("Task deleted", { status: 200 });
+        return NextResponse.json(deletedTask);
     } catch (error) {
         console.error("Error while deleting task from the database: ", error);
         return new NextResponse("Error deleting task", { status: 500 });
