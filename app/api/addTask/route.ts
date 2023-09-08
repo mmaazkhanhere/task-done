@@ -49,8 +49,10 @@ export const POST = async (request: NextRequest) => {
 
 export const DELETE = async (request: NextRequest) => {
     try {
+
         const url = new URL(request.url);
-        const deleteTask = url.searchParams.get("delete_item") as string;
+        const deleteTask = url.searchParams.get("delete_task") as string;
+        console.log(deleteTask)
         const username = request.cookies.get("username")?.value ?? null;
 
         if (!username) {
@@ -60,6 +62,8 @@ export const DELETE = async (request: NextRequest) => {
         const deletedTask = await db.delete(taskTable)
             .where(and(eq(taskTable.username, username), eq(taskTable.task_added, deleteTask)))
             .execute();
+
+        console.log(deleteTask);
 
         return NextResponse.json(deletedTask);
     } catch (error) {

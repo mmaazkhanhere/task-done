@@ -12,6 +12,7 @@ const ComingUpNext = () => {
 
     const dispatch = useAppDispatch();
     const todoTask = useAppSelector((state) => state.task.todoTask);
+
     console.log(todoTask);
 
     useEffect(() => {
@@ -19,8 +20,13 @@ const ComingUpNext = () => {
     }, [dispatch])
 
     useEffect(() => {
-        setCompleted(false); // Reset completed when todoTask changes
+
+        console.log('todoTask changed:', todoTask);
+        if (todoTask.length > 0) {
+            setCompleted(false); // Reset completed status when todoTask changes
+        }
     }, [todoTask]);
+
 
     const handleComplete = async () => {
         try {

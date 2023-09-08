@@ -38,41 +38,13 @@ const AddToDo = () => {
 
     const { toast } = useToast();
 
-    const router = useRouter();
 
     const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTaskName(event.target.value);
     }
 
     const handleAddTask = async () => {
-        try {
-            setLoading(true);
 
-            if (taskName === '') {
-                setErrorMessage("Please enter a name for the to do task");
-            }
-            else if (value === null) {
-                setErrorMessage("Select a valid date and time");
-            }
-            else {
-                setErrorMessage("");
-            }
-
-            const res = await axios.post(`/api/addTask`, {
-                task_added: taskName,
-                due_date: value
-            });
-
-            console.log(res);
-
-            if (res.status === 200) {
-                const result = await res.data;
-                router.push('/')
-            }
-            setLoading(false);
-        } catch (error) {
-            console.error("Error while passing values to the add task POST call: ", error)
-        }
     }
 
     return (

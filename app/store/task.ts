@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import axios from "axios";
-import { TaskSliceState } from "../interfaces";
+import { TaskInterface, TaskSliceState } from "../interfaces";
 
 export const getLatestTask = createAsyncThunk('task/getLatestTask', async () => {
     try {
@@ -15,6 +15,26 @@ export const getLatestTask = createAsyncThunk('task/getLatestTask', async () => 
         throw error;
     }
 });
+
+export const taskAdded = createAsyncThunk(`task/taskAdded`, async (data: { task_added: string, due_date: string }) => {
+    try {
+        const res = axios.post(`/api/addTask`, {
+            task_added: data.task_added,
+            due_date: data.due_date
+        })
+
+        const addedTask: TaskInterface = {
+            task_added: data.task_added,
+            due_date: data.due_date
+        };
+
+        return addedTask;
+
+    } catch (error) {
+        console.error("The following error encounteredin taskAdded Post call: ", error)
+        throw new Error("Cannot add items to the cart!")
+    }
+})
 
 export const taskCompleted = createAsyncThunk(`task/taskCompleted`, async (data: { task_completed: string }) => {
     try {
@@ -38,6 +58,9 @@ export const todoTaskSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
+
+        //cases for gettingLatestTask
+
         builder.addCase(getLatestTask.pending, (state) => {
             state.isLoading = true
         });
@@ -51,18 +74,31 @@ export const todoTaskSlice = createSlice({
             state.error("Error in the async thunk of getting latest task");
         });
 
+        //cases for taskAdded
+
+        builder.addCase(taskAdded.pending, (state) => {
+            state.isLoading = false;
+        });
+        builder.addCase(taskAdded.fulfilled, (state, action) => {
+            state.isLoading = false;
+            const newItem = action.payload;
+            state.todoTask.push(newItem);
+        });
+        builder.addCase(taskAdded.rejected, (state) => {
+            state.isLoading = false;
+            state.error = "Error in case of taskAdded asyncThunk";
+        })
+
+        //cases for taskCompleted
+
         builder.addCase(taskCompleted.pending, (state) => {
             state.error = true;
         });
         builder.addCase(taskCompleted.fulfilled, (state, action) => {
             state.isLoading = false;
-            const deletedTask = action.payload; // This should be the deleted task
-            console.log(deletedTask);
-
-            state.todoTask = state.todoTask.filter(task => task.task_added !== deletedTask.task_added);
-            console.log(state.todoTask);
+            const completedTask = action.payload;
+            state.todoTask = state.todoTask.filter(task => task.task_added !== completedTask.task_added);
         });
-
         builder.addCase(taskCompleted.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error.message;

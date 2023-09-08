@@ -1,5 +1,5 @@
 export interface TaskInterface {
-    username: string;
+    username?: string;
     task_added: string;
     due_date: string;
 }
@@ -9,3 +9,5 @@ export interface TaskSliceState {
     isLoading: boolean,
     error: any
 }
+
+export interface TaskAddedInterface { }
