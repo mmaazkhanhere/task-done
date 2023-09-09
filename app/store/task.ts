@@ -36,6 +36,23 @@ export const taskAdded = createAsyncThunk(`task/taskAdded`, async (data: { task_
     }
 })
 
+export const editTask = createAsyncThunk(`task/editTask`, async (data: { task_name: string, new_date: Date }) => {
+    try {
+
+        const res = await axios.patch(`/api/addTask`, {
+            task_name: data.task_name,
+            new_date: data.new_date
+        });
+
+        const updatedTask = res.data;
+        return updatedTask;
+
+    } catch (error) {
+        console.error("Error in async thunk function editTask", error);
+        throw new Error;
+    }
+})
+
 export const taskCompleted = createAsyncThunk(`task/taskCompleted`, async (data: { task_completed: string }) => {
     try {
         const encodedTask = encodeURIComponent(data.task_completed)
@@ -88,6 +105,21 @@ export const todoTaskSlice = createSlice({
             state.isLoading = false;
             state.error = "Error in case of taskAdded asyncThunk";
         });
+
+        //cases for editTask
+
+        builder.addCase(editTask.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(editTask.fulfilled, (state, action) => {
+            state.isLoading = false;
+            const taskUpdated = action.payload;
+            state.todoTask = state.todoTask.map((task) => task.task_added === taskUpdated.task_name ? taskUpdated : task);
+        });
+        builder.addCase(editTask.rejected, (state) => {
+            state.isLoading = false;
+            state.error = "Error in the cases for editTask asyncThunk function"
+        })
 
         //cases for taskCompleted
 

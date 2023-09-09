@@ -47,6 +47,37 @@ export const POST = async (request: NextRequest) => {
     }
 }
 
+export const PATCH = async (request: NextRequest) => {
+    try {
+
+        const username = request.cookies.get("username")?.value ?? null;
+
+        const body = await request.json();
+
+        const newTask = body.task_name;
+        const newDate = body.new_date;
+
+        if (!username || !newTask || !newDate) {
+            return new NextResponse("Missing Information", { status: 400 })
+        }
+
+        await db.update(taskTable)
+            .set({ task_added: newTask, due_date: newDate })
+            .where(and(eq(taskTable.username, username)))
+            .execute();
+
+        const updatedTask = await db.select()
+            .from(taskTable)
+            .where(and(eq(taskTable.task_added, newTask), eq(taskTable.due_date, newDate)))
+            .execute();
+
+        return NextResponse.json(updatedTask[0]);
+
+    } catch (error) {
+
+    }
+}
+
 export const DELETE = async (request: NextRequest) => {
     try {
 

@@ -31,14 +31,6 @@ export const taskTable = pgTable("tasks", {
     due_date: timestamp("due_date", { mode: 'string' }).notNull()
 })
 
-// export const deleteTaskTable = pgTable("tasksdeleted", {
-//     username: varchar("username", {
-//         length: 255
-//     }).notNull(),
-//     task_deleted: varchar("task_deleted", {
-//         length: 255
-//     })
-// });
 
 export const completedTaskTable = pgTable("completedtask", {
     username: varchar("username", {

@@ -1,13 +1,20 @@
 import { TaskInterface } from '@/app/interfaces'
 import { formatDate } from '@/app/utils/formatDate'
 import axios from 'axios';
-import { Check } from 'lucide-react';
+import { Check, PencilIcon } from 'lucide-react';
 import React, { useState } from 'react'
+
+type ValuePiece = Date | null;
 
 const TaskCard: React.FC<{ task: TaskInterface }> = ({ task }) => {
 
     const [completed, setCompleted] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
+
+    const [taskName, setTaskName] = useState<string>("");
+    const [value, onChange] = useState<ValuePiece>(new Date());
+
+
 
     const handleComplete = async () => {
         try {
@@ -49,7 +56,10 @@ const TaskCard: React.FC<{ task: TaskInterface }> = ({ task }) => {
                 <h3 className='text-2xl xl:text-3xl font-semibold tracking-wide'>{task.task_added}</h3>
                 <h4 className='xl:text-xl font-semibold tracking-wide'>{formatDate(task.due_date)}</h4>
             </div>
-            <div className='mt-1'>
+            <div className='flex items-center justify-start gap-10 mt-1 '>
+                <button>
+                    <PencilIcon />
+                </button>
                 {
                     completed ? (
                         <button className='w-8 h-8 rounded-full bg-white border

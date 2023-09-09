@@ -47,7 +47,7 @@ const CompletedTask = () => {
                                             <span className='text-lg: xl:text-xl line-through'>{formatDate(task.due_date)}</span>
                                         </div>
                                         <Trash
-                                            className='mt-1'
+                                            className='mt-1 cursor-pointer'
                                             onClick={() => handleDelete(task.task_completed)}
                                             aria-disabled={loading}
                                         />
