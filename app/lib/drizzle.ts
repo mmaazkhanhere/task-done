@@ -41,4 +41,14 @@ export const completedTaskTable = pgTable("completedtask", {
     })
 });
 
+export const pendingTaskTable = pgTable("pendingtask", {
+    username: varchar("username", {
+        length: 255
+    }).notNull(),
+    task_pending: varchar("task_added", {
+        length: 255
+    }).notNull(),
+    due_date: timestamp("due_date", { mode: 'string' }).notNull()
+})
+
 export const db = drizzle(pool);

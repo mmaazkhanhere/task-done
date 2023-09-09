@@ -19,3 +19,14 @@ export interface CompletedTaskInterface {
     task_completed: string;
     due_date: Date
 }
+
+export interface PendingTaskInterface {
+    task_pending: string,
+    due_date: Date
+}
+
+export interface PendingTaskSliceInterface {
+    pending: PendingTaskInterface[],
+    isLoading: boolean,
+    error: any
+}
