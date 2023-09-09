@@ -3,7 +3,7 @@ import { formatDate } from '@/app/utils/formatDate';
 import { Check } from 'lucide-react';
 import { getLatestTask, taskCompleted } from '@/app/store/task';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-import { addTaskCompleted } from '@/app/store/completedTask';
+import { addTaskCompleted } from '@/app/store/taskCompleted';
 
 
 const ComingUpNext = () => {
@@ -34,9 +34,10 @@ const ComingUpNext = () => {
     const handleComplete = async () => {
         try {
             setLoading(true);
-            const taskCompletedData = { task_completed: todoTask[0].task_added };
-            await dispatch(taskCompleted(taskCompletedData));
-
+            const completedTask = { task_completed: todoTask[0].task_added };
+            await dispatch(taskCompleted(completedTask));
+            const completedTaskData = { task_completed: todoTask[0].task_added, due_date: todoTask[0].due_date }
+            await dispatch(addTaskCompleted(completedTaskData));
             setCompleted(true);
             setLoading(false);
 
@@ -45,19 +46,6 @@ const ComingUpNext = () => {
             console.error('Error while passing to-do item to delete API call: ', error);
         }
     };
-
-
-    const handleAddToComplete = async () => {
-        try {
-            setLoading(true);
-            await dispatch(addTaskCompleted({ task_completed: todoTask[0].task_added }));
-            setLoading(false);
-        } catch (error) {
-            console.error("Error while passing to do item to delete api call: ", error);
-        }
-    }
-
-
 
     return (
         <div>
@@ -86,7 +74,6 @@ const ComingUpNext = () => {
                                             disabled={loading}
                                             onClick={() => {
                                                 handleComplete()
-                                                handleAddToComplete()
                                             }}
                                         />
                                     )

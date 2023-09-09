@@ -5,8 +5,13 @@ import { CompletedTaskInterface, CompletedTaskSliceState } from "../interfaces";
 
 export const getCompletedTasks = createAsyncThunk(`taskCompleted/getCompletedTask`, async () => {
     try {
-        const res = await axios.get(`/api/completedTask`);
-        const data = await res.data();
+        console.log("Before request")
+        const res = await fetch(`/api/completedTask`, {
+            method: 'GET'
+        });
+        console.log("After request")
+        const data = await res.json();
+        console.log(data);
         return data;
     } catch (error) {
         console.error('Error in the async thunk of getCompletedTask: ', error);
@@ -14,26 +19,31 @@ export const getCompletedTasks = createAsyncThunk(`taskCompleted/getCompletedTas
     }
 })
 
-export const addTaskCompleted = createAsyncThunk(`taskCompleted/addTaskCompleted`, async (data: { task_completed: string }) => {
-    try {
-        const res = await axios.post(`/api/completedTask`, {
-            task_completed: data.task_completed,
-        });
+export const addTaskCompleted = createAsyncThunk(`taskCompleted/addTaskCompleted`,
+    async (data: { task_completed: string, due_date: Date }) => {
+        try {
+            console.log("Async thunk called")
+            const res = await axios.post(`/api/completedTask`, {
+                task_completed: data.task_completed,
+                due_date: data.due_date
+            });
+            console.log("Api recieved")
 
-        const taskAdded: CompletedTaskInterface = {
-            task_completed: data.task_completed,
-        };
+            const taskAdded: CompletedTaskInterface = {
+                task_completed: data.task_completed,
+                due_date: data.due_date
+            };
+            console.log(taskAdded);
 
-        return taskAdded;
+            return taskAdded;
 
-    } catch (error) {
-        console.error("Error while passing data to completed task api: ", error);
-    }
-})
-
+        } catch (error) {
+            console.error("Error while passing data to completed task api: ", error);
+        }
+    })
 
 const initialState: CompletedTaskSliceState = {
-    completedTask: [],
+    tasks: [],
     isLoading: false,
     error: null
 }
@@ -49,10 +59,9 @@ export const completedTaskSlice = createSlice({
             state.isLoading = true;
             state.error = null;
         });
-
         builder.addCase(getCompletedTasks.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.completedTask = action.payload;
+            state.tasks = action.payload
             state.error = null;
         });
         builder.addCase(getCompletedTasks.rejected, (state) => {
@@ -68,8 +77,10 @@ export const completedTaskSlice = createSlice({
         });
         builder.addCase(addTaskCompleted.fulfilled, (state, action) => {
             state.isLoading = false;
-            const newTask = action.payload;
-            state.completedTask.push();
+            const newItem = action.payload;
+            if (newItem) {
+                state.tasks.push(newItem);
+            }
         });
         builder.addCase(addTaskCompleted.rejected, (state) => {
             state.isLoading = false;
@@ -78,6 +89,6 @@ export const completedTaskSlice = createSlice({
     }
 })
 
-export const selectCompletedTaskSlice = (state: RootState) => state.taskCompleted
+export const selectCompletedTask = (state: RootState) => state.taskCompleted
 
-export const completedTaskReducer = completedTaskSlice.reducer;
+export default completedTaskSlice.reducer;

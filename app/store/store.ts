@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import todoTaskSlice from './task'
-import { completedTaskReducer, completedTaskSlice } from './completedTask'
+import completedTaskSlice from './taskCompleted'
 
 export const store = configureStore({
     reducer: {
         task: todoTaskSlice,
-        taskCompleted: completedTaskReducer,
+        taskCompleted: completedTaskSlice,
     }
 })
 

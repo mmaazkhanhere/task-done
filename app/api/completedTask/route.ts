@@ -4,16 +4,17 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (request: NextRequest) => {
     try {
-
+        console.log(request)
         const username = request.cookies.get("username")?.value;
         if (!username) {
             return new NextResponse("Missing username", { status: 400 });
         }
-
+        console.log("Before insertion")
         const taskCompleted = await db.select()
             .from(completedTaskTable)
             .where(eq(completedTaskTable.username, username))
-
+        console.log("After insertion")
+        console.log(taskCompleted);
         return NextResponse.json(taskCompleted);
 
     } catch (error) {
@@ -29,27 +30,18 @@ export const POST = async (request: NextRequest) => {
 
         const username = request.cookies.get("username")?.value ?? null;
         const taskCompleted = body.task_completed
+        console.log(taskCompleted);
 
         if (!username) {
             return new NextResponse("Username missing", { status: 400 })
         }
 
-        const existingTask = await db.select({ taskCompleted: completedTaskTable })
-            .from(completedTaskTable)
-            .where(and(eq(completedTaskTable.task_completed, taskCompleted), eq(completedTaskTable.username, username)))
+        const completedTask = await db.insert(completedTaskTable).values({
+            username: username,
+            task_completed: taskCompleted,
+        })
 
-        if (existingTask.length > 0) {
-            return new NextResponse("Item already deleted", { status: 400 })
-        }
-        else {
-            const completedTask = await db.insert(completedTaskTable).values({
-                username: username,
-                task_completed: taskCompleted,
-            })
-
-            return NextResponse.json(completedTask);
-        }
-
+        return NextResponse.json(completedTask);
     } catch (error) {
         console.error("Error while adding completed task into the database: ", error);
     }

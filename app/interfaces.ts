@@ -10,12 +10,12 @@ export interface TaskSliceState {
     error: any
 }
 export interface CompletedTaskSliceState {
-    completedTask: CompletedTaskInterface[],
+    tasks: CompletedTaskInterface[],
     isLoading: boolean,
     error: any
 }
 
 export interface CompletedTaskInterface {
     task_completed: string;
-    due_date?: Date;
+    due_date: Date
 }
