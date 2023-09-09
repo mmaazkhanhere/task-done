@@ -8,6 +8,7 @@ import { JWTPayload } from 'jose';
 import ComingUpNext from './components/ComingUpNext';
 import TodoTask from './components/TodoTask';
 import TaskPending from './components/TaskPending';
+import CompletedTask from './components/CompletedTask';
 
 
 const Home = () => {
@@ -32,6 +33,7 @@ const Home = () => {
                         <ComingUpNext />
                         <TaskPending />
                         <TodoTask />
+                        <CompletedTask />
                     </main>
                 )
             }

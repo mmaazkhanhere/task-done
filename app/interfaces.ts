@@ -9,5 +9,13 @@ export interface TaskSliceState {
     isLoading: boolean,
     error: any
 }
+export interface CompletedTaskSliceState {
+    completedTask: CompletedTaskInterface[],
+    isLoading: boolean,
+    error: any
+}
 
-export interface TaskAddedInterface { }
+export interface CompletedTaskInterface {
+    task_completed: string;
+    due_date?: Date;
+}

@@ -3,12 +3,14 @@ import { formatDate } from '@/app/utils/formatDate';
 import { Check } from 'lucide-react';
 import { getLatestTask, taskCompleted } from '@/app/store/task';
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
+import { addTaskCompleted } from '@/app/store/completedTask';
 
 
 const ComingUpNext = () => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [completed, setCompleted] = useState<boolean>(false);
+    const [refreshData, setRefreshData] = useState<boolean>(false);
 
     const dispatch = useAppDispatch();
     const todoTask = useAppSelector((state) => state.task.todoTask);
@@ -16,47 +18,44 @@ const ComingUpNext = () => {
     console.log(todoTask);
 
     useEffect(() => {
+
         dispatch(getLatestTask());
-    }, [dispatch])
+    }, [dispatch]);
 
     useEffect(() => {
-
-        console.log('todoTask changed:', todoTask);
-        if (todoTask.length > 0) {
-            setCompleted(false); // Reset completed status when todoTask changes
+        console.log('todoTask changed: ', todoTask);
+        if (todoTask.length > 0 && refreshData) {
+            setCompleted(false);
+            dispatch(getLatestTask());
+            setRefreshData(false); // Reset completed status when todoTask changes
         }
-    }, [todoTask]);
-
+    }, [todoTask, refreshData, dispatch]);
 
     const handleComplete = async () => {
         try {
             setLoading(true);
-
-            const taskCompletedData = { task_completed: todoTask[0].task_added }; // Assuming `task_added` is a unique identifier for tasks
+            const taskCompletedData = { task_completed: todoTask[0].task_added };
             await dispatch(taskCompleted(taskCompletedData));
 
             setCompleted(true);
             setLoading(false);
+
+            setRefreshData(true);
         } catch (error) {
-            console.error("Error while passing to-do item to delete API call: ", error);
+            console.error('Error while passing to-do item to delete API call: ', error);
+        }
+    };
+
+
+    const handleAddToComplete = async () => {
+        try {
+            setLoading(true);
+            await dispatch(addTaskCompleted({ task_completed: todoTask[0].task_added }));
+            setLoading(false);
+        } catch (error) {
+            console.error("Error while passing to do item to delete api call: ", error);
         }
     }
-
-
-    // const handleAddToComplete = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const req = await axios.post(`/api/completedTask`, {
-    //             task_completed: task[0].task_added
-    //         });
-    //         if (req.status === 200) {
-    //             const result = await req.data;
-    //         }
-    //         setLoading(false);
-    //     } catch (error) {
-    //         console.error("Error while passing to do item to delete api call: ", error);
-    //     }
-    // }
 
 
 
@@ -72,7 +71,7 @@ const ComingUpNext = () => {
                         <div className='flex flex-1 items-start justify-between md:max-w-lg xl:max-w-xl w-full'>
                             <div className='flex flex-col items-start gap-4'>
                                 <h3 className='text-2xl xl:text-3xl font-semibold tracking-wide'>{todoTask[0].task_added}</h3>
-                                <h4 className='xl:text-xl font-semibold tracking-wide'>{formatDate(todoTask[0].due_date.toISOString())}</h4>
+                                <h4 className='xl:text-xl font-semibold tracking-wide'>{formatDate(todoTask[0].due_date)}</h4>
                             </div>
                             <div className='mt-1'>
                                 {
@@ -87,7 +86,7 @@ const ComingUpNext = () => {
                                             disabled={loading}
                                             onClick={() => {
                                                 handleComplete()
-                                                //handleAddToComplete()
+                                                handleAddToComplete()
                                             }}
                                         />
                                     )

@@ -18,7 +18,7 @@ export const getLatestTask = createAsyncThunk('task/getLatestTask', async () => 
 
 export const taskAdded = createAsyncThunk(`task/taskAdded`, async (data: { task_added: string, due_date: Date }) => {
     try {
-        const res = axios.post(`/api/addTask`, {
+        const res = await axios.post(`/api/addTask`, {
             task_added: data.task_added,
             due_date: data.due_date
         })
@@ -32,7 +32,7 @@ export const taskAdded = createAsyncThunk(`task/taskAdded`, async (data: { task_
 
     } catch (error) {
         console.error("The following error encounteredin taskAdded Post call: ", error)
-        throw new Error("Cannot add items to the cart!")
+        throw new Error("Cannot add task to the list !")
     }
 })
 
@@ -92,17 +92,18 @@ export const todoTaskSlice = createSlice({
         //cases for taskCompleted
 
         builder.addCase(taskCompleted.pending, (state) => {
-            state.error = true;
+            state.isLoading = true;
         });
         builder.addCase(taskCompleted.fulfilled, (state, action) => {
             state.isLoading = false;
             const completedTask = action.payload;
-            state.todoTask = state.todoTask.filter(task => task.task_added !== completedTask.task_added);
+            state.todoTask = state.todoTask.filter(task => task.task_added === completedTask.task_added);
         });
         builder.addCase(taskCompleted.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error.message;
         });
+
     }
 })
 
