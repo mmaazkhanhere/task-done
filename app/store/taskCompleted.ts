@@ -22,18 +22,15 @@ export const getCompletedTasks = createAsyncThunk(`taskCompleted/getCompletedTas
 export const addTaskCompleted = createAsyncThunk(`taskCompleted/addTaskCompleted`,
     async (data: { task_completed: string, due_date: Date }) => {
         try {
-            console.log("Async thunk called")
             const res = await axios.post(`/api/completedTask`, {
                 task_completed: data.task_completed,
                 due_date: data.due_date
             });
-            console.log("Api recieved")
 
             const taskAdded: CompletedTaskInterface = {
                 task_completed: data.task_completed,
                 due_date: data.due_date
             };
-            console.log(taskAdded);
 
             return taskAdded;
 
@@ -41,6 +38,20 @@ export const addTaskCompleted = createAsyncThunk(`taskCompleted/addTaskCompleted
             console.error("Error while passing data to completed task api: ", error);
         }
     })
+
+export const deleteCompleted = createAsyncThunk(`taskCompleted/deleteCompleted`, async (data: { task_completed: string }) => {
+    try {
+
+        const encodedTask = encodeURIComponent(data.task_completed)
+        const res = await axios.delete(`/api/completedTask?delete_task=${encodedTask}`);
+
+        const deleted = await res.data;
+        return deleted;
+
+    } catch (error) {
+        console.error("Error in the asyncThunk function deleteCompleted")
+    }
+})
 
 const initialState: CompletedTaskSliceState = {
     tasks: [],
@@ -85,6 +96,22 @@ export const completedTaskSlice = createSlice({
         builder.addCase(addTaskCompleted.rejected, (state) => {
             state.isLoading = false;
             state.error = "Error in the cases for asyncThunk addTaskCompleted"
+        });
+
+        //Cases for deleteCompleted
+
+
+        builder.addCase(deleteCompleted.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(deleteCompleted.fulfilled, (state, action) => {
+            state.isLoading = false;
+            const completedTask = action.payload;
+            state.tasks = state.tasks.filter(task => task.task_completed === completedTask.task_added);
+        });
+        builder.addCase(deleteCompleted.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error.message;
         });
     }
 })

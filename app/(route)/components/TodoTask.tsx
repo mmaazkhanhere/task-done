@@ -1,26 +1,11 @@
 import { TaskInterface } from '@/app/interfaces'
 import React, { useEffect, useState } from 'react'
 import TaskCard from './TaskCard';
+import { useAppSelector } from '@/app/store/hooks';
 
 const TodoTask = () => {
 
-    const [tasks, setTasks] = useState<TaskInterface[]>([]);
-
-    const fetchAllTasks = async () => {
-        try {
-            const res = await fetch(`/api/addTask`, {
-                method: 'GET'
-            })
-            const data = await res.json();
-            setTasks(data);
-        } catch (error) {
-            console.error("Error while calling GET API call in TodoTask!", error);
-        }
-    }
-
-    useEffect(() => {
-        fetchAllTasks();
-    }, [])
+    const tasks = useAppSelector((state) => state.task.todoTask);
 
     return (
         <div >

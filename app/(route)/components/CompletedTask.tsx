@@ -1,12 +1,27 @@
 
-import { useAppSelector } from '@/app/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
+import { deleteCompleted } from '@/app/store/taskCompleted';
 import { formatDate } from '@/app/utils/formatDate';
 import { Trash } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
 
 const CompletedTask = () => {
 
+    const [loading, setLoading] = useState(false);
     const completedTasks = useAppSelector((state) => state.taskCompleted.tasks);
+
+    const dispatch = useAppDispatch();
+
+    const handleDelete = async (task: string) => {
+        try {
+            setLoading(true);
+            await dispatch(deleteCompleted({ task_completed: task }))
+            setLoading(false);
+        } catch (error) {
+
+        }
+    }
+
     console.log(completedTasks);
 
     return (
@@ -23,7 +38,7 @@ const CompletedTask = () => {
                                 completedTasks.map((task) => (
                                     <div
                                         key={task.task_completed}
-                                        className='flex flex-1 items-start justify-between border w-full'
+                                        className='flex flex-1 items-start justify-between w-full'
                                     >
                                         <div className='flex flex-col md:flex-row items-start md:items-center justify-center gap-5'>
                                             <h3 className='text-2xl xl:text-3xl line-through text-gray-500 font-semibold tracking-wide'>
@@ -31,7 +46,11 @@ const CompletedTask = () => {
                                             </h3>
                                             <span className='text-lg: xl:text-xl line-through'>{formatDate(task.due_date)}</span>
                                         </div>
-                                        <Trash className='mt-1' />
+                                        <Trash
+                                            className='mt-1'
+                                            onClick={() => handleDelete(task.task_completed)}
+                                            aria-disabled={loading}
+                                        />
                                     </div>
                                 ))
                             }

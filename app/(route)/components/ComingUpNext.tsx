@@ -15,15 +15,12 @@ const ComingUpNext = () => {
     const dispatch = useAppDispatch();
     const todoTask = useAppSelector((state) => state.task.todoTask);
 
-    console.log(todoTask);
-
     useEffect(() => {
 
         dispatch(getLatestTask());
     }, [dispatch]);
 
     useEffect(() => {
-        console.log('todoTask changed: ', todoTask);
         if (todoTask.length > 0 && refreshData) {
             setCompleted(false);
             dispatch(getLatestTask());
