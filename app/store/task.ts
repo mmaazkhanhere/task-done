@@ -16,7 +16,7 @@ export const getLatestTask = createAsyncThunk('task/getLatestTask', async () => 
     }
 });
 
-export const taskAdded = createAsyncThunk(`task/taskAdded`, async (data: { task_added: string, due_date: string }) => {
+export const taskAdded = createAsyncThunk(`task/taskAdded`, async (data: { task_added: string, due_date: Date }) => {
     try {
         const res = axios.post(`/api/addTask`, {
             task_added: data.task_added,
@@ -87,7 +87,7 @@ export const todoTaskSlice = createSlice({
         builder.addCase(taskAdded.rejected, (state) => {
             state.isLoading = false;
             state.error = "Error in case of taskAdded asyncThunk";
-        })
+        });
 
         //cases for taskCompleted
 

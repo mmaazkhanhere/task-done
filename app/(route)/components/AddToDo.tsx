@@ -22,21 +22,22 @@ import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
 
-import axios from 'axios'
-import { useRouter } from 'next/navigation'
+import { taskAdded } from '@/app/store/task'
+import { useAppDispatch } from '@/app/store/hooks'
 
 type ValuePiece = Date | null;
-type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 const AddToDo = () => {
 
     const [taskName, setTaskName] = useState<string>("");
-    const [value, onChange] = useState<Value>(new Date());
+    const [value, onChange] = useState<ValuePiece>(new Date());
     const [loading, setLoading] = useState<boolean>(false);
 
     const [errorMessage, setErrorMessage] = useState("");
 
     const { toast } = useToast();
+
+    const dispatch = useAppDispatch();
 
 
     const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,6 +45,27 @@ const AddToDo = () => {
     }
 
     const handleAddTask = async () => {
+        try {
+            setLoading(true);
+
+            if (taskName === "" || value === null) {
+                setErrorMessage("Please fill in the details")
+            }
+            else {
+                setErrorMessage("");
+                if (value !== null) {
+                    dispatch(taskAdded({ task_added: taskName, due_date: value }))
+                    toast({
+                        description: "Task added.",
+                        variant: "custom"
+                    })
+                }
+            };
+
+            setLoading(false);
+        } catch (error) {
+            console.error("Error while passing value to taskAdded async thunk: ", error);
+        }
 
     }
 
@@ -101,12 +123,9 @@ const AddToDo = () => {
                         <Button
                             type='submit'
                             variant='signin'
+                            disabled={loading}
                             onClick={() => {
-                                handleAddTask(),
-                                    toast({
-                                        description: "Task added.",
-                                        variant: "custom"
-                                    })
+                                handleAddTask()
                             }}
                         >
                             Add Task

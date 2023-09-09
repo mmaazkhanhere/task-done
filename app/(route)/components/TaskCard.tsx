@@ -13,7 +13,7 @@ const TaskCard: React.FC<{ task: TaskInterface }> = ({ task }) => {
         try {
             setLoading(true);
             const encodedTask = encodeURIComponent(task.task_added);
-            const encodedTime = encodeURIComponent(task.due_date)
+            const encodedTime = encodeURIComponent(task.due_date.toISOString())
             const url = `/api/addTask?delete_item=${encodedTask}&due_time=${encodedTime}`;
 
             const req = await axios.delete(url);
@@ -47,7 +47,7 @@ const TaskCard: React.FC<{ task: TaskInterface }> = ({ task }) => {
         <div className='flex flex-1 items-start justify-between md:max-w-lg xl:max-w-xl w-full'>
             <div className='flex flex-col items-start gap-4'>
                 <h3 className='text-2xl xl:text-3xl font-semibold tracking-wide'>{task.task_added}</h3>
-                <h4 className='xl:text-xl font-semibold tracking-wide'>{formatDate(task.due_date)}</h4>
+                <h4 className='xl:text-xl font-semibold tracking-wide'>{formatDate(task.due_date.toISOString())}</h4>
             </div>
             <div className='mt-1'>
                 {

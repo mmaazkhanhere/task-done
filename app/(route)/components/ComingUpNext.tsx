@@ -72,7 +72,7 @@ const ComingUpNext = () => {
                         <div className='flex flex-1 items-start justify-between md:max-w-lg xl:max-w-xl w-full'>
                             <div className='flex flex-col items-start gap-4'>
                                 <h3 className='text-2xl xl:text-3xl font-semibold tracking-wide'>{todoTask[0].task_added}</h3>
-                                <h4 className='xl:text-xl font-semibold tracking-wide'>{formatDate(todoTask[0].due_date)}</h4>
+                                <h4 className='xl:text-xl font-semibold tracking-wide'>{formatDate(todoTask[0].due_date.toISOString())}</h4>
                             </div>
                             <div className='mt-1'>
                                 {
