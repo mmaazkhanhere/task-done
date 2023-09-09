@@ -143,7 +143,7 @@ const ComingUpNext = () => {
                                                     id="name"
                                                     placeholder='Complete homework..'
                                                     value={newTask}
-                                                    // onChange={}
+                                                    onChange={handleTaskChange}
                                                     className="w-full mt-2"
                                                 />
                                             </div>

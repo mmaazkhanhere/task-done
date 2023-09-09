@@ -7,6 +7,8 @@ const TodoTask = () => {
 
     const tasks = useAppSelector((state) => state.task.todoTask);
 
+    console.log(tasks);
+
     return (
         <div >
             {
