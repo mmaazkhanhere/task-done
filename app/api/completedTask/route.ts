@@ -30,20 +30,23 @@ export const GET = async (request: NextRequest) => {
 export const POST = async (request: NextRequest) => {
     try {
 
+        console.log("API called");
         const body = await request.json();
 
         const username = request.cookies.get("username")?.value ?? null;
         const taskCompleted = body.task_completed
         console.log(taskCompleted);
 
-        if (!username) {
+        if (!username || !taskCompleted) {
             return new NextResponse("Username missing", { status: 400 })
         }
 
+        console.log("Before insertion")
         const completedTask = await db.insert(completedTaskTable).values({
             username: username,
             task_completed: taskCompleted,
         })
+        console.log("After insertion")
 
         return NextResponse.json(completedTask);
     } catch (error) {

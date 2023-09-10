@@ -29,11 +29,13 @@ const Home = () => {
                 auth === null && (
                     <main>
                         <Header />
-                        <AddToDo />
-                        <ComingUpNext />
-                        <TaskPending />
-                        <TodoTask />
-                        <CompletedTask />
+                        <div className='m-8'>
+                            <AddToDo />
+                            <ComingUpNext />
+                            <TaskPending />
+                            <TodoTask />
+                            <CompletedTask />
+                        </div>
                     </main>
                 )
             }

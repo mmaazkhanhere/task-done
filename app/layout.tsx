@@ -15,12 +15,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body >
+      <body className='bg-gradient-to-bl from-[#ff7f50] via-[#f39e0c] to-[#ffc000] w-full h-full' >
         <ReduxProvider>
           {children}
           <Toaster />
         </ReduxProvider>
       </body>
-    </html>
+    </html >
   )
 }

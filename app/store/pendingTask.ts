@@ -5,13 +5,13 @@ import axios from "axios";
 
 export const getPendingTask = createAsyncThunk(`pendingTask/getPendingTask`, async () => {
     try {
-        console.log("async thunk called");
+
         const req = await fetch(`/api/pendingTask`, {
             method: 'GET'
         });
-        console.log("after api call");
+
         const res = await req.json();
-        console.log(res);
+
         return res;
     } catch (error) {
         console.error("Error in the asyncThunk function getPendingTask: ", error);
@@ -21,15 +21,11 @@ export const getPendingTask = createAsyncThunk(`pendingTask/getPendingTask`, asy
 export const addPendingTask = createAsyncThunk(`pendingTask/addPendingTask`,
     async (data: { pending_task: string, due_date: Date }) => {
         try {
-            console.log("asyncthunk called")
-            console.log(data.due_date);
 
-            console.log("Before api call");
             const res = await axios.post(`/api/pendingTask`, {
                 pending_task: data.pending_task,
                 due_date: data.due_date
             })
-            console.log("After api call");
 
             const result = await res.data;
 
@@ -37,13 +33,23 @@ export const addPendingTask = createAsyncThunk(`pendingTask/addPendingTask`,
                 task_pending: data.pending_task,
                 due_date: data.due_date
             };
-            console.log(pendingTask);
+
             return pendingTask;
 
         } catch (error) {
             console.error("Error in asyncThunk function addPendingTask: ", error);
         }
-    })
+    });
+
+export const deletePendingTask = createAsyncThunk(`pendingTask/deletePendingTask`, async (data: { pending_task: string }) => {
+    try {
+        const encodedTask = encodeURIComponent(data.pending_task);
+        const res = await axios.delete(`/api/pendingTask?delete_task=${encodedTask}`);
+        return res.data;
+    } catch (error) {
+        console.error("Error in the asyncThunk of deletePendingTask")
+    }
+})
 
 const initialState: PendingTaskSliceInterface = {
     pending: [],
@@ -66,7 +72,6 @@ const pendingTaskSlice = createSlice({
         builder.addCase(getPendingTask.fulfilled, (state, action) => {
             state.isLoading = false;
             state.pending = action.payload;
-            console.log(action.payload);
             state.error = null;
         });
         builder.addCase(getPendingTask.rejected, (state) => {
@@ -82,7 +87,6 @@ const pendingTaskSlice = createSlice({
         builder.addCase(addPendingTask.fulfilled, (state, action) => {
             state.isLoading = false;
             const task = action.payload;
-            console.log(task);
             if (task) {
                 state.pending.push(task);
             }
@@ -91,7 +95,23 @@ const pendingTaskSlice = createSlice({
         builder.addCase(addPendingTask.rejected, (state) => {
             state.isLoading = false;
             state.error = "Error in case for asyncThunk function addPendingTask"
-        })
+        });
+
+
+        //cases for deleteing pendingTask
+
+        builder.addCase(deletePendingTask.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(deletePendingTask.fulfilled, (state, action) => {
+            state.isLoading = false;
+            const completedTask = action.payload;
+            state.pending = state.pending.filter(task => task.task_pending === completedTask.task_pending);
+        });
+        builder.addCase(deletePendingTask.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error.message;
+        });
     }
 })
 

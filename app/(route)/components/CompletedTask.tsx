@@ -1,9 +1,9 @@
 
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
-import { deleteCompleted } from '@/app/store/taskCompleted';
+import { deleteCompleted, getCompletedTasks } from '@/app/store/taskCompleted';
 import { formatDate } from '@/app/utils/formatDate';
 import { Trash } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const CompletedTask = () => {
 
@@ -11,6 +11,25 @@ const CompletedTask = () => {
     const completedTasks = useAppSelector((state) => state.taskCompleted.tasks);
 
     const dispatch = useAppDispatch();
+
+    const fetchingCompletedTask = async () => {
+        try {
+            const getPending = await dispatch(getCompletedTasks());
+            return getPending;
+        } catch (error) {
+            console.error('Error while fetching completed tasks:', error);
+        }
+    }
+
+    useEffect(() => {
+        fetchingCompletedTask()
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (loading === true) {
+            fetchingCompletedTask();
+        }
+    }, [loading, fetchingCompletedTask]);
 
     const handleDelete = async (task: string) => {
         try {
@@ -21,8 +40,6 @@ const CompletedTask = () => {
 
         }
     }
-
-    console.log(completedTasks);
 
     return (
         <div>

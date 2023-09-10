@@ -21,17 +21,19 @@ export const getCompletedTasks = createAsyncThunk(`taskCompleted/getCompletedTas
 
 export const addTaskCompleted = createAsyncThunk(`taskCompleted/addTaskCompleted`,
     async (data: { task_completed: string, due_date: Date }) => {
+        console.log("async thunk called")
         try {
             const res = await axios.post(`/api/completedTask`, {
                 task_completed: data.task_completed,
                 due_date: data.due_date
             });
-
+            console.log("After api call");
             const taskAdded: CompletedTaskInterface = {
                 task_completed: data.task_completed,
                 due_date: data.due_date
             };
 
+            console.log("task added")
             return taskAdded;
 
         } catch (error) {
@@ -89,6 +91,7 @@ export const completedTaskSlice = createSlice({
         builder.addCase(addTaskCompleted.fulfilled, (state, action) => {
             state.isLoading = false;
             const newItem = action.payload;
+            console.log(newItem)
             if (newItem) {
                 state.tasks.push(newItem);
             }

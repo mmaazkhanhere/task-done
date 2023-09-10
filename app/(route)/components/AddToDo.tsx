@@ -38,8 +38,6 @@ const AddToDo = () => {
 
     const [date, setDate] = useState<ValuePiece>(new Date());
 
-    console.log(date);
-
     const [loading, setLoading] = useState<boolean>(false);
 
     const [errorMessage, setErrorMessage] = useState("");
@@ -76,17 +74,16 @@ const AddToDo = () => {
         } catch (error) {
             console.error("Error while passing value to taskAdded async thunk: ", error);
         }
-
     }
 
     return (
         <div className='flex flex-grow max-w-[1600px] mx-auto mt-10'>
             <Dialog>
                 <DialogTrigger>
-                    <div className='flex items-center justify-between w-60 px-4'>
-                        <p className='xl:text-xl'>Add new task</p>
+                    <div className='flex items-center justify-between w-80 px-4'>
+                        <p className='text-2xl xl:text-3xl text-white font-bold'>Add new task</p>
                         <Plus
-                            className='bg-orange-400 rounded-full w-9 h-9 p-2 text-white'
+                            className='bg-white rounded-full w-9 h-9 p-2 text-orange-500'
                         />
                     </div>
                 </DialogTrigger>

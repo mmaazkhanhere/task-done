@@ -29,9 +29,8 @@ const Header = () => {
     }
 
     return (
-        <header className='bg-gradient-to-bl from-[#ff7f50] via-[#f09c0b] to-[#ffc000] 
-        mx-auto flex flex-grow items-center justify-between max-w-[1600px] 
-        px-4 py-2 relative'>
+        <header className='mx-auto flex flex-grow items-center justify-between max-w-[1600px] 
+        px-4 py-2 relative shadow-sm'>
             <nav className={cn(`text-3xl`, logo.className)}>
                 TaskDone
             </nav>
