@@ -1,6 +1,6 @@
 import { useAppSelector } from '@/app/store/hooks'
 import React from 'react'
-import PendingTask from './PendingTask';
+import PendingTaskCard from './PendingTaskCard';
 
 const TaskPending = () => {
 
@@ -18,7 +18,7 @@ const TaskPending = () => {
                         </h2>
                         {
                             pendingTasks.map((pending) => (
-                                <PendingTask pending={pending} key={pending.task_pending} />
+                                <PendingTaskCard pending={pending} key={pending.task_pending} />
                             ))
                         }
                     </div>

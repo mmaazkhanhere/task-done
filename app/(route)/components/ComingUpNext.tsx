@@ -32,7 +32,6 @@ const ComingUpNext = () => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [completed, setCompleted] = useState<boolean>(false);
-    const [refreshData, setRefreshData] = useState<boolean>(false);
 
     const [newTask, setNewTask] = useState<string>("");
     const [date, onChange] = useState<ValuePiece>(new Date());
@@ -42,36 +41,50 @@ const ComingUpNext = () => {
 
 
     const dispatch = useAppDispatch();
+
     const todoTask = useAppSelector((state) => state.task.todoTask);
 
-    useEffect(() => {
-
-        dispatch(getLatestTask());
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (todoTask.length > 0 && refreshData) {
-            setCompleted(false);
-            dispatch(getLatestTask());
-            setRefreshData(false); // Reset completed status when todoTask changes
-        }
-    }, [todoTask, refreshData, dispatch]);
-
-    useEffect(() => {
-
-        const pendingTasks = async () => {
-            if (todoTask.length > 0) {
-                const currentDate = new Date();
-                if (todoTask[0].due_date <= currentDate) {
-                    await dispatch(addPendingTask({
-                        pending_task: todoTask[0].task_added,
-                        due_date: todoTask[0].due_date
-                    }));
-                }
+    const fetchLatestTask = async () => {
+        try {
+            const latestTask = await dispatch(getLatestTask());
+            // Update the todoTask state with the latest task
+            if (latestTask) {
+                setCompleted(false);
+                return latestTask;
             }
-        };
-        pendingTasks();
-    }, [dispatch, todoTask])
+        } catch (error) {
+            console.error('Error while fetching latest task:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchLatestTask();
+    }, []);
+
+    useEffect(() => {
+
+        if (completed === true) {
+            fetchLatestTask();
+        }
+
+    }, [completed, fetchLatestTask]);
+
+    const checkDueDateAndAddToPending = async () => {
+        if (todoTask.length > 0) {
+            const dueDate = new Date(todoTask[0].due_date);
+            const currentTime = new Date();
+
+            if (dueDate < currentTime) {
+                await dispatch(addPendingTask({ pending_task: todoTask[0].task_added, due_date: todoTask[0].due_date }));
+            }
+        }
+    };
+
+    useEffect(() => {
+        // Check due date and add to pending whenever todoTask changes
+        checkDueDateAndAddToPending();
+    }, [checkDueDateAndAddToPending, todoTask]);
+
 
     const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewTask(event.target.value);
@@ -82,14 +95,19 @@ const ComingUpNext = () => {
             setLoading(true);
             const completedTask = { task_completed: todoTask[0].task_added };
             await dispatch(taskCompleted(completedTask));
-            const completedTaskData = { task_completed: todoTask[0].task_added, due_date: todoTask[0].due_date }
-            await dispatch(addTaskCompleted(completedTaskData));
-            setCompleted(true);
-            setLoading(false);
 
-            setRefreshData(true);
+            const completedTaskData = { task_completed: todoTask[0].task_added, due_date: todoTask[0].due_date };
+            await dispatch(addTaskCompleted(completedTaskData));
+
+            setCompleted(true);
+            // Fetch the latest task after completing the current one
+            fetchLatestTask();
+            setCompleted(false);
+
         } catch (error) {
             console.error('Error while passing to-do item to delete API call: ', error);
+        } finally {
+            setLoading(false);
         }
     };
 

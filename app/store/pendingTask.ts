@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { PendingTaskSliceInterface } from "../interfaces";
+import { PendingTaskInterface, PendingTaskSliceInterface } from "../interfaces";
 import { RootState } from "./store";
 import axios from "axios";
 
@@ -21,15 +21,24 @@ export const getPendingTask = createAsyncThunk(`pendingTask/getPendingTask`, asy
 export const addPendingTask = createAsyncThunk(`pendingTask/addPendingTask`,
     async (data: { pending_task: string, due_date: Date }) => {
         try {
+            console.log("asyncthunk called")
             console.log(data.due_date);
+
+            console.log("Before api call");
             const res = await axios.post(`/api/pendingTask`, {
                 pending_task: data.pending_task,
                 due_date: data.due_date
             })
+            console.log("After api call");
 
             const result = await res.data;
-            console.log(result);
-            return result;
+
+            const pendingTask: PendingTaskInterface = {
+                task_pending: data.pending_task,
+                due_date: data.due_date
+            };
+            console.log(pendingTask);
+            return pendingTask;
 
         } catch (error) {
             console.error("Error in asyncThunk function addPendingTask: ", error);
@@ -57,6 +66,7 @@ const pendingTaskSlice = createSlice({
         builder.addCase(getPendingTask.fulfilled, (state, action) => {
             state.isLoading = false;
             state.pending = action.payload;
+            console.log(action.payload);
             state.error = null;
         });
         builder.addCase(getPendingTask.rejected, (state) => {
@@ -72,7 +82,10 @@ const pendingTaskSlice = createSlice({
         builder.addCase(addPendingTask.fulfilled, (state, action) => {
             state.isLoading = false;
             const task = action.payload;
-            state.pending.push(task);
+            console.log(task);
+            if (task) {
+                state.pending.push(task);
+            }
             state.error = null;
         });
         builder.addCase(addPendingTask.rejected, (state) => {

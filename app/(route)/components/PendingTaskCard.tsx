@@ -5,7 +5,7 @@ import { formatDate } from '@/app/utils/formatDate'
 import { Check } from 'lucide-react';
 import React, { useState } from 'react'
 
-const PendingTask: React.FC<{ pending: PendingTaskInterface }> = ({ pending }) => {
+const PendingTaskCard: React.FC<{ pending: PendingTaskInterface }> = ({ pending }) => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [completed, setCompleted] = useState<boolean>(false);
@@ -31,7 +31,7 @@ const PendingTask: React.FC<{ pending: PendingTaskInterface }> = ({ pending }) =
             {
                 completed ? (
                     <button className='w-8 h-8 rounded-full bg-white border
-                                    flex items-center justify-center'
+                    flex items-center justify-center'
                     >
                         <Check size={20} className='text-orange-500' />
                     </button>
@@ -48,4 +48,4 @@ const PendingTask: React.FC<{ pending: PendingTaskInterface }> = ({ pending }) =
     )
 }
 
-export default PendingTask
+export default PendingTaskCard;

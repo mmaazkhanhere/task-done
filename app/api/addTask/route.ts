@@ -27,8 +27,6 @@ export const POST = async (request: NextRequest) => {
         const body = await request.json();
 
         const username = request.cookies.get("username")?.value ?? null;
-        console.log(body.due_date)
-
         if (!username || !body.task_added || !body.due_date) {
             return new NextResponse("Missing Information", { status: 400 })
         }
@@ -39,6 +37,7 @@ export const POST = async (request: NextRequest) => {
         })
 
         const response = NextResponse.json({ newTask });
+        console.log(response);
         return response;
 
     } catch (error) {

@@ -30,11 +30,15 @@ type ValuePiece = Date | null;
 const AddToDo = () => {
 
 
-    const userTimezoneOffset = new Date().getTimezoneOffset() * 60000;
-    const localTime = new Date(new Date().getTime() - userTimezoneOffset);
+    // const userTimezoneOffset = new Date().getTimezoneOffset() * 60000;
+    // const localTime = new Date(new Date().getTime() - userTimezoneOffset);
+    // console.log(localTime);
 
     const [taskName, setTaskName] = useState<string>("");
-    const [value, onChange] = useState<ValuePiece>(localTime);
+
+    const [date, setDate] = useState<ValuePiece>(new Date());
+
+    console.log(date);
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -49,17 +53,18 @@ const AddToDo = () => {
         setTaskName(event.target.value);
     }
 
+
     const handleAddTask = async () => {
         try {
             setLoading(true);
 
-            if (taskName === "" || value === null) {
+            if (taskName === "" || date === null) {
                 setErrorMessage("Please fill in the details")
             }
             else {
                 setErrorMessage("");
-                if (value !== null) {
-                    dispatch(taskAdded({ task_added: taskName, due_date: value }))
+                if (date !== null) {
+                    dispatch(taskAdded({ task_added: taskName, due_date: date }))
                     toast({
                         description: "Task added.",
                         variant: "custom"
@@ -115,8 +120,8 @@ const AddToDo = () => {
                                 name='datetime'
                                 required={true}
                                 minDate={new Date()}
-                                onChange={onChange}
-                                value={value}
+                                onChange={setDate}
+                                value={date}
                                 className={`mt-2`}
                                 calendarIcon={<BsFillCalendarDateFill />}
 
