@@ -45,7 +45,7 @@ export const pendingTaskTable = pgTable("pendingtask", {
     username: varchar("username", {
         length: 255
     }).notNull(),
-    task_pending: varchar("task_added", {
+    task_pending: varchar("task_pending", {
         length: 255
     }).notNull(),
     due_date: timestamp("due_date", { mode: 'string' }).notNull()

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { TaskInterface } from '@/app/interfaces'
 import { useAppDispatch } from '@/app/store/hooks';
 import { formatDate } from '@/app/utils/formatDate';
@@ -23,6 +23,7 @@ import { Button } from '@/components/ui/button';
 import DateTimePicker from 'react-datetime-picker';
 import { editTask, taskCompleted } from '@/app/store/task';
 import { addTaskCompleted } from '@/app/store/taskCompleted';
+import { addPendingTask } from '@/app/store/pendingTask';
 
 type ValuePiece = Date | null;
 
@@ -37,6 +38,21 @@ const TaskCard: React.FC<{ task: TaskInterface }> = ({ task }) => {
 
 
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        const pendingTasks = async () => {
+            if (!task.task_added || !task.due_date) {
+                const currentDate = new Date();
+                if (task.due_date <= currentDate) {
+                    await dispatch(addPendingTask({
+                        pending_task: task.task_added,
+                        due_date: task.due_date
+                    }));
+                };
+            };
+        };
+        pendingTasks();
+    }, [dispatch, task.due_date, task.task_added])
 
     const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewTask(event.target.value);
@@ -88,7 +104,7 @@ const TaskCard: React.FC<{ task: TaskInterface }> = ({ task }) => {
                 <div className='flex flex-col items-start gap-4'>
                     <h3 className='text-2xl xl:text-3xl font-semibold tracking-wide'>{task.task_added}</h3>
                     <h4 className='xl:text-xl font-semibold tracking-wide'>{formatDate(task.due_date)}</h4>
-                    D</div>
+                </div>
                 <div className='flex items-center justify-start gap-10 mt-1 '>
                     <DialogTrigger>
                         <button>

@@ -22,6 +22,7 @@ import { toast, useToast } from '@/components/ui/use-toast'
 import { BsFillCalendarDateFill } from "react-icons/bs"
 import { Check, PencilIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { addPendingTask } from '@/app/store/pendingTask';
 
 
 type ValuePiece = Date | null;
@@ -55,6 +56,22 @@ const ComingUpNext = () => {
             setRefreshData(false); // Reset completed status when todoTask changes
         }
     }, [todoTask, refreshData, dispatch]);
+
+    useEffect(() => {
+
+        const pendingTasks = async () => {
+            if (todoTask.length > 0) {
+                const currentDate = new Date();
+                if (todoTask[0].due_date <= currentDate) {
+                    await dispatch(addPendingTask({
+                        pending_task: todoTask[0].task_added,
+                        due_date: todoTask[0].due_date
+                    }));
+                }
+            }
+        };
+        pendingTasks();
+    }, [dispatch, todoTask])
 
     const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewTask(event.target.value);

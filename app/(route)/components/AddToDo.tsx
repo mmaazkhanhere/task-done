@@ -29,8 +29,13 @@ type ValuePiece = Date | null;
 
 const AddToDo = () => {
 
+
+    const userTimezoneOffset = new Date().getTimezoneOffset() * 60000;
+    const localTime = new Date(new Date().getTime() - userTimezoneOffset);
+
     const [taskName, setTaskName] = useState<string>("");
-    const [value, onChange] = useState<ValuePiece>(new Date());
+    const [value, onChange] = useState<ValuePiece>(localTime);
+
     const [loading, setLoading] = useState<boolean>(false);
 
     const [errorMessage, setErrorMessage] = useState("");
@@ -112,7 +117,6 @@ const AddToDo = () => {
                                 minDate={new Date()}
                                 onChange={onChange}
                                 value={value}
-                                minDetail='month'
                                 className={`mt-2`}
                                 calendarIcon={<BsFillCalendarDateFill />}
 
