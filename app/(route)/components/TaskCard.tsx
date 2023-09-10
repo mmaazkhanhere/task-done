@@ -99,7 +99,8 @@ const TaskCard: React.FC<{ task: TaskInterface }> = ({ task }) => {
 
 
     return (
-        <div className='flex flex-1 items-start justify-between md:max-w-lg xl:max-w-xl w-full'>
+        <div className='flex flex-1 items-start justify-between md:max-w-lg xl:max-w-xl w-full
+        bg-gradient-to-bl from-[#ff7f50] via-[#f39e0c] to-[#ffc000] '>
             <Dialog>
                 <div className='flex flex-col items-start gap-4'>
                     <h3 className='text-2xl xl:text-3xl font-semibold tracking-wide'>{task.task_added}</h3>

@@ -81,9 +81,9 @@ const AddToDo = () => {
             <Dialog>
                 <DialogTrigger>
                     <div className='flex items-center justify-between w-80 px-4'>
-                        <p className='text-2xl xl:text-3xl text-white font-bold'>Add new task</p>
+                        <p className='text-2xl xl:text-3xl text-orange-500 font-bold'>Add new task</p>
                         <Plus
-                            className='bg-white rounded-full w-9 h-9 p-2 text-orange-500'
+                            className='bg-orange-500 rounded-full w-9 h-9 p-2 text-white'
                         />
                     </div>
                 </DialogTrigger>
