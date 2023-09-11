@@ -29,9 +29,6 @@ const Header = () => {
         router.push('/login');
     }
 
-    const todoTask = useAppSelector((state) => state.task.todoTask.length);
-    const pending = useAppSelector((state) => state.pendingTask.pending.length);
-
     return (
         <header className='mx-auto flex flex-grow items-center justify-between max-w-[1600px] 
         px-4 py-2 relative shadow-sm bg-gradient-to-bl from-[#ff7f50] via-[#f39e0c] to-[#ffc000] w-full'>
@@ -45,19 +42,19 @@ const Header = () => {
                         className='cursor-pointer md:text-lg xl:text-xl '>
                         Task Pending
                     </p>
-                    {
+                    {/* {
                         pending > 0 && (
                             <p className='absolute top-0 left-24 bg-white text-orange-500 w-5 h-5 rounded-full
                             flex items-center justify-center'>
                                 {pending}
                             </p>
                         )
-                    }
+                    } */}
                     <p
                         className='cursor-pointer md:text-lg xl:text-xl'>
                         Task Remaining
                     </p>
-                    {
+                    {/* {
                         todoTask > 0 && (
                             <p className='absolute top-0 right-16 flex items-center justify-center 
                             bg-white text-orange-500 w-5 h-5 rounded-full'>
@@ -65,7 +62,7 @@ const Header = () => {
                             </p>
                         )
 
-                    }
+                    } */}
                 </div>
                 <Avatar onClick={handleShowMenu}>
                     <AvatarImage src="/avatar-placeholder.jpg" />
@@ -85,24 +82,24 @@ const Header = () => {
                             relative'>
                             Task Pending
                         </p>
-                        {
+                        {/* {
                             <p className='absolute top-9 left-[110px] bg-orange-500 text-white w-5 h-5 rounded-full
                             flex items-center justify-center'>
                                 {pending}
                             </p>
 
-                        }
+                        } */}
                         <p
                             className='cursor-pointer px-2 w-full md:text-lg xl:text-xl relative'>
                             Task Remaining
                         </p>
-                        {
+                        {/* {
                             <p className='absolute top-16 left-[150px] bg-orange-500 text-white w-5 h-5 rounded-full
                             flex items-center justify-center'>
                                 {todoTask}
                             </p>
 
-                        }
+                        } */}
                         <p
                             onClick={handleLogout}
                             className='cursor-pointer px-2 w-full md:text-lg xl:text-xl'>

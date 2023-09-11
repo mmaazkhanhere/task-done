@@ -5,12 +5,22 @@ export interface TaskInterface {
 }
 
 export interface TaskSliceState {
-    todoTask: TaskInterface[],
+    task: TaskInterface[],
+    isLoading: boolean,
+    error: any
+}
+export interface LatestTaskSliceState {
+    latestTask: TaskInterface[],
     isLoading: boolean,
     error: any
 }
 export interface CompletedTaskSliceState {
     tasks: CompletedTaskInterface[],
+    isLoading: boolean,
+    error: any
+}
+export interface PendingTaskSliceInterface {
+    pending: PendingTaskInterface[],
     isLoading: boolean,
     error: any
 }
@@ -25,8 +35,3 @@ export interface PendingTaskInterface {
     due_date: Date
 }
 
-export interface PendingTaskSliceInterface {
-    pending: PendingTaskInterface[],
-    isLoading: boolean,
-    error: any
-}

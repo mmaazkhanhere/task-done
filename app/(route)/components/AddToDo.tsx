@@ -22,25 +22,18 @@ import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
 
-import { taskAdded } from '@/app/store/task'
 import { useAppDispatch } from '@/app/store/hooks'
+import { addTask } from '@/app/store/todoTask'
 
 type ValuePiece = Date | null;
 
 const AddToDo = () => {
 
-
-    // const userTimezoneOffset = new Date().getTimezoneOffset() * 60000;
-    // const localTime = new Date(new Date().getTime() - userTimezoneOffset);
-    // console.log(localTime);
-
     const [taskName, setTaskName] = useState<string>("");
-
     const [date, setDate] = useState<ValuePiece>(new Date());
-
     const [loading, setLoading] = useState<boolean>(false);
-
     const [errorMessage, setErrorMessage] = useState("");
+
 
     const { toast } = useToast();
 
@@ -51,30 +44,20 @@ const AddToDo = () => {
         setTaskName(event.target.value);
     }
 
-
-    const handleAddTask = async () => {
-        try {
-            setLoading(true);
-
-            if (taskName === "" || date === null) {
-                setErrorMessage("Please fill in the details")
-            }
-            else {
-                setErrorMessage("");
-                if (date !== null) {
-                    dispatch(taskAdded({ task_added: taskName, due_date: date }))
-                    toast({
-                        description: "Task added.",
-                        variant: "custom"
-                    })
-                }
-            };
-
-            setLoading(false);
-        } catch (error) {
-            console.error("Error while passing value to taskAdded async thunk: ", error);
+    const handleAddTask = () => {
+        setLoading(true);
+        if (!taskName || !date) {
+            setErrorMessage("Error. Enter correct name and choose valid date");
         }
-    }
+        else {
+            dispatch(addTask({ task_added: taskName, due_date: date }));
+            toast({
+                description: 'Add Task',
+                variant: 'custom'
+            });
+        }
+        setLoading(false);
+    };
 
     return (
         <div className='flex flex-grow max-w-[1600px] mx-auto mt-10'>
@@ -130,9 +113,7 @@ const AddToDo = () => {
                             type='submit'
                             variant='signin'
                             disabled={loading}
-                            onClick={() => {
-                                handleAddTask()
-                            }}
+                            onClick={handleAddTask}
                         >
                             Add Task
                         </Button>

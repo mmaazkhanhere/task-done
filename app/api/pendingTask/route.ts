@@ -1,75 +1,60 @@
 import { db, pendingTaskTable } from "@/app/lib/drizzle";
 import { and, eq } from "drizzle-orm";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server"
 
 export const GET = async (request: NextRequest) => {
     try {
-        const username = request.cookies.get("username")?.value ?? null;
+        const username = request.cookies.get("username")?.value;
         if (!username) {
-            return new NextResponse("Missing details", { status: 400 });
+            return new NextResponse("Missing details!", { status: 400 });
         }
+        const tasks = await db.select().from(pendingTaskTable).where(eq(pendingTaskTable.username, username));
 
-        const res = await db.select().from(pendingTaskTable)
-            .where(eq(pendingTaskTable.username, username));
+        return NextResponse.json(tasks);
 
-        return NextResponse.json(res);
     } catch (error) {
-        console.error("Error in GET API call for getting pending task: ", error);
+        console.error("Error in the GET API call to pending task: ", error);
     }
-}
+};
 
 export const POST = async (request: NextRequest) => {
     try {
-        const username = request.cookies.get("username")?.value ?? null;
+        const data = await request.json();
+        const username = request.cookies.get("username")?.value;
 
-        const body = await request.json();
-        const pending = body.pending_task;
-        const date = body.due_date;
-
-        if (!username || !pending || !date) {
+        if (!username || !data.pending_task || !data.pending_date) {
             return new NextResponse("Missing details", { status: 400 });
         }
 
-        const existing = await db.select({ pending: pendingTaskTable.task_pending, date: pendingTaskTable.due_date })
-            .from(pendingTaskTable)
-            .where(eq(pendingTaskTable.username, username))
-            .limit(1);
+        const addPending = await db.insert(pendingTaskTable).values({
+            username: username,
+            task_pending: data.pending_task,
+            due_date: data.pending_date
+        });
 
-        if (existing.length > 0) {
-            return new NextResponse("Item already present!", { status: 404 });
-        }
-        else {
-            const newPending = await db.insert(pendingTaskTable).values({
-                username: username,
-                task_pending: pending,
-                due_date: date
-            })
-            return NextResponse.json({ newPending });
-        }
+        return NextResponse.json({ addPending });
 
     } catch (error) {
-        console.error("Error in the POST api call of pendingTask");
+        console.log("Error in the POST API of todoTask: ", error);
     }
-}
+};
+
 
 export const DELETE = async (request: NextRequest) => {
     try {
-        const url = new URL(request.url);
-        const deleteTask = url.searchParams.get("delete_task") as string;
+        const task = request.nextUrl.searchParams.get("delete_task") as string;
         const username = request.cookies.get("username")?.value ?? null;
 
-        if (!username) {
-            return new NextResponse("No user available", { status: 400 });
+        if (!task || !username) {
+            return new NextResponse("Missing details", { status: 400 });
         }
 
-        const deletedTask = await db.delete(pendingTaskTable)
-            .where(and(eq(pendingTaskTable.username, username), eq(pendingTaskTable.task_pending, deleteTask)))
-            .execute();
+        const res = await db.delete(pendingTaskTable)
+            .where(and(eq(pendingTaskTable.task_pending, task), eq(pendingTaskTable.username, username)));
 
-        return NextResponse.json(deletedTask);
+        return NextResponse.json(res);
 
     } catch (error) {
-        console.error("Error while deleting pending task from the database: ", error);
-        return new NextResponse("Error deleting task", { status: 500 });
+        console.error("Error in the DELETE API request of todoTask for deleteing task: ", error);
     }
-}
+};
