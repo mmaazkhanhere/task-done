@@ -21,6 +21,7 @@ import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import { deleteTask, getLatestTask, updateTask } from '@/app/store/todoTask';
 import { formatDate } from '@/app/utils/formatDate';
 import { addPending } from '@/app/store/pendingTask';
+import { addCompletedTask } from '@/app/store/completedTask';
 
 
 
@@ -73,6 +74,7 @@ const ComingUpNext = () => {
     const handleCompleted = () => {
         setLoading(true);
         dispatch(deleteTask({ task_added: latestTask[0].task_added }));
+        dispatch(addCompletedTask({ task_completed: latestTask[0].task_added, due_date: latestTask[0].due_date }));
         toast({
             description: 'Congrulation! Task Completed',
             variant: 'custom'
@@ -99,7 +101,7 @@ const ComingUpNext = () => {
                 latestTask.length > 0 && (
                     <Dialog>
                         <div className='max-w-[1600px] mx-auto flex flex-col items-start w-full 
-                        border border-gray-400 p-4 rounded-xl gap-10 mt-10
+                        p-4 rounded-xl gap-10 mt-10
                         bg-gradient-to-bl from-[#ff7f50] via-[#f39e0c] to-[#ffc000]'
                         >
                             <h2 className='text-2xl xl:text-4xl font-bold tracking-wider'>

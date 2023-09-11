@@ -26,16 +26,24 @@ export const POST = async (request: NextRequest) => {
             return new NextResponse("Missing details", { status: 400 });
         }
 
-        const addPending = await db.insert(pendingTaskTable).values({
-            username: username,
-            task_pending: data.pending_task,
-            due_date: data.pending_date
-        });
+        const existingTask = await db.select()
+            .from(pendingTaskTable)
+            .where(and(eq(pendingTaskTable.username, username), eq(pendingTaskTable.task_pending, data.pending_task)));
 
-        return NextResponse.json({ addPending });
+        if (existingTask) {
+            return new NextResponse("Task already present", { status: 406 });
+        } else {
+            const addPending = await db.insert(pendingTaskTable).values({
+                username: username,
+                task_pending: data.pending_task,
+                due_date: data.pending_date
+            });
+
+            return NextResponse.json({ addPending });
+        }
 
     } catch (error) {
-        console.log("Error in the POST API of todoTask: ", error);
+        console.log("Error in the POST API of pending task: ", error);
     }
 };
 
@@ -48,6 +56,7 @@ export const DELETE = async (request: NextRequest) => {
         if (!task || !username) {
             return new NextResponse("Missing details", { status: 400 });
         }
+
 
         const res = await db.delete(pendingTaskTable)
             .where(and(eq(pendingTaskTable.task_pending, task), eq(pendingTaskTable.username, username)));

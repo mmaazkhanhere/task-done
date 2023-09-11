@@ -1,5 +1,5 @@
 import { db, taskTable } from "@/app/lib/drizzle";
-import { and, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server"
 
 export const GET = async (request: NextRequest) => {
@@ -8,7 +8,9 @@ export const GET = async (request: NextRequest) => {
         if (!username) {
             return new NextResponse("Missing details!", { status: 400 });
         }
-        const tasks = await db.select().from(taskTable).where(eq(taskTable.username, username));
+        const tasks = await db.select().from(taskTable)
+            .where(eq(taskTable.username, username))
+            .orderBy(asc(taskTable.due_date));
         return NextResponse.json(tasks);
     } catch (error) {
         console.error("Error in the GET API call to get all tasks: ", error);

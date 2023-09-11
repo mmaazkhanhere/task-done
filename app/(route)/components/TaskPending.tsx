@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Check } from 'lucide-react';
 import { formatDate } from '@/app/utils/formatDate';
 import { deletePending, getPendingTask } from '@/app/store/pendingTask';
+import { addCompletedTask } from '@/app/store/completedTask';
 
 
 const TaskPending = () => {
@@ -26,9 +27,10 @@ const TaskPending = () => {
         }
     }, [completed, dispatch])
 
-    const handleCompleted = (pending_task: string) => {
+    const handleCompleted = (pending_task: string, due_date: Date) => {
         setLoading(true);
         dispatch(deletePending({ pending_task: pending_task }));
+        dispatch(addCompletedTask({ task_completed: pending_task, due_date: due_date }));
         setCompleted(true);
         setLoading(false);
     }
@@ -61,7 +63,7 @@ const TaskPending = () => {
                                     <button className='w-8 h-8 rounded-full bg-white border border-red-500 
                         relative'
                                         disabled={loading}
-                                        onClick={() => handleCompleted(pending.task_pending)}
+                                        onClick={() => handleCompleted(pending.task_pending, pending.due_date)}
                                     />
                                     {
                                         completed && (

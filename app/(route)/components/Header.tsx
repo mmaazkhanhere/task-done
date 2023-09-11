@@ -17,7 +17,10 @@ const logo = Rock_Salt({
 const Header = () => {
 
     const [showMenu, setShowMenu] = useState<boolean>(false);
+
     const router = useRouter();
+    const todoTask = useAppSelector(state => state.todoTasks.task.length);
+    const pendingTask = useAppSelector(state => state.pendingTask.pending.length)
 
     const handleShowMenu = () => {
         setShowMenu(!showMenu);
@@ -42,19 +45,19 @@ const Header = () => {
                         className='cursor-pointer md:text-lg xl:text-xl '>
                         Task Pending
                     </p>
-                    {/* {
-                        pending > 0 && (
+                    {
+                        pendingTask > 0 && (
                             <p className='absolute top-0 left-24 bg-white text-orange-500 w-5 h-5 rounded-full
                             flex items-center justify-center'>
-                                {pending}
+                                {pendingTask}
                             </p>
                         )
-                    } */}
+                    }
                     <p
                         className='cursor-pointer md:text-lg xl:text-xl'>
                         Task Remaining
                     </p>
-                    {/* {
+                    {
                         todoTask > 0 && (
                             <p className='absolute top-0 right-16 flex items-center justify-center 
                             bg-white text-orange-500 w-5 h-5 rounded-full'>
@@ -62,7 +65,7 @@ const Header = () => {
                             </p>
                         )
 
-                    } */}
+                    }
                 </div>
                 <Avatar onClick={handleShowMenu}>
                     <AvatarImage src="/avatar-placeholder.jpg" />
@@ -82,24 +85,26 @@ const Header = () => {
                             relative'>
                             Task Pending
                         </p>
-                        {/* {
-                            <p className='absolute top-9 left-[110px] bg-orange-500 text-white w-5 h-5 rounded-full
+                        {
+                            pendingTask && (
+                                <p className='absolute top-9 left-[110px] bg-orange-500 text-white w-5 h-5 rounded-full
                             flex items-center justify-center'>
-                                {pending}
-                            </p>
-
-                        } */}
+                                    {pendingTask}
+                                </p>
+                            )
+                        }
                         <p
                             className='cursor-pointer px-2 w-full md:text-lg xl:text-xl relative'>
                             Task Remaining
                         </p>
-                        {/* {
-                            <p className='absolute top-16 left-[150px] bg-orange-500 text-white w-5 h-5 rounded-full
-                            flex items-center justify-center'>
-                                {todoTask}
-                            </p>
-
-                        } */}
+                        {
+                            todoTask && (
+                                <p className='absolute top-16 left-[150px] bg-orange-500 text-white w-5 h-5 rounded-full
+                                flex items-center justify-center'>
+                                    {todoTask}
+                                </p>
+                            )
+                        }
                         <p
                             onClick={handleLogout}
                             className='cursor-pointer px-2 w-full md:text-lg xl:text-xl'>

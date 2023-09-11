@@ -15,7 +15,7 @@ export interface LatestTaskSliceState {
     error: any
 }
 export interface CompletedTaskSliceState {
-    tasks: CompletedTaskInterface[],
+    completed: CompletedTaskInterface[],
     isLoading: boolean,
     error: any
 }
