@@ -99,6 +99,11 @@ const ComingUpNext = () => {
             const completedTaskData = { task_completed: todoTask[0].task_added, due_date: todoTask[0].due_date };
             await dispatch(addTaskCompleted(completedTaskData));
 
+            toast({
+                description: "Congrulation! Task Completed.",
+                variant: "custom"
+            })
+
             setCompleted(true);
             // Fetch the latest task after completing the current one
             fetchLatestTask();

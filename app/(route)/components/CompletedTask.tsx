@@ -2,6 +2,7 @@
 import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
 import { deleteCompleted, getCompletedTasks } from '@/app/store/taskCompleted';
 import { formatDate } from '@/app/utils/formatDate';
+import { useToast } from '@/components/ui/use-toast';
 import { Trash } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
@@ -11,6 +12,8 @@ const CompletedTask = () => {
     const completedTasks = useAppSelector((state) => state.taskCompleted.tasks);
 
     const dispatch = useAppDispatch();
+
+    const { toast } = useToast();
 
     const fetchingCompletedTask = async () => {
         try {
@@ -35,6 +38,10 @@ const CompletedTask = () => {
         try {
             setLoading(true);
             await dispatch(deleteCompleted({ task_completed: task }))
+            toast({
+                description: "Task deleted!",
+                variant: "destructive"
+            })
             setLoading(false);
         } catch (error) {
 

@@ -6,12 +6,11 @@ import { NextResponse, NextRequest } from "next/server";
 import { getSecretKey } from "@/app/lib/auth"
 
 
-export const GET = async (request: NextResponse) => {
+export const GET = async (request: NextRequest) => {
     try {
 
-        const url = new URL(request.url);
-        const username = url.searchParams.get("username");
-        const password = url.searchParams.get("password");
+        const username = request.nextUrl.searchParams.get("username");
+        const password = request.nextUrl.searchParams.get("password");
 
         if (!username || !password) {
             return new NextResponse('Missing details', { status: 406 })

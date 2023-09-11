@@ -2,6 +2,7 @@ import { PendingTaskInterface } from '@/app/interfaces'
 import { useAppDispatch } from '@/app/store/hooks';
 import { taskCompleted } from '@/app/store/task';
 import { formatDate } from '@/app/utils/formatDate'
+import { useToast } from '@/components/ui/use-toast';
 import { Check } from 'lucide-react';
 import React, { useState } from 'react'
 
@@ -12,10 +13,16 @@ const PendingTaskCard: React.FC<{ pending: PendingTaskInterface }> = ({ pending 
 
     const dispatch = useAppDispatch();
 
+    const { toast } = useToast();
+
     const handleCompleted = async () => {
         setLoading(true);
         const completedTask = { task_completed: pending.task_pending };
         await dispatch(taskCompleted(completedTask));
+        toast({
+            description: "Congrulation! Task Completed.",
+            variant: "custom"
+        })
         setCompleted(false);
         setLoading(false);
     }
