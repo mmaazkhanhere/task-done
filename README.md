@@ -1,34 +1,38 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# [Fullstack TodoList](https://todolist-two-roan.vercel.app/)
 
-## Getting Started
+## Table of contents
 
-First, run the development server:
+- [Overview](#overview)
+  - [Stack](#stack)
+  - [Screenshot](#screenshot)
+  - [Links](#links)
+- [What I learned](#what-i-learned)
+ 
+## Overview
+TaskDone is a cutting-edge to-do list application built using Next.js 13, TypeScript, Tailwind CSS, Shadcn/ui,and powered by the Neon Database for serverless PostgreSQL storage. It features a secure JWT-based custom authentication system for user registration and login.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+With TaskDone, users can effortlessly create accounts, manage tasks, mark them as completed, and handle pending tasks. Our application ensures a seamless user experience. In addition, users can easily switch between accounts by signing out, providing a hassle-free experience.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+TaskDone - Your modern solution for efficient task management.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Stack
+- Next.js 13 App Router (React Fullstack Framework)
+- TypeScript
+- Tailwind CSS (Styling Framework)
+- Shadcn/ui (Components)
+- Redux (State Management)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Screenshot
 
-## Learn More
+![Login Page](https://github.com/mmaazkhanhere/hackathon/assets/115078151/0b4cb181-5203-4195-9166-c6031ba9e9db)
+![Main page](https://github.com/mmaazkhanhere/hackathon/assets/115078151/810a4bc5-42ce-49ec-a3e7-ede64148d97e)
+![Edit Task page](https://github.com/mmaazkhanhere/hackathon/assets/115078151/fad54718-2410-4cfc-99eb-82702ada6b56)
+![Main page after task is edited](https://github.com/mmaazkhanhere/hackathon/assets/115078151/1337827a-e169-4a01-b20b-bd6eaba00be4)
+![Task completed and pending task page](https://github.com/mmaazkhanhere/hackathon/assets/115078151/5fe6f2c3-9e88-43ba-a3eb-eb32b6d6bc7b)
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Links
+Live Site URL: [https://todolist-two-roan.vercel.app/](https://todolist-two-roan.vercel.app/)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## What I learned
+I learned fetching, posting, and deleteing task on the go. Moreover, I also got used to with shadcn/ui which is great component provider service.
