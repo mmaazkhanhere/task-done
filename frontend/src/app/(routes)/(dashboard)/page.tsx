@@ -12,7 +12,7 @@ const MainPage = (props: Props) => {
 				<div className="w-9/12">
 					<Statistics />
 				</div>
-				<RightSideBar />
+				<RightSideBar percentage={55} />
 			</div>
 		</div>
 	);
