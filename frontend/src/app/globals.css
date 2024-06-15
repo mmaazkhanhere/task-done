@@ -10,7 +10,12 @@
 		--card-foreground: 240 10% 3.9%;
 		--popover: 0 0% 100%;
 		--popover-foreground: 240 10% 3.9%;
-		--primary: 142.1 76.2% 36.3%;
+		--primary: linear-gradient(
+			160deg,
+			hsl(141.7, 76.6%, 73.1%),
+			hsl(141.9, 69.2%, 58%),
+			hsl(142.1, 76.2%, 36.3%)
+		);
 		--primary-foreground: 355.7 100% 97.3%;
 		--secondary: 240 4.8% 95.9%;
 		--secondary-foreground: 240 5.9% 10%;
@@ -24,6 +29,11 @@
 		--input: 240 5.9% 90%;
 		--ring: 142.1 76.2% 36.3%;
 		--radius: 0.5rem;
+	}
+
+	/* Example of how to use the --primary variable */
+	.bg-primary {
+		background: var(--primary);
 	}
 
 	.dark {
