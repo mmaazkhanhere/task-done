@@ -10,7 +10,7 @@ interface Props {
 const RootLayout = ({ children }: Props) => {
 	return (
 		<main className="h-full">
-			<header className="md:pl-64 md:h-28 w-full fixed z-50 inset-y-0 dark:bg-muted ">
+			<header className="md:pl-64 md:h-28 w-full fixed z-50 inset-y-0 ">
 				<Navbar />
 			</header>
 			<section className=" h-full w-64 hidden md:flex flex-col fixed z-50 inset-y-0 dark:border-r dark:border-muted">
