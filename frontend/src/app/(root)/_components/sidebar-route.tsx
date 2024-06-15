@@ -31,7 +31,7 @@ const routes: Routes[] = [
 
 const SidebarRoutes = (props: Props) => {
 	return (
-		<div className="flex flex-col w-full gap-y-5 pt-20">
+		<div className="flex flex-col w-full gap-y-3 md:gap-y-5 pt-16 md:pt-20">
 			{routes.map((route: Routes) => (
 				<SidebarItem
 					key={route.href}
