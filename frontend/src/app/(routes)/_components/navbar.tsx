@@ -34,8 +34,9 @@ const Navbar = (props: Props) => {
 					<div className="w-10 h-10 rounded-full border bg-green-500" />
 				</div>
 			</nav>
-			<nav className="md:hidden py-4 px-2">
+			<nav className="flex items-center gap-5 md:hidden py-4 px-4 bg-white dark:bg-muted">
 				<MobileSidebar />
+				<UserGreeting name="Maaz" />
 			</nav>
 		</React.Fragment>
 	);

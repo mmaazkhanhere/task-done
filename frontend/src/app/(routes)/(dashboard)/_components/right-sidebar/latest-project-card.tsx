@@ -23,11 +23,11 @@ const LatestProjectCard = ({ title, totalTasks, tasksCompleted }: Props) => {
 			<div className="flex flex-col items-start gap-1 w-full">
 				<div className="flex items-center justify-between gap-2 w-full">
 					<div className="flex items-center gap-2">
-						<span>Progress</span>
+						<span className="text-sm md:text-base">Progress</span>
 						<FaBarsProgress />
 					</div>
 					<div className="flex items-center gap-2">
-						<p>
+						<p className="text-sm md:text-base">
 							<span>{tasksCompleted}</span>/{totalTasks}
 						</p>
 					</div>

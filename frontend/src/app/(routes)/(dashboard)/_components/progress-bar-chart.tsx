@@ -49,7 +49,7 @@ const ProgressBarChart = (props: Props) => {
 						type="monotone"
 						dataKey="tasksDone"
 						stroke="white"
-						fill="green"
+						fill="#4ade80"
 					/>
 				</BarChart>
 			</ResponsiveContainer>

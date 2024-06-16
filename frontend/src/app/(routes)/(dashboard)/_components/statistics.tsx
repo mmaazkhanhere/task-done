@@ -27,7 +27,7 @@ const statisticsData = [
 const Statistics = (props: Props) => {
 	return (
 		<section className=" bg-gray-100/50 dark:bg-muted p-2 rounded-md">
-			<div className="grid grid-cols-3 gap-4">
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 				{statisticsData.map((data) => (
 					<StatisticsCard
 						key={data.title}

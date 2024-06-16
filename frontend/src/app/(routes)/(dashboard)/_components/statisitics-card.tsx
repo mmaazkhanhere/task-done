@@ -15,10 +15,7 @@ const StatisticsCard = ({ title, value, icon: Icon }: Props) => {
 				<p className="text-gray-100 font-light">{title}</p>
 			</div>
 			<div className="bg-white rounded-full p-2 h-12 w-12 flex items-center justify-center">
-				<Icon
-					size={26}
-					className=" text-green-500 group-hover:animate-spin"
-				/>
+				<Icon className=" text-green-500 group-hover:animate-spin w-6 md:w-7 h-6 md:h-7" />
 			</div>
 		</article>
 	);

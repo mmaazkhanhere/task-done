@@ -6,7 +6,7 @@ type Props = {};
 
 const RightSideBar = (props: Props) => {
 	return (
-		<div className="w-3/12 p-4 flex flex-col gap-4">
+		<div className="lg:w-3/12 p-4 flex flex-col gap-4">
 			<OverallProgress percentage={30} />
 			<LatestProjects />
 		</div>
