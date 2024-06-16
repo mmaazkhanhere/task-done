@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 import Statistics from "./_components/statistics";
 import RightSideBar from "./_components/right-sidebar";
+import ProgressLineChart from "./_components/progress-line-chart";
 
 type Props = {};
 
@@ -11,6 +12,7 @@ const MainPage = (props: Props) => {
 			<div className="flex w-full">
 				<div className="w-9/12">
 					<Statistics />
+					<ProgressLineChart />
 				</div>
 				<RightSideBar />
 			</div>
