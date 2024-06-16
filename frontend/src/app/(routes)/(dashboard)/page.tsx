@@ -1,8 +1,9 @@
-import Image from "next/image";
 import React from "react";
+
 import Statistics from "./_components/statistics";
 import RightSideBar from "./_components/right-sidebar";
-import ProgressLineChart from "./_components/progress-line-chart";
+import ProgressBarChart from "./_components/progress-bar-chart";
+import RecentTasks from "./_components/recent-tasks";
 
 type Props = {};
 
@@ -10,9 +11,10 @@ const MainPage = (props: Props) => {
 	return (
 		<div className="flex flex-col item-start gap-y-4">
 			<div className="flex w-full">
-				<div className="w-9/12">
+				<div className="w-9/12 flex flex-col gap-y-4">
 					<Statistics />
-					<ProgressLineChart />
+					<ProgressBarChart />
+					<RecentTasks />
 				</div>
 				<RightSideBar />
 			</div>

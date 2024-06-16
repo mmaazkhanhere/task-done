@@ -29,7 +29,7 @@ const data: TaskDone[] = [
 	{ day: "Sunday", tasksDone: 8 },
 ];
 
-const ProgressLineChart = (props: Props) => {
+const ProgressBarChart = (props: Props) => {
 	const [mockData, setMockData] = useState<TaskDone[]>([]);
 
 	useEffect(() => {
@@ -37,8 +37,8 @@ const ProgressLineChart = (props: Props) => {
 	}, []);
 
 	return (
-		<div className="mt-10">
-			<ResponsiveContainer width={"99%"} height={400}>
+		<div>
+			<ResponsiveContainer width={"99%"} height={500}>
 				<BarChart data={mockData}>
 					<XAxis dataKey="day" />
 					<YAxis />
@@ -57,4 +57,4 @@ const ProgressLineChart = (props: Props) => {
 	);
 };
 
-export default ProgressLineChart;
+export default ProgressBarChart;
