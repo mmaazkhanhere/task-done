@@ -9,7 +9,7 @@ type Props = {};
 
 const MainPage = (props: Props) => {
 	return (
-		<div className="flex flex-col items-center lg:item-start gap-y-4 w-full">
+		<div className="flex flex-col items-center lg:item-start gap-y-4 w-full py-4">
 			<div className="flex flex-col lg:flex-row w-full">
 				<div className="w-full lg:w-9/12 flex flex-col gap-y-8 lg:gap-y-4">
 					<Statistics />

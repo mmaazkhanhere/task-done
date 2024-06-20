@@ -6,26 +6,26 @@ import SidebarItem from "./sidebar-item";
 
 import { Routes } from "@/types/interface";
 
-import { MdDashboard, MdCategory } from "react-icons/md";
-import { GoTasklist } from "react-icons/go";
+import { MdDashboard } from "react-icons/md";
+import { FaTasks, FaProjectDiagram } from "react-icons/fa";
 
 type Props = {};
 
 const routes: Routes[] = [
 	{
-		title: "Dashboard",
+		title: "Overview",
 		href: "/",
 		icon: MdDashboard,
 	},
 	{
-		title: "Projects",
-		href: "/projects",
-		icon: GoTasklist,
+		title: "Tasks List",
+		href: "/tasks",
+		icon: FaTasks,
 	},
 	{
-		title: "Categories",
-		href: "/categories",
-		icon: MdCategory,
+		title: "Projects",
+		href: "/projects",
+		icon: FaProjectDiagram,
 	},
 ];
 
