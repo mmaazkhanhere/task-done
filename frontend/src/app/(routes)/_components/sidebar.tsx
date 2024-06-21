@@ -7,7 +7,7 @@ type Props = {};
 
 const Sidebar = (props: Props) => {
 	return (
-		<div className="flex flex-col items-center justify-between p-6 py-10 h-full overflow-y-auto shadow-md">
+		<div className="flex flex-col items-center justify-between p-6 py-8 h-full overflow-y-auto shadow-md">
 			<Logo />
 
 			<div className="w-full md:pb-32">

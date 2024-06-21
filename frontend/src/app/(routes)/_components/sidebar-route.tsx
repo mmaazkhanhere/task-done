@@ -8,6 +8,7 @@ import { Routes } from "@/types/interface";
 
 import { MdDashboard } from "react-icons/md";
 import { FaTasks, FaProjectDiagram } from "react-icons/fa";
+import { RiStackFill } from "react-icons/ri";
 
 type Props = {};
 
@@ -26,6 +27,11 @@ const routes: Routes[] = [
 		title: "Projects",
 		href: "/projects",
 		icon: FaProjectDiagram,
+	},
+	{
+		title: "Categories",
+		href: "/categories",
+		icon: RiStackFill,
 	},
 ];
 
