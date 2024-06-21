@@ -2,11 +2,11 @@
 
 import React, { useState } from "react";
 
+import MobileSidebar from "@/app/(routes)/_components/mobile-sidebar";
 import UserGreeting from "./user-greeting";
+import SearchBar from "./search-bar";
 
 import { IoIosSearch, IoMdClose } from "react-icons/io";
-import SearchBar from "./search-bar";
-import MobileSidebar from "./mobile-sidebar";
 type Props = {};
 
 const Navbar = (props: Props) => {
