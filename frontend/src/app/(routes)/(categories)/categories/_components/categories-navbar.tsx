@@ -14,17 +14,17 @@ const CategoriesNavbar = (props: Props) => {
 			</div>
 			<div className="flex items-center justify-center gap-4 lg:gap-8">
 				<div className="flex flex-col items-start">
-					<h2 className="text-lg md:text-xl font-bold">Tasks</h2>
+					<h2 className="text-lg md:text-xl font-bold">Categories</h2>
 					<p className="text-gray-400 text-xs md:text-sm">
-						3 Projects
+						3 Categories
 					</p>
 				</div>
 				<Button
 					size="sm"
-					className="flex items-center justify-center gap-1 text-xs md:text-sm"
+					className="flex items-center justify-center gap-1 text-xs md:text-sm dark:text-white"
 				>
 					<IoAdd size={24} className="hidden md:block" />
-					Add Task
+					Add Category
 				</Button>
 			</div>
 		</header>

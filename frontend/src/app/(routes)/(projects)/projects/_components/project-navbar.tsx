@@ -21,7 +21,7 @@ const ProjectNavbar = (props: Props) => {
 				</div>
 				<Button
 					size="sm"
-					className="flex items-center justify-center gap-1 text-xs md:text-sm"
+					className="flex items-center justify-center gap-1 text-xs md:text-sm dark:text-white"
 				>
 					<IoAdd size={24} className="hidden md:block" />
 					Add Project
