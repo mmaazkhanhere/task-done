@@ -134,7 +134,7 @@ const AddProject = (props: Props) => {
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="space-y-8"
 					>
-						<div className="flex items-end gap-4">
+						<div className="flex flex-wrap items-end gap-4">
 							<FormField
 								control={form.control}
 								name="title"

@@ -1,7 +1,10 @@
-import { Progress } from "@/components/ui/progress";
 import React from "react";
+
+import { Progress } from "@/components/ui/progress";
+
 import { FaProjectDiagram } from "react-icons/fa";
 import { FaBarsProgress } from "react-icons/fa6";
+import ProjectDropdownMenu from "./project-dropdown-menu";
 
 type Props = {
 	title: string;
@@ -20,13 +23,17 @@ const ProjectCard = ({
 
 	return (
 		<div className="bg-gray-100 dark:bg-muted-foreground/30 p-4 rounded-lg flex flex-col items-start w-full gap-5">
-			<div className="flex items-center gap-2 w-full">
-				<FaProjectDiagram
-					size={24}
-					className="bg-primary rounded-full text-white p-1"
-				/>
-				<h2 className="text-lg font-semibold">{title}</h2>
+			<div className="flex items-center justify-between w-full">
+				<div className="flex items-center gap-2 w-full">
+					<FaProjectDiagram
+						size={24}
+						className="bg-primary rounded-full text-white p-1"
+					/>
+					<h2 className="text-lg font-semibold">{title}</h2>
+				</div>
+				<ProjectDropdownMenu />
 			</div>
+
 			<div className="flex flex-col items-start w-full gap-2">
 				<div className="flex items-center justify-between w-full">
 					<div className="text-sm md:text-base flex items-center gap-2">
