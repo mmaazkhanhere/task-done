@@ -1,8 +1,7 @@
-import MobileSidebar from "@/app/(routes)/_components/mobile-sidebar";
-import { Button } from "@/components/ui/button";
 import React from "react";
 
-import { IoAdd } from "react-icons/io5";
+import MobileSidebar from "@/app/(routes)/_components/mobile-sidebar";
+import AddProject from "./add-project";
 
 type Props = {};
 
@@ -19,13 +18,7 @@ const ProjectNavbar = (props: Props) => {
 						3 Projects
 					</p>
 				</div>
-				<Button
-					size="sm"
-					className="flex items-center justify-center gap-1 text-xs md:text-sm dark:text-white"
-				>
-					<IoAdd size={24} className="hidden md:block" />
-					Add Project
-				</Button>
+				<AddProject />
 			</div>
 		</header>
 	);
