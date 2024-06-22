@@ -33,6 +33,7 @@ const Topbar = (props: Props) => {
 			{projectList.map((project) => (
 				<ProjectCard
 					key={project.id}
+					id={project.id}
 					title={project.title}
 					tasksCompleted={project.tasksCompleted}
 					totalTasks={project.totalTasks}

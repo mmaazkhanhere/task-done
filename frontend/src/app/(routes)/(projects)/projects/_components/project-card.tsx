@@ -5,8 +5,10 @@ import { Progress } from "@/components/ui/progress";
 import { FaProjectDiagram } from "react-icons/fa";
 import { FaBarsProgress } from "react-icons/fa6";
 import ProjectDropdownMenu from "./project-dropdown-menu";
+import Link from "next/link";
 
 type Props = {
+	id: number;
 	title: string;
 	totalTasks: number;
 	tasksCompleted: number;
@@ -14,6 +16,7 @@ type Props = {
 };
 
 const ProjectCard = ({
+	id,
 	title,
 	totalTasks,
 	tasksCompleted,
@@ -29,7 +32,12 @@ const ProjectCard = ({
 						size={24}
 						className="bg-primary rounded-full text-white p-1"
 					/>
-					<h2 className="text-lg font-semibold">{title}</h2>
+					<Link
+						href={`/projects/${id}`}
+						className="text-lg font-semibold hover:underline hover:opacity-80 transition duration-300"
+					>
+						{title}
+					</Link>
 				</div>
 				<ProjectDropdownMenu />
 			</div>
