@@ -5,7 +5,7 @@ type Props = {};
 
 const ProjectDetailPage = (props: Props) => {
 	return (
-		<div>
+		<div className="relative w-full">
 			<ProjectDetailNavbar />
 		</div>
 	);

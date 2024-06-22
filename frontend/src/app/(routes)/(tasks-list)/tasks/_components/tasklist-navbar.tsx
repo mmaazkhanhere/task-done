@@ -8,7 +8,7 @@ type Props = {};
 
 const TaskListNavbar = (props: Props) => {
 	return (
-		<header className="sticky top-0 left-0 w-full flex items-center gap-4 md:gap-0 justify-between z-50 bg-white dark:bg-muted py-3 md:py-4 md:p-4 shadow-sm">
+		<header className="sticky top-0 left-0 w-full flex items-center gap-4 md:gap-0 justify-between z-50 bg-white dark:bg-muted py-3 md:py-4 px-4 shadow-sm">
 			<div className="md:hidden">
 				<MobileSidebar />
 			</div>

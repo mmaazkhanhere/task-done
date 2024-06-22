@@ -20,7 +20,7 @@ const CircularProgressBar = ({ totalTasks, completedTasks }: Props) => {
 	}, [totalTasks, completedTasks]);
 
 	const radius = 50;
-	const strokeWidth = 8;
+	const strokeWidth = 7;
 	const circumference = 2 * Math.PI * radius;
 	const offset = circumference - (percentage / 100) * circumference;
 
@@ -55,7 +55,13 @@ const CircularProgressBar = ({ totalTasks, completedTasks }: Props) => {
 				fill="white"
 			>
 				{percentage}%
-				<tspan x="60" dy="1.8em" fontSize="12" fill="white">
+				<tspan
+					x="60"
+					dy="1.8em"
+					fontSize="12"
+					fill="white"
+					className="hidden md:block"
+				>
 					Completed
 				</tspan>
 			</text>

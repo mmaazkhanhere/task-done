@@ -1,13 +1,14 @@
 import React from "react";
 
-import { FaProjectDiagram } from "react-icons/fa";
 import CircularProgressBar from "./circular-progress-bar";
+
+import { FaProjectDiagram } from "react-icons/fa";
 
 type Props = {};
 
 const ProjectDetailNavbar = (props: Props) => {
 	return (
-		<header className="sticky h-32 bg-primary w-full flex items-center justify-between py-4 px-8">
+		<header className="sticky h-32 bg-primary w-full flex items-center justify-between py-4 px-4 md:px-8">
 			<div className="flex items-center gap-4">
 				<FaProjectDiagram className="w-11 h-11 bg-white text-green-500 p-2 rounded-full" />
 				<div className="flex flex-col items-start">

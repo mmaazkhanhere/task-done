@@ -11,9 +11,7 @@ const RootLayout = ({ children }: Props) => {
 			<section className=" h-full w-64 hidden md:flex flex-col fixed z-50 inset-y-0 dark:border-r dark:border-muted">
 				<Sidebar />
 			</section>
-			<section className="md:pl-64 h-full w-full px-4 md:px-0">
-				{children}
-			</section>
+			<section className="md:pl-64 h-full w-full">{children}</section>
 		</main>
 	);
 };
