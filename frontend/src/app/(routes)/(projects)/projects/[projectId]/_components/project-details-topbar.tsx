@@ -46,6 +46,7 @@ const ProjectDetailsTopBar = (props: Props) => {
 					>
 						<option value="name">Name</option>
 						<option value="date">Date</option>
+						<option value="priority">Priority</option>
 					</select>
 				</div>
 			</div>

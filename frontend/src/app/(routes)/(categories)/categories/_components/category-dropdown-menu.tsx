@@ -1,16 +1,17 @@
+"use client";
 import React from "react";
+
+import EditCategory from "./edit-category";
 
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 import { BsThreeDots } from "react-icons/bs";
-import { MdEdit, MdDelete } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 
 type Props = {};
 
@@ -21,9 +22,8 @@ const CategoryDropdownMenu = (props: Props) => {
 				<BsThreeDots />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
-				<DropdownMenuItem className="flex items-center justify-center gap-2 text-sm cursor-pointer">
-					<MdEdit />
-					Edit
+				<DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+					<EditCategory />
 				</DropdownMenuItem>
 				<DropdownMenuItem className="flex items-center justify-center gap-2 text-sm cursor-pointer">
 					<MdDelete />

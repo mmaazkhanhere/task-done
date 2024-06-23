@@ -1,6 +1,9 @@
-import MobileSidebar from "@/app/(routes)/_components/mobile-sidebar";
-import { Button } from "@/components/ui/button";
 import React from "react";
+
+import AddCategory from "./add-category";
+import MobileSidebar from "@/app/(routes)/_components/mobile-sidebar";
+
+import { Button } from "@/components/ui/button";
 
 import { IoAdd } from "react-icons/io5";
 
@@ -19,13 +22,7 @@ const CategoriesNavbar = (props: Props) => {
 						3 Categories
 					</p>
 				</div>
-				<Button
-					size="sm"
-					className="flex items-center justify-center gap-1 text-xs md:text-sm dark:text-white"
-				>
-					<IoAdd size={24} className="hidden md:block" />
-					Add Category
-				</Button>
+				<AddCategory />
 			</div>
 		</header>
 	);
