@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 
 import { IoMdAdd, IoMdArrowBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
+import AddProjectTask from "./add-project-task";
 
 type Props = {};
 
@@ -32,13 +33,7 @@ const ProjectDetailsTopBar = (props: Props) => {
 			<div className="flex items-center justify-between w-full">
 				<div className="flex items-center gap-x-4">
 					<h2 className="text-2xl font-semibold">All Tasks</h2>
-					<Button
-						size="sm"
-						className="flex items-center justify-center dark:text-white gap-x-1"
-					>
-						<IoMdAdd className="w-6 h-6 md:w-5 md:h-5" />
-						<p className="hidden md:block">Add Task</p>
-					</Button>
+					<AddProjectTask />
 				</div>
 				<div className="flex items-center gap-2">
 					<p className="text-gray-500">Sort by:</p>
