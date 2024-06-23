@@ -16,8 +16,8 @@ type Props = {};
 const AddSubTask = (props: Props) => {
 	return (
 		<Dialog>
-			<DialogTrigger className="flex items- gap-2 text-sm">
-				<IoIosAdd />
+			<DialogTrigger className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+				<IoIosAdd className="w-5 h-5" />
 				Add Sub Task
 			</DialogTrigger>
 			<DialogContent>
