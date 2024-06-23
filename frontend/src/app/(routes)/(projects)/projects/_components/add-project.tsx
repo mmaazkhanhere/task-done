@@ -91,7 +91,7 @@ const formSchema = z.object({
 	title: z.string().min(2, {
 		message: "Project title must be at least 2 characters.",
 	}),
-	category: z.array(optionSchema).min(1),
+	category: z.array(optionSchema),
 	icon: z.string().min(1, {
 		message: "Please select an icon.",
 	}),
