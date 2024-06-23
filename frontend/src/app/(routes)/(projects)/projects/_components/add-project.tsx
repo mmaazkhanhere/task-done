@@ -25,13 +25,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
+import MultipleSelector from "@/components/multiple-selector";
 
 import { Button } from "@/components/ui/button";
 
@@ -58,6 +52,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
+import { Option } from "@/components/multiple-selector";
+
 type Props = {};
 
 const icons = [
@@ -79,13 +75,23 @@ const icons = [
 	{ name: "Gaming", component: IoGameController },
 ];
 
+const OPTIONS: Option[] = [
+	{ label: "Personal", value: "personal" },
+	{ label: "Work", value: "work" },
+	{ label: "School", value: "remix" },
+];
+
+const optionSchema = z.object({
+	label: z.string(),
+	value: z.string(),
+	disable: z.boolean().optional(),
+});
+
 const formSchema = z.object({
 	title: z.string().min(2, {
 		message: "Project title must be at least 2 characters.",
 	}),
-	category: z.string().min(1, {
-		message: "Please select a category.",
-	}),
+	category: z.array(optionSchema).min(1),
 	icon: z.string().min(1, {
 		message: "Please select an icon.",
 	}),
@@ -98,7 +104,6 @@ const AddProject = (props: Props) => {
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			title: "",
-			category: "",
 			icon: "Personal",
 		},
 	});
@@ -237,27 +242,18 @@ const AddProject = (props: Props) => {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Category</FormLabel>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-									>
-										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder="Select a category ..." />
-											</SelectTrigger>
-										</FormControl>
-										<SelectContent>
-											<SelectItem value="personal">
-												Personal
-											</SelectItem>
-											<SelectItem value="work">
-												Work
-											</SelectItem>
-											<SelectItem value="school">
-												School
-											</SelectItem>
-										</SelectContent>
-									</Select>
+									<FormControl>
+										<MultipleSelector
+											defaultOptions={OPTIONS}
+											{...field}
+											placeholder="Select category..."
+											emptyIndicator={
+												<p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+													no results found.
+												</p>
+											}
+										/>
+									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}

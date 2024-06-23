@@ -34,7 +34,7 @@ const ProjectCard = ({
 					/>
 					<Link
 						href={`/projects/${id}`}
-						className="text-lg font-semibold hover:underline hover:opacity-80 transition duration-300"
+						className="text-lg font-semibold hover:text-green-500 hover:underline hover:opacity-80 transition duration-300"
 					>
 						{title}
 					</Link>

@@ -5,3 +5,8 @@ export interface Routes {
 	href: string;
 	icon: ReactIcon;
 }
+
+export interface Option {
+	value: string;
+	label: string;
+}
