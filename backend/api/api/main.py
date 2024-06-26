@@ -1,14 +1,24 @@
 
 from typing import Annotated, List
 
+import os
+
+import requests
 import uuid
 from datetime import datetime
 from contextlib import asynccontextmanager
+from dotenv import load_dotenv
 
-from sqlmodel import SQLModel, create_engine, Session, Field, Relationship
-from fastapi import FastAPI, Depends
+
+from sqlmodel import SQLModel, create_engine, Session, Field, Relationship, select
+from fastapi import FastAPI, Depends, Request, Response, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from .setting import DATABASE_URL
+from .utils.hashed_password import hashed_password
+
+load_dotenv()
+
 
 
 class User(SQLModel, table=True):
@@ -94,10 +104,66 @@ async def lifespan(app: FastAPI):
     yield
 
 app: FastAPI = FastAPI(lifespan=lifespan)
+security = HTTPBearer() # <- (4)
 
 @app.get('/')
 async def root():
-    return {"message": "Hello World"}
+    return {'message': 'Hello World'}
+
+# User sign up endpoint
+@app.post('/sign-up', response_model=User)
+async def handle_user_signup(user_data, session:Annotated[Session, Depends(get_session)]):
+    full_name = f"{user_data['first_name']} {user_data['last_name']}";
+    hashed_password = hashed_password(user_data["password"])
+    try:
+        user = User(
+            id=user_data["id"],
+            name=full_name,
+            username=user_data["username"],
+            email=user_data["email_addresses"][0]["email_address"],
+            hashed_password=hashed_password,
+        )
+        session.add(user)
+        session.commit()
+    except Exception as error:
+        print(f"Error inserting user data: {error}")
+        raise error
+
+
+#User update api endpoint
+@app.put('/user/update/{user_id}', response_model=User)    
+async def handle_user_update(user_data, session:Annotated[Session, Depends(get_session)]):
+    full_name = f"{user_data['first_name']} {user_data['last_name']}"
+    try:
+        user = session.exec(select(User).where(User.id == user_data["id"])).first()
+        if user:
+            user.name = full_name
+            user.username = user_data["username"]
+            user.email = user_data["email_addresses"][0]["email_address"]
+
+
+            session.commit()
+        else:
+            print("User not found")
+    except Exception as error:
+        print(f"Error updating user data: {error}")
+        raise error
+
+
+#User delete api endpoint
+@app.delete('/user/delete/{user_id}',response_model=User)
+async def handle_delete_user(user_data, session:Annotated[Session, Depends(get_session)]):
+    try:
+        user = session.exec(select(User).where(User.id == user_data["id"])).first()
+        if user:
+            session.delete(user)
+            session.commit()
+        else:
+            print("User not found")
+    except Exception as error:
+        print(f"Error deleting user data: {error}")
+        raise error
+    
 
 @app.post('/category/', response_model=list[Category])
 async def create_category(category: Category, session: Annotated[Session, Depends(get_session)]):

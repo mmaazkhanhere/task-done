@@ -12,9 +12,12 @@ sqlmodel = "^0.0.19"
 uvicorn = "^0.30.1"
 pytest = "^8.2.2"
 httpx = "^0.27.0"
-supabase = "^2.5.1"
 psycopg2-binary = "^2.9.9"
 python-dotenv = "^1.0.1"
+requests = "^2.32.3"
+types-requests = "^2.32.0.20240622"
+python-jose = "^3.3.0"
+bcrypt = "^4.1.3"
 
 
 [build-system]
