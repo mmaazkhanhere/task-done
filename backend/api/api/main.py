@@ -1,5 +1,5 @@
 
-from typing import Annotated, List
+from typing import Annotated, List, Optional
 
 import os
 
@@ -8,19 +8,19 @@ import uuid
 from datetime import datetime
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
+from pydantic import BaseModel, EmailStr
 
 
 from sqlmodel import SQLModel, create_engine, Session, Field, Relationship, select
 from fastapi import FastAPI, Depends, Request, Response, HTTPException
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.middleware.cors import CORSMiddleware
 
 from .setting import DATABASE_URL
 from .utils.hashed_password import hashed_password
 
 load_dotenv()
 
-
-
+#User model
 class User(SQLModel, table=True):
     id: str = Field(default_factory=uuid.uuid4, primary_key=True)
     name: str = Field(nullable=False)
@@ -32,6 +32,7 @@ class User(SQLModel, table=True):
     projects: List['Project'] = Relationship(back_populates="creator", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
     categories: List['Category'] = Relationship(back_populates="creator", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
 
+#Task model
 class Task(SQLModel, table=True):
     id: str = Field(default_factory=uuid.uuid4, primary_key=True)
     title: str = Field(nullable=False)
@@ -39,28 +40,27 @@ class Task(SQLModel, table=True):
     priority: str = Field(nullable=False)
     due_time: datetime = Field(nullable=False)
     is_completed: bool = Field(default=False, nullable=False)
-    created_at: datetime = Field(default=datetime.now(), nullable=False)
-
-    creator_id: str = Field(default=None, foreign_key="user.id")
-    creator: 'User' = Relationship(back_populates="tasks")
-
+    created_at: datetime = Field(default=datetime.now, nullable=False)
+    
+    creator_id: str = Field(foreign_key="user.id", nullable=False)
+    creator: "User" = Relationship(back_populates="tasks")
+    
     project_id: str = Field(default=None, foreign_key="project.id")
-    project: 'Project' = Relationship(back_populates="tasks")
+    project: Optional["Project"] = Relationship(back_populates="tasks")
+    
+    sub_tasks: List["SubTask"] = Relationship(back_populates="task", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
 
-    sub_tasks: List['SubTask'] = Relationship(back_populates="task", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
-
+#Subtask Model
 class SubTask(SQLModel, table=True):
     id: str = Field(default_factory=uuid.uuid4, primary_key=True)
     title: str = Field(nullable=False)
     priority: str = Field(nullable=False)
-    task_id: str = Field(default=None, foreign_key="task.id")
-    task: 'Task' = Relationship(back_populates="sub_tasks")
+    created_at: datetime = Field(default=datetime.now, nullable=False)
+    
+    task_id: str = Field(foreign_key="task.id", nullable=False)
+    task: "Task" = Relationship(back_populates="sub_tasks")
 
-    creator_id: str = Field(default=None, foreign_key="user.id")
-    creator: 'User' = Relationship(back_populates="tasks")
-
-    created_at: datetime = Field(default=datetime.now(), nullable=False)
-
+#Project model
 class Project(SQLModel, table=True):
     id: str = Field(default_factory=uuid.uuid4, primary_key=True)
     title: str = Field(nullable=False, index=True)
@@ -74,6 +74,7 @@ class Project(SQLModel, table=True):
     tasks: List['Task'] = Relationship(back_populates="project", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
     categories: List['Category'] = Relationship(back_populates="projects")
 
+#Category model
 class Category(SQLModel, table=True):
     id: str = Field(default_factory=uuid.uuid4, primary_key=True)
     title: str = Field(nullable=False, index=True)
@@ -104,30 +105,31 @@ async def lifespan(app: FastAPI):
     yield
 
 app: FastAPI = FastAPI(lifespan=lifespan)
-security = HTTPBearer() # <- (4)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get('/')
 async def root():
     return {'message': 'Hello World'}
 
 # User sign up endpoint
-@app.post('/sign-up', response_model=User)
-async def handle_user_signup(user_data, session:Annotated[Session, Depends(get_session)]):
-    full_name = f"{user_data['first_name']} {user_data['last_name']}";
-    hashed_password = hashed_password(user_data["password"])
-    try:
-        user = User(
-            id=user_data["id"],
-            name=full_name,
-            username=user_data["username"],
-            email=user_data["email_addresses"][0]["email_address"],
-            hashed_password=hashed_password,
-        )
-        session.add(user)
-        session.commit()
-    except Exception as error:
-        print(f"Error inserting user data: {error}")
-        raise error
+@app.post("/sign-up/", response_model=User)
+async def handle_user_signup(
+    user_data: User,
+    session: Annotated[Session, Depends(get_session)]
+):
+    print("Received user_data:", user_data)
+
+    user = User.model_validate(User)
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user
 
 
 #User update api endpoint

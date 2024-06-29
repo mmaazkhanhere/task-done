@@ -1,8 +1,8 @@
+import "./globals.css";
+
 import type { Metadata } from "next";
 import { Roboto_Condensed } from "next/font/google";
-import "./globals.css";
 import { ThemeProvider } from "@/lib/theme-provider";
-
 import { ClerkProvider } from "@clerk/nextjs";
 
 const roboto = Roboto_Condensed({

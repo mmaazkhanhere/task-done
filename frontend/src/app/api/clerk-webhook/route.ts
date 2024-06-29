@@ -1,12 +1,9 @@
-/*An api endpoint to receive webhook events from the Clerk and do database queries 
-using prisma accordingly, ensuring that the data is synchronized between the
-Clerk and database */
-
 import { IncomingHttpHeaders } from "http";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { Webhook, WebhookRequiredHeaders } from "svix";
+import axios from "axios";
 
 type EventType = "user.created" | "user.updated" | "user.deleted" | "*";
 
@@ -19,14 +16,18 @@ type Event = {
 export async function POST(request: Request) {
 	const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET; /*retrieve the 
     clerk webhook secret from the environment variables */
+	console.log(WEBHOOK_SECRET);
 
 	if (!WEBHOOK_SECRET) {
 		throw new Error(
 			"Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local"
 		);
 	}
+	console.log("checled");
 
 	const payload = await request.json(); //get the payload from the request
+
+	console.log(payload);
 
 	const headersList = headers();
 	const heads = {
@@ -50,35 +51,63 @@ export async function POST(request: Request) {
 		return NextResponse.json("CLERK_WEBHOOK_ERROR", { status: 400 });
 	}
 
+	console.log("checked");
+
 	const eventType: EventType = evt.type;
+	console.log(eventType);
 
 	try {
-		/*if the event type is creating user, call the handleUserSignUp function
-        that creates a new user and insert in the database */
+		console.log("try");
 		if (eventType === "user.created") {
 			await handleUserSignup(evt.data);
 		}
+		console.log("try completed");
 	} catch (error) {
 		console.error("Error handling webhook event:", error);
 		return new Response("Error handling webhook event", { status: 500 });
 	}
 
-	return new Response("", { status: 200 });
+	return new Response("Successful creation", { status: 200 });
 }
 
 async function handleUserSignup(userData: any) {
+	const full_name: string = userData.first_name + " " + userData.last_name;
+	console.log(full_name);
+
+	const id = userData.id;
+	console.log(id);
+
+	const name = full_name;
+	console.log(name);
+
+	const username = userData.username;
+	console.log(username);
+
+	const email = userData.email_addresses[0].email_address;
+	console.log(email);
+
+	const requestData = {
+		id,
+		name,
+		username,
+		email,
+	};
+
+	console.log(requestData);
+
 	try {
-		const request = await fetch("http://localhost:8000/sign-up", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				userData,
-			}),
+		const request = await axios.post("http://localhost:8000/sign-up/", {
+			requestData,
 		});
+
+		console.log(request);
+
 		revalidatePath("/sign-up");
-		const data = await request.json();
+
+		const data = await request.data();
+
+		console.log(data);
+
 		if (data) {
 			revalidatePath("/");
 			return { status: "success", message: "User created successfully" };
