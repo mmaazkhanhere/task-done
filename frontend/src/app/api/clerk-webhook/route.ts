@@ -51,6 +51,10 @@ export async function POST(request: Request) {
 	try {
 		if (eventType === "user.created") {
 			await handleUserSignup(evt.data);
+		} else if (eventType === "user.deleted") {
+			console.log("user deleted");
+			await handleUserDelete(evt.data);
+			console.log("first");
 		}
 	} catch (error) {
 		console.error("Error handling webhook event:", error);
@@ -86,9 +90,12 @@ async function handleUserSignup(userData: any) {
 }
 
 async function handleUserDelete(userData: any) {
+	console.log(userData);
+
 	try {
 		const response = await axios.delete(
-			`http://localhost:8000/user/delete/${userData.id}`
+			`http://localhost:8000/user/delete/${userData.id}`,
+			userData
 		);
 	} catch (error) {
 		console.error("Error deleting user:", error);

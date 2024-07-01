@@ -144,7 +144,7 @@ async def handle_user_signup(
         session.refresh(user)
         return user
     except ValidationError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 #User update api endpoint
@@ -168,18 +168,20 @@ async def handle_user_update(user_data, session:Annotated[Session, Depends(get_s
 
 
 #User delete api endpoint
-@app.delete('/user/delete/{user_id}',response_model=User)
-async def handle_delete_user(user_data, session:Annotated[Session, Depends(get_session)]):
+@app.delete('/user/delete/{user_id}', response_model=User)
+async def handle_delete_user(user_id: str, session: Annotated[Session, Depends(get_session)]):
     try:
-        user = session.exec(select(User).where(User.id == user_data["id"])).first()
+        user = session.exec(select(User).where(User.id == user_id)).first()
         if user:
             session.delete(user)
             session.commit()
+            return user
         else:
-            print("User not found")
-    except Exception as error:
-        print(f"Error deleting user data: {error}")
-        raise error
+            logger.error("User not found")
+            raise HTTPException(status_code=404, detail="User not found")
+    except Exception as e:
+        logger.error(f"Error deleting user data: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
     
 
 @app.post('/category/', response_model=list[Category])
