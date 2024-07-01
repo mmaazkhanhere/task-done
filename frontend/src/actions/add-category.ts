@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import axios from "axios";
 import { uuid } from "uuidv4";
 

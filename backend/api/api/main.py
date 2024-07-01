@@ -10,7 +10,7 @@ from pydantic import ValidationError, EmailStr, BaseModel
 
 
 from sqlmodel import SQLModel, create_engine, Session, Field, Relationship, select
-from fastapi import FastAPI, Depends, Request, Response, HTTPException
+from fastapi import FastAPI, Depends, Request, Response, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 
 from .setting import DATABASE_URL
@@ -195,6 +195,18 @@ async def handle_delete_user(user_id: str, session: Annotated[Session, Depends(g
         logger.error(f"Error deleting user data: {e}")
         raise HTTPException(status_code=500, detail=str(e))
     
+
+#Get the list of all categories
+@app.get('/category/all', response_model=List[Category])
+async def get_all_categories(session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    logger.info(f"Received user ID: {x_user_id}")
+    try:
+        category_list = session.exec(select(Category).where(Category.creator_id == x_user_id)).all()
+        return category_list
+    except Exception as e:
+        logger.error(f"Error getting category list: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post('/category', response_model=Category)
 async def handle_create_category(category_data: CreateCategory, session: Annotated[Session, Depends(get_session)]):
