@@ -4,9 +4,6 @@ import { uuid } from "uuidv4";
 
 export async function add_category(title: string, userId: string) {
 	const id = uuid();
-
-	console.log({ id, title, userId });
-
 	try {
 		const response = await axios.post("http://localhost:8000/category", {
 			id,
@@ -14,14 +11,28 @@ export async function add_category(title: string, userId: string) {
 			userId,
 		});
 
-		revalidatePath("/category");
-
-		if (response.data) {
+		if (response.status === 200) {
 			return { status: 200, message: "Category Successfully Created" };
 		} else {
-			return { status: 400, message: "Failed to create category" };
+			return {
+				status: response.status,
+				message: "Failed to create category",
+			};
 		}
-	} catch (error) {
-		return { status: 500, message: "Something went wrong" };
+	} catch (error: any) {
+		if (axios.isAxiosError(error) && error.response) {
+			const status = error.response.status;
+			let message = "Something went wrong";
+
+			if (status === 409) {
+				message = "Category already exists";
+			} else {
+				message = error.response.data.detail || message;
+			}
+
+			return { status, message };
+		} else {
+			return { status: 500, message: "Something went wrong" };
+		}
 	}
 }

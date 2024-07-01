@@ -199,6 +199,11 @@ async def handle_delete_user(user_id: str, session: Annotated[Session, Depends(g
 @app.post('/category', response_model=Category)
 async def handle_create_category(category_data: CreateCategory, session: Annotated[Session, Depends(get_session)]):
     try:
+        existing_category = session.exec(select(Category).where(Category.title == category_data.title)).first()
+        if existing_category:
+            logger.error("Category already exists")
+            raise HTTPException(status_code=409, detail="Category already exists")
+        
         category = Category(
             id= category_data.id,
             title=category_data.title,

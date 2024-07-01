@@ -43,8 +43,8 @@ const formSchema = z.object({
 });
 const AddCategory = (props: Props) => {
 	const { toast } = useToast();
-	const router = useRouter();
 	const { userId } = useAuth();
+	const router = useRouter();
 
 	if (!userId) {
 		throw new Error("No authorized!");
@@ -63,10 +63,15 @@ const AddCategory = (props: Props) => {
 		try {
 			const response = await add_category(values.title, userId as string);
 
-			if (response.status === 200) {
+			if (response?.status == 200) {
 				toast({
 					title: "Success",
 					description: "Category created.",
+				});
+			} else if (response?.message.includes("409")) {
+				toast({
+					title: "Category already exists",
+					variant: "destructive",
 				});
 			} else {
 				toast({
@@ -75,6 +80,7 @@ const AddCategory = (props: Props) => {
 					variant: "destructive",
 				});
 			}
+			router.refresh();
 		} catch (error: any) {
 			console.log("[CATEGORY_CREATE_API_ERROR]: ", error);
 		}
