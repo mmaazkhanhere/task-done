@@ -2,8 +2,10 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { Roboto_Condensed } from "next/font/google";
-import { ThemeProvider } from "@/lib/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
+
+import { ThemeProvider } from "@/lib/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
 
 const roboto = Roboto_Condensed({
 	subsets: ["latin"],
@@ -33,6 +35,7 @@ export default function RootLayout({
 					>
 						{children}
 					</ThemeProvider>
+					<Toaster />
 				</body>
 			</html>
 		</ClerkProvider>

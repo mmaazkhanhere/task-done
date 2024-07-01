@@ -1,14 +1,12 @@
 
 from typing import Annotated, List, Optional
 
-import os
-
-import requests
+import logging
 import uuid
 from datetime import datetime
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
-from pydantic import BaseModel, EmailStr
+from pydantic import ValidationError
 
 
 from sqlmodel import SQLModel, create_engine, Session, Field, Relationship, select
@@ -20,19 +18,23 @@ from .utils.hashed_password import hashed_password
 
 load_dotenv()
 
-#User model
+class ProjectCategoryLink(SQLModel, table=True):
+    project_id: str = Field(default=None, foreign_key="project.id", primary_key=True)
+    category_id: str = Field(default=None, foreign_key="category.id", primary_key=True)
+
+# User Model
 class User(SQLModel, table=True):
-    id: str = Field(default_factory=uuid.uuid4, primary_key=True)
+    id: str = Field (primary_key=True)
     name: str = Field(nullable=False)
     username: str = Field(unique=True, nullable=False)
     email: str = Field(unique=True, nullable=False)
     created_at: datetime = Field(default=datetime.now(), nullable=False)
+    
+    tasks: List["Task"] = Relationship(back_populates="creator", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
+    projects: List["Project"] = Relationship(back_populates="creator", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
+    categories: List["Category"] = Relationship(back_populates="creator", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
 
-    tasks: List['Task'] = Relationship(back_populates="creator", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
-    projects: List['Project'] = Relationship(back_populates="creator", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
-    categories: List['Category'] = Relationship(back_populates="creator", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
-
-#Task model
+# Task Model
 class Task(SQLModel, table=True):
     id: str = Field(default_factory=uuid.uuid4, primary_key=True)
     title: str = Field(nullable=False)
@@ -50,7 +52,7 @@ class Task(SQLModel, table=True):
     
     sub_tasks: List["SubTask"] = Relationship(back_populates="task", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
 
-#Subtask Model
+# SubTask Model
 class SubTask(SQLModel, table=True):
     id: str = Field(default_factory=uuid.uuid4, primary_key=True)
     title: str = Field(nullable=False)
@@ -60,31 +62,34 @@ class SubTask(SQLModel, table=True):
     task_id: str = Field(foreign_key="task.id", nullable=False)
     task: "Task" = Relationship(back_populates="sub_tasks")
 
-#Project model
+# Project Model
 class Project(SQLModel, table=True):
     id: str = Field(default_factory=uuid.uuid4, primary_key=True)
     title: str = Field(nullable=False, index=True)
     description: str = Field(nullable=False)
     is_completed: bool = Field(default=False)
-    icon: str 
-
-    creator_id: str = Field(default=None, foreign_key="user.id")
-    creator: 'User' = Relationship(back_populates="projects")
+    icon: str = Field(default="")
     
-    tasks: List['Task'] = Relationship(back_populates="project", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
-    categories: List['Category'] = Relationship(back_populates="projects")
+    creator_id: str = Field(foreign_key="user.id", nullable=False)
+    creator: "User" = Relationship(back_populates="projects")
+    
+    tasks: List["Task"] = Relationship(back_populates="project", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
+    categories: List["Category"] = Relationship(back_populates="projects", link_model=ProjectCategoryLink)
 
-#Category model
+# Category Model
 class Category(SQLModel, table=True):
     id: str = Field(default_factory=uuid.uuid4, primary_key=True)
     title: str = Field(nullable=False, index=True)
-    created_at: datetime = Field(default=datetime.now(), nullable=False)
+    created_at: datetime = Field(default=datetime.now, nullable=False)
+    
+    creator_id: str = Field(foreign_key="user.id", nullable=False)
+    creator: "User" = Relationship(back_populates="categories")
+    
+    projects: List["Project"] = Relationship(back_populates="categories", link_model=ProjectCategoryLink)
 
-    creator_id: str = Field(default=None, foreign_key="user.id")
-    creator: 'User' = Relationship(back_populates="categories")
 
-    projects: List['Project'] = Relationship(back_populates="categories")
-
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 connection_string: str = str(DATABASE_URL).replace("postgresql","postgresql+psycopg2")
 
@@ -118,18 +123,28 @@ async def root():
     return {'message': 'Hello World'}
 
 # User sign up endpoint
-@app.post("/sign-up/", response_model=User)
+@app.post("/sign-up", response_model=User)
 async def handle_user_signup(
     user_data: User,
     session: Annotated[Session, Depends(get_session)]
 ):
-    print("Received user_data:", user_data)
+    logger.info(f"Received user_data: {user_data}")
 
-    user = User.model_validate(User)
-    session.add(user)
-    session.commit()
-    session.refresh(user)
-    return user
+    try:
+        user = User(
+            id= user_data.id,
+            name=user_data.name,
+            username=user_data.username,
+            email=user_data.email,
+            created_at=datetime.now()
+            
+        )
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+        return user
+    except ValidationError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 #User update api endpoint
