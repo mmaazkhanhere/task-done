@@ -47,14 +47,15 @@ export async function POST(request: Request) {
 	}
 
 	const eventType: EventType = evt.type;
+	console.log(eventType);
 
 	try {
 		if (eventType === "user.created") {
 			await handleUserSignup(evt.data);
+		} else if (eventType === "user.updated") {
+			await handleUserUpdate(evt.data);
 		} else if (eventType === "user.deleted") {
-			console.log("user deleted");
 			await handleUserDelete(evt.data);
-			console.log("first");
 		}
 	} catch (error) {
 		console.error("Error handling webhook event:", error);
@@ -65,6 +66,8 @@ export async function POST(request: Request) {
 }
 
 async function handleUserSignup(userData: any) {
+	console.log(userData);
+
 	const full_name: string = userData.first_name + " " + userData.last_name;
 	const id = userData.id;
 	const name = full_name;
@@ -89,9 +92,32 @@ async function handleUserSignup(userData: any) {
 	}
 }
 
-async function handleUserDelete(userData: any) {
-	console.log(userData);
+async function handleUserUpdate(userData: any) {
+	const full_name: string = userData.first_name + " " + userData.last_name;
+	const name = full_name;
+	const username = userData.username;
+	const email = userData.email_addresses[0].email_address;
 
+	const requestData = {
+		name,
+		username,
+		email,
+	};
+
+	console.log(requestData);
+
+	try {
+		const response = await axios.patch(
+			`http://localhost:8000/user/update/${userData.id}`,
+			requestData
+		);
+	} catch (error) {
+		console.error("Error updating user data:", error);
+		throw error;
+	}
+}
+
+async function handleUserDelete(userData: any) {
 	try {
 		const response = await axios.delete(
 			`http://localhost:8000/user/delete/${userData.id}`,

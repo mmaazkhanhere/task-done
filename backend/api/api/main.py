@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
-from pydantic import ValidationError
+from pydantic import ValidationError, EmailStr, BaseModel
 
 
 from sqlmodel import SQLModel, create_engine, Session, Field, Relationship, select
@@ -14,7 +14,6 @@ from fastapi import FastAPI, Depends, Request, Response, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from .setting import DATABASE_URL
-from .utils.hashed_password import hashed_password
 
 load_dotenv()
 
@@ -87,6 +86,10 @@ class Category(SQLModel, table=True):
     
     projects: List["Project"] = Relationship(back_populates="categories", link_model=ProjectCategoryLink)
 
+class UserUpdate(BaseModel):
+    name: Optional[str]
+    username: Optional[str]
+    email: Optional[EmailStr]
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -148,23 +151,27 @@ async def handle_user_signup(
 
 
 #User update api endpoint
-@app.put('/user/update/{user_id}', response_model=User)    
-async def handle_user_update(user_data, session:Annotated[Session, Depends(get_session)]):
-    full_name = f"{user_data['first_name']} {user_data['last_name']}"
+@app.patch('/user/update/{user_id}', response_model=User)
+async def handle_user_update(user_id: str, user_data: UserUpdate, session: Annotated[Session, Depends(get_session)]):
     try:
-        user = session.exec(select(User).where(User.id == user_data["id"])).first()
+        user = session.exec(select(User).where(User.id == user_id)).first()
         if user:
-            user.name = full_name
-            user.username = user_data["username"]
-            user.email = user_data["email_addresses"][0]["email_address"]
-
+            if user_data.name is not None:
+                user.name = user_data.name
+            if user_data.username is not None:
+                user.username = user_data.username
+            if user_data.email is not None:
+                user.email = user_data.email
 
             session.commit()
+            session.refresh(user)
+            return user
         else:
-            print("User not found")
+            logger.error("User not found")
+            raise HTTPException(status_code=404, detail="User not found")
     except Exception as error:
-        print(f"Error updating user data: {error}")
-        raise error
+        logger.error(f"Error updating user data: {error}")
+        raise HTTPException(status_code=500, detail=str(error))
 
 
 #User delete api endpoint
