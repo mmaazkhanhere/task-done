@@ -96,6 +96,9 @@ class  CreateCategory(BaseModel):
     title: str
     userId: str
 
+class EditCategory(BaseModel):
+    title: str
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -196,7 +199,7 @@ async def handle_delete_user(user_id: str, session: Annotated[Session, Depends(g
         raise HTTPException(status_code=500, detail=str(e))
     
 
-#Get the list of all categories
+# Get the list of all categories
 @app.get('/category/all', response_model=List[Category])
 async def get_all_categories(session: Session = Depends(get_session), x_user_id: str = Header(...)):
     logger.info(f"Received user ID: {x_user_id}")
@@ -208,6 +211,7 @@ async def get_all_categories(session: Session = Depends(get_session), x_user_id:
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# Create a category api endpoint
 @app.post('/category', response_model=Category)
 async def handle_create_category(category_data: CreateCategory, session: Annotated[Session, Depends(get_session)]):
     try:
@@ -228,4 +232,30 @@ async def handle_create_category(category_data: CreateCategory, session: Annotat
         return category
     except Exception as e:
         logger.error(f"Error creating category: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+# Edit category api endpoint
+@app.patch('/category/edit/{category_id}', response_model=Category)
+async def handle_edit_category(
+    category_id: str, 
+    category_data: EditCategory,
+    session: Session = Depends(get_session), 
+    x_user_id: str = Header(...)
+):
+    try:
+        category = session.exec(
+            select(Category).where((Category.id == category_id) & (Category.creator_id == x_user_id))
+        ).first()
+        
+        if category:
+            category.title = category_data.title
+            session.commit()
+            session.refresh(category)
+            return category
+        else:
+            logger.error("Category not found")
+            raise HTTPException(status_code=404, detail="Category not found")
+    except Exception as e:
+        logger.error(f"Error updating category: {e}")
         raise HTTPException(status_code=500, detail=str(e))

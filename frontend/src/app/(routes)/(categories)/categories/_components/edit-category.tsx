@@ -26,15 +26,31 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MdEdit } from "react-icons/md";
+import axios from "axios";
+import { editCategory } from "@/actions/edit-category";
+import { useAuth } from "@clerk/nextjs";
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
-type Props = {};
+type Props = {
+	categoryId: string;
+	fetchCategoriesList: () => void;
+};
 
 const formSchema = z.object({
 	title: z.string().min(2, {
 		message: "Category title must be at least 2 characters.",
 	}),
 });
-const EditCategory = (props: Props) => {
+const EditCategory = ({ categoryId, fetchCategoriesList }: Props) => {
+	const { userId } = useAuth();
+	const { toast } = useToast();
+	const router = useRouter();
+
+	if (!userId) {
+		throw new Error("No authorized!");
+	}
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -42,10 +58,34 @@ const EditCategory = (props: Props) => {
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
+	const { isSubmitting, isValid } = form.formState;
+
+	async function onSubmit(values: z.infer<typeof formSchema>) {
 		console.log(values);
+		try {
+			console.log("try");
+			const response = await editCategory(
+				categoryId,
+				userId as string,
+				values.title
+			);
+			if (response?.status === 200) {
+				toast({
+					title: "Category Edit Successful",
+				});
+				form.reset();
+				fetchCategoriesList();
+				router.refresh();
+			} else {
+				toast({
+					title: "Something went wrong",
+					description: "Failed to edit category",
+					variant: "destructive",
+				});
+			}
+		} catch (error) {
+			console.error("[EDIT-CATEOGRY-ERROR]: ", error);
+		}
 	}
 
 	return (
@@ -67,7 +107,9 @@ const EditCategory = (props: Props) => {
 								name="title"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Category Title</FormLabel>
+										<FormLabel>
+											Edit Category Title
+										</FormLabel>
 										<FormControl>
 											<Input
 												placeholder="Enter category title..."
@@ -82,6 +124,7 @@ const EditCategory = (props: Props) => {
 								aria-label="Edit category button"
 								className="w-full"
 								type="submit"
+								disabled={isValid && isSubmitting}
 							>
 								Edit Category
 							</Button>

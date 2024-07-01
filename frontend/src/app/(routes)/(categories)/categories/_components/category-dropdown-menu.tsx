@@ -13,9 +13,12 @@ import {
 import { BsThreeDots } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 
-type Props = {};
+type Props = {
+	categoryId: string;
+	fetchCategoriesList: () => void;
+};
 
-const CategoryDropdownMenu = (props: Props) => {
+const CategoryDropdownMenu = ({ categoryId, fetchCategoriesList }: Props) => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className="text-gray-500 dark:text-gray-200 w-5 h-5 hover:opacity-70 transition duration-300">
@@ -23,7 +26,10 @@ const CategoryDropdownMenu = (props: Props) => {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
 				<DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-					<EditCategory />
+					<EditCategory
+						categoryId={categoryId}
+						fetchCategoriesList={fetchCategoriesList}
+					/>
 				</DropdownMenuItem>
 				<DropdownMenuItem className="flex items-center justify-center gap-2 text-sm cursor-pointer">
 					<MdDelete />

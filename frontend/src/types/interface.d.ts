@@ -10,3 +10,10 @@ export interface Option {
 	value: string;
 	label: string;
 }
+
+export interface Category {
+	title: string;
+	id: string;
+	created_at: Date;
+	creator_id: string;
+}
