@@ -104,8 +104,6 @@ async function handleUserUpdate(userData: any) {
 		email,
 	};
 
-	console.log(requestData);
-
 	try {
 		const response = await axios.patch(
 			`http://localhost:8000/user/update/${userData.id}`,

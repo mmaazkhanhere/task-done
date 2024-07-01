@@ -2,6 +2,7 @@
 
 import React from "react";
 
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -25,8 +26,13 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+
+import { add_category } from "@/actions/add-category";
 
 import { IoIosAdd } from "react-icons/io";
+import { currentUser } from "@clerk/nextjs/server";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 type Props = {};
 
@@ -36,6 +42,14 @@ const formSchema = z.object({
 	}),
 });
 const AddCategory = (props: Props) => {
+	const { toast } = useToast();
+	const router = useRouter();
+	const { userId } = useAuth();
+
+	if (!userId) {
+		throw new Error("No authorized!");
+	}
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -43,10 +57,27 @@ const AddCategory = (props: Props) => {
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(values);
+	const { isSubmitting, isValid } = form.formState;
+
+	async function onSubmit(values: z.infer<typeof formSchema>) {
+		try {
+			const response = await add_category(values.title, userId as string);
+
+			if (response.status === 200) {
+				toast({
+					title: "Success",
+					description: "Category created.",
+				});
+			} else {
+				toast({
+					title: "Something went wrong",
+					description: "Failed to create category.",
+					variant: "destructive",
+				});
+			}
+		} catch (error: any) {
+			console.log("[CATEGORY_CREATE_API_ERROR]: ", error);
+		}
 	}
 
 	return (
@@ -83,6 +114,7 @@ const AddCategory = (props: Props) => {
 								aria-label="Add category button"
 								className="w-full"
 								type="submit"
+								disabled={isValid && isSubmitting}
 							>
 								Add Category
 							</Button>

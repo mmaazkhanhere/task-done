@@ -1,5 +1,5 @@
 
-from typing import Annotated, List, Optional
+from typing import Annotated, List, Optional, Any
 
 import logging
 import uuid
@@ -77,7 +77,7 @@ class Project(SQLModel, table=True):
 
 # Category Model
 class Category(SQLModel, table=True):
-    id: str = Field(default_factory=uuid.uuid4, primary_key=True)
+    id: str = Field(primary_key=True)
     title: str = Field(nullable=False, index=True)
     created_at: datetime = Field(default=datetime.now, nullable=False)
     
@@ -90,6 +90,11 @@ class UserUpdate(BaseModel):
     name: Optional[str]
     username: Optional[str]
     email: Optional[EmailStr]
+
+class  CreateCategory(BaseModel):
+    id: str
+    title: str
+    userId: str
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -191,9 +196,19 @@ async def handle_delete_user(user_id: str, session: Annotated[Session, Depends(g
         raise HTTPException(status_code=500, detail=str(e))
     
 
-@app.post('/category/', response_model=list[Category])
-async def create_category(category: Category, session: Annotated[Session, Depends(get_session)]):
-    session.add(category)
-    session.commit()
-    session.refresh(category)
-    return category
+@app.post('/category', response_model=Category)
+async def handle_create_category(category_data: CreateCategory, session: Annotated[Session, Depends(get_session)]):
+    try:
+        category = Category(
+            id= category_data.id,
+            title=category_data.title,
+            created_at=datetime.now(),
+            creator_id=category_data.userId
+        )
+        session.add(category)
+        session.commit()
+        session.refresh(category)
+        return category
+    except Exception as e:
+        logger.error(f"Error creating category: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
