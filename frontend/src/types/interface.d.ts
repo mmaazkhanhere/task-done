@@ -32,3 +32,10 @@ export interface Category {
 	creator: User[];
 	projects?: Project[];
 }
+
+export interface AddProjectData {
+	title: string;
+	description: string;
+	category: { label: string; value: string }[];
+	icon: string;
+}

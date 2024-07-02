@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -53,6 +53,12 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 import { Option } from "@/components/multiple-selector";
+import { Textarea } from "@/components/ui/textarea";
+import { Category } from "@/types/interface";
+import { useAuth } from "@clerk/nextjs";
+import { getCategoriesList } from "@/actions/category-actions/get-categories-list";
+import { addProject } from "@/actions/project-actions/add-project";
+import { useToast } from "@/components/ui/use-toast";
 
 type Props = {};
 
@@ -75,12 +81,6 @@ const icons = [
 	{ name: "Gaming", component: IoGameController },
 ];
 
-const OPTIONS: Option[] = [
-	{ label: "Personal", value: "personal" },
-	{ label: "Work", value: "work" },
-	{ label: "School", value: "remix" },
-];
-
 const optionSchema = z.object({
 	label: z.string(),
 	value: z.string(),
@@ -88,9 +88,23 @@ const optionSchema = z.object({
 });
 
 const formSchema = z.object({
-	title: z.string().min(2, {
-		message: "Project title must be at least 2 characters.",
-	}),
+	title: z
+		.string()
+		.min(2, {
+			message: "Project title must be at least 2 characters.",
+		})
+		.max(40, {
+			message: "Project title must be less than 50 characters.",
+		}),
+
+	description: z
+		.string()
+		.min(2, {
+			message: "Project description must be at least 2 characters.",
+		})
+		.max(200, {
+			message: "Project description must be less than 200 characters.",
+		}),
 	category: z.array(optionSchema),
 	icon: z.string().min(1, {
 		message: "Please select an icon.",
@@ -99,24 +113,63 @@ const formSchema = z.object({
 
 const AddProject = (props: Props) => {
 	const [selectedIcon, setSelectedIcon] = useState("Personal");
+	const [categories, setCategories] = useState<Category[]>([]);
+
+	const { userId } = useAuth();
+	const { toast } = useToast();
+
+	const getCategories = useCallback(async () => {
+		try {
+			const responseData = await getCategoriesList(userId as string);
+			setCategories(responseData);
+		} catch (error) {
+			console.error(`[CATEGORIES_FETCH_CALLBACK_ERROR]: `, error);
+		}
+	}, [userId]);
+
+	useEffect(() => {
+		getCategories();
+	}, [getCategories]);
+
+	const OPTIONS: Option[] = categories.map((category) => ({
+		label: category.title,
+		value: category.id,
+	}));
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			title: "",
+			description: "",
 			icon: "Personal",
 		},
 	});
+
+	const { isSubmitting, isValid } = form.formState;
 
 	const handleIconChange = (iconName: string) => {
 		setSelectedIcon(iconName);
 		form.setValue("icon", iconName);
 	};
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
+	async function onSubmit(values: z.infer<typeof formSchema>) {
 		console.log(values);
+		try {
+			const response = await addProject(values, userId as string);
+			if (response?.status == 200) {
+				toast({
+					title: "Project created",
+				});
+			} else {
+				toast({
+					variant: "destructive",
+					description: "Cannot create project",
+					title: "Something went wrong",
+				});
+			}
+		} catch (error) {
+			console.error("[ADD_PROJECT_FORM_SUBMIT_ERROR]:", error);
+		}
 	}
 
 	return (
@@ -150,6 +203,7 @@ const AddProject = (props: Props) => {
 											<Input
 												placeholder="Enter a name for your project..."
 												className=" w-96"
+												maxLength={40}
 												{...field}
 											/>
 										</FormControl>
@@ -238,6 +292,25 @@ const AddProject = (props: Props) => {
 
 						<FormField
 							control={form.control}
+							name="description"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Description</FormLabel>
+									<FormControl>
+										<Textarea
+											placeholder="The project is about..."
+											className="min-h-[140px]"
+											maxLength={200}
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
 							name="category"
 							render={({ field }) => (
 								<FormItem>
@@ -261,6 +334,7 @@ const AddProject = (props: Props) => {
 						<AlertDialogFooter>
 							<AlertDialogCancel>Cancel</AlertDialogCancel>
 							<AlertDialogAction
+								disabled={isSubmitting && isValid}
 								aria-label="Add project button"
 								type="submit"
 								className="w-full dark:text-white"

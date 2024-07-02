@@ -99,6 +99,19 @@ class UserUpdate(BaseModel):
     username: Optional[str]
     email: Optional[EmailStr]
 
+
+class CategoryData(BaseModel):
+    value: str
+    label: str
+
+class ProjectData(BaseModel):
+    id: str
+    title: str
+    description: str
+    icon: str
+    creator_id: str
+    category: List[CategoryData]
+
 class ProjectResponse(BaseModel):
     id: str
     title: str
@@ -317,3 +330,40 @@ async def handle_delete_category(category_id: str, session:Session = Depends(get
     except Exception as e:
         logger.error(f"Error deleting category: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+
+# create project api endpoint
+@app.post('/project', response_model=Project)
+async def handle_create_project(project_data: ProjectData, session: Annotated[Session, Depends(get_session)]):
+    try:
+        logger.info(f"Received project data: {project_data.json()}")
+        project = Project(
+            id=project_data.id,
+            title=project_data.title,
+            description=project_data.description,
+            icon=project_data.icon,
+            created_at=datetime.now(),
+            creator_id=project_data.creator_id
+        )
+        session.add(project)
+        session.commit()
+        session.refresh(project)
+
+        for category in project_data.category:
+            project_category_link = ProjectCategoryLink(
+                project_id=project.id,
+                category_id=category.value 
+            )
+            session.add(project_category_link)
+
+        session.commit()
+        session.refresh(project)
+
+        return project
+    except Exception as e:
+        logger.error(f"Error creating project: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+# get all projects

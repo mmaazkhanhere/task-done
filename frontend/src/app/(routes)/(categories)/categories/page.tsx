@@ -31,7 +31,7 @@ const CategoriesPage = (props: Props) => {
 			const cateogriesData = await getCategoriesList(userId as string);
 			setCategoryList(cateogriesData);
 		} catch (error) {
-			console.error(`[CATEGORIES_FETCH_USE_EFFECT_ERROR]: `, error);
+			console.error(`[CATEGORIES_FETCH_CALLBACK_ERROR]: `, error);
 		}
 	}, [userId]);
 
