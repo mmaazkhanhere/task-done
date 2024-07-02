@@ -6,7 +6,7 @@ import axios from "axios";
 
 import CategoriesCard from "./categories-card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getCategoriesList } from "@/actions/get-categories-list";
+import { getCategoriesList } from "@/actions/category-actions/get-categories-list";
 import { Category } from "@/types/interface";
 
 type Props = {};

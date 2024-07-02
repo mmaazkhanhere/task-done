@@ -272,3 +272,20 @@ async def handle_edit_category(
     except Exception as e:
         logger.error(f"Error updating category: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/category/delete/{category_id}", response_model = Category)
+async def handle_delete_category(category_id: str, session:Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        category = session.exec(
+            select(Category).where((Category.id == category_id) & (Category.creator_id == x_user_id))
+        ).first()
+        if category:
+            session.delete(category)
+            session.commit()
+            return category
+        else:
+            logger.error("Category not found")
+            raise HTTPException(status_code = 400, detail = "Category not found")
+    except Exception as e:
+        logger.error(f"Error deleting category: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

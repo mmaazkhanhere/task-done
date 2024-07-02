@@ -28,7 +28,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 
-import { add_category } from "@/actions/add-category";
+import { add_category } from "@/actions/category-actions/add-category";
 
 import { IoIosAdd } from "react-icons/io";
 import { currentUser } from "@clerk/nextjs/server";

@@ -12,6 +12,7 @@ import {
 
 import { BsThreeDots } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
+import DeleteCategory from "./delete-category";
 
 type Props = {
 	categoryId: string;
@@ -32,8 +33,10 @@ const CategoryDropdownMenu = ({ categoryId, fetchCategoriesList }: Props) => {
 					/>
 				</DropdownMenuItem>
 				<DropdownMenuItem className="flex items-center justify-center gap-2 text-sm cursor-pointer">
-					<MdDelete />
-					Delete
+					<DeleteCategory
+						categoryId={categoryId}
+						fetchCategoriesList={fetchCategoriesList}
+					/>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

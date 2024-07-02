@@ -27,7 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MdEdit } from "react-icons/md";
 import axios from "axios";
-import { editCategory } from "@/actions/edit-category";
+import { editCategory } from "@/actions/category-actions/edit-category";
 import { useAuth } from "@clerk/nextjs";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
@@ -67,9 +67,6 @@ const EditCategory = ({ categoryId, fetchCategoriesList }: Props) => {
 				userId as string,
 				values.title
 			);
-
-			console.log(response?.status);
-			console.log(response?.message);
 
 			if (response?.status === 200) {
 				toast({
