@@ -99,7 +99,6 @@ class UserUpdate(BaseModel):
     username: Optional[str]
     email: Optional[EmailStr]
 
-
 class CategoryData(BaseModel):
     value: str
     label: str
@@ -112,6 +111,20 @@ class ProjectData(BaseModel):
     creator_id: str
     category: List[CategoryData]
 
+class TaskResponse(BaseModel):
+    id: str
+    title: str
+    description: str
+    priority: str
+    is_completed: bool
+    created_at: datetime
+
+    creator_id: str
+    creator: UserResponse
+
+    project_id: str
+    project: 'ProjectResponse'  # Forward reference using a string
+
 class ProjectResponse(BaseModel):
     id: str
     title: str
@@ -119,8 +132,15 @@ class ProjectResponse(BaseModel):
     is_completed: bool
     icon: str
     created_at: datetime
+
     creator_id: str
     creator: UserResponse
+
+    tasks: List['TaskResponse']  # Forward reference using a string
+
+ProjectResponse.model_rebuild()  # Update forward references
+TaskResponse.model_rebuild()  # Update forward references
+
 
 
 class  CreateCategory(BaseModel):
@@ -242,7 +262,6 @@ async def handle_delete_user(user_id: str, session: Annotated[Session, Depends(g
 # Get the list of all categories
 @app.get('/category/all', response_model=List[CategoryResponse])
 async def get_all_categories(session: Session = Depends(get_session), x_user_id: str = Header(...)):
-    logger.info(f"Received user ID: {x_user_id}")
     try:
         category_list = session.exec(select(Category).where(Category.creator_id == x_user_id)).all()
         return category_list
@@ -367,3 +386,11 @@ async def handle_create_project(project_data: ProjectData, session: Annotated[Se
     
 
 # get all projects
+@app.get('/project/all', response_model=List[ProjectResponse])
+async def get_all_projects(session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        project_list = session.exec(select(Project).where(Project.creator_id == x_user_id)).all()
+        return project_list
+    except Exception as e:
+        logger.error(f"Error getting project list: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

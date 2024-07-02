@@ -60,7 +60,9 @@ import { getCategoriesList } from "@/actions/category-actions/get-categories-lis
 import { addProject } from "@/actions/project-actions/add-project";
 import { useToast } from "@/components/ui/use-toast";
 
-type Props = {};
+type Props = {
+	fetchProjectList: () => void;
+};
 
 const icons = [
 	{ name: "Personal", component: IoBody },
@@ -111,7 +113,7 @@ const formSchema = z.object({
 	}),
 });
 
-const AddProject = (props: Props) => {
+const AddProject = ({ fetchProjectList }: Props) => {
 	const [selectedIcon, setSelectedIcon] = useState("Personal");
 	const [categories, setCategories] = useState<Category[]>([]);
 
@@ -167,6 +169,7 @@ const AddProject = (props: Props) => {
 					title: "Something went wrong",
 				});
 			}
+			fetchProjectList();
 		} catch (error) {
 			console.error("[ADD_PROJECT_FORM_SUBMIT_ERROR]:", error);
 		}
