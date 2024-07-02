@@ -1,39 +1,22 @@
-"use client";
-
-import React, { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@clerk/nextjs";
-import axios from "axios";
+import React from "react";
 
 import CategoriesCard from "./categories-card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getCategoriesList } from "@/actions/category-actions/get-categories-list";
+
 import { Category } from "@/types/interface";
+import { Skeleton } from "@/components/ui/skeleton";
 
-type Props = {};
+type Props = {
+	categoryList: Category[];
+	fetchCategoriesList: () => void;
+};
 
-const CategoriesList = (props: Props) => {
-	const [categoryList, setCategoryList] = useState<Category[]>([]);
-	const { userId } = useAuth();
-
-	if (!userId) {
-		throw new Error("User not found");
-	}
-
-	const fetchCategoriesList = useCallback(async () => {
-		try {
-			const cateogriesData = await getCategoriesList(userId as string);
-			setCategoryList(cateogriesData);
-		} catch (error) {
-			console.error(`[CATEGORIES_FETCH_USE_EFFECT_ERROR]: `, error);
-		}
-	}, [userId]);
-
-	useEffect(() => {
-		fetchCategoriesList();
-	}, [fetchCategoriesList]);
-
-	if (!categoryList) {
-		<Skeleton className="w-[100px] h-[40px] rounded-full" />;
+const CategoriesList = ({ categoryList, fetchCategoriesList }: Props) => {
+	if (categoryList.length === 0) {
+		return (
+			<div className="text-lg text-center text- text-black">
+				No categories created yet. Create one now!
+			</div>
+		);
 	}
 
 	return (
@@ -44,7 +27,7 @@ const CategoriesList = (props: Props) => {
 					id={category.id}
 					title={category.title}
 					fetchCategoriesList={fetchCategoriesList}
-					projects={1}
+					projects={category.projects?.length as number}
 				/>
 			))}
 		</div>

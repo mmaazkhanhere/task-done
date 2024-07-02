@@ -68,6 +68,7 @@ class Project(SQLModel, table=True):
     description: str = Field(nullable=False)
     is_completed: bool = Field(default=False)
     icon: str = Field(default="")
+    created_at: datetime = Field(default=datetime.now, nullable=False)
     
     creator_id: str = Field(foreign_key="user.id", nullable=False)
     creator: "User" = Relationship(back_populates="projects")
@@ -86,15 +87,41 @@ class Category(SQLModel, table=True):
     
     projects: List["Project"] = Relationship(back_populates="categories", link_model=ProjectCategoryLink)
 
+class UserResponse(BaseModel):
+    id: str
+    name: str
+    username: str
+    email: str
+    created_at: datetime
+
 class UserUpdate(BaseModel):
     name: Optional[str]
     username: Optional[str]
     email: Optional[EmailStr]
 
+class ProjectResponse(BaseModel):
+    id: str
+    title: str
+    description: str
+    is_completed: bool
+    icon: str
+    created_at: datetime
+    creator_id: str
+    creator: UserResponse
+
+
 class  CreateCategory(BaseModel):
     id: str
     title: str
     userId: str
+
+class CategoryResponse(BaseModel):
+    id: str
+    title: str
+    created_at: datetime
+    creator_id: str
+    creator: UserResponse
+    projects: List[ProjectResponse]
 
 class EditCategory(BaseModel):
     title: str
@@ -200,7 +227,7 @@ async def handle_delete_user(user_id: str, session: Annotated[Session, Depends(g
     
 
 # Get the list of all categories
-@app.get('/category/all', response_model=List[Category])
+@app.get('/category/all', response_model=List[CategoryResponse])
 async def get_all_categories(session: Session = Depends(get_session), x_user_id: str = Header(...)):
     logger.info(f"Received user ID: {x_user_id}")
     try:
@@ -273,6 +300,7 @@ async def handle_edit_category(
         logger.error(f"Error updating category: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# delete category api endpoint 
 @app.delete("/category/delete/{category_id}", response_model = Category)
 async def handle_delete_category(category_id: str, session:Session = Depends(get_session), x_user_id: str = Header(...)):
     try:

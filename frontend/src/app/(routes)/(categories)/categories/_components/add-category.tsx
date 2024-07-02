@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useAuth } from "@clerk/nextjs";
 
 import {
 	Dialog,
@@ -31,17 +32,17 @@ import { useToast } from "@/components/ui/use-toast";
 import { add_category } from "@/actions/category-actions/add-category";
 
 import { IoIosAdd } from "react-icons/io";
-import { currentUser } from "@clerk/nextjs/server";
-import { useAuth, useUser } from "@clerk/nextjs";
 
-type Props = {};
+type Props = {
+	fetchCategoriesList: () => void;
+};
 
 const formSchema = z.object({
 	title: z.string().min(2, {
 		message: "Category title must be at least 2 characters.",
 	}),
 });
-const AddCategory = (props: Props) => {
+const AddCategory = ({ fetchCategoriesList }: Props) => {
 	const { toast } = useToast();
 	const { userId } = useAuth();
 	const router = useRouter();
@@ -80,6 +81,7 @@ const AddCategory = (props: Props) => {
 					variant: "destructive",
 				});
 			}
+			fetchCategoriesList();
 			router.refresh();
 		} catch (error: any) {
 			console.log("[CATEGORY_CREATE_API_ERROR]: ", error);

@@ -7,9 +7,12 @@ import { Button } from "@/components/ui/button";
 
 import { IoAdd } from "react-icons/io5";
 
-type Props = {};
+type Props = {
+	categoriesCount: number;
+	fetchCategoriesList: () => void;
+};
 
-const CategoriesNavbar = (props: Props) => {
+const CategoriesNavbar = ({ categoriesCount, fetchCategoriesList }: Props) => {
 	return (
 		<header className="sticky top-0 left-0 w-full flex items-center gap-4 md:gap-0 justify-between z-50 bg-white dark:bg-muted py-3 md:py-4 px-4 shadow-sm">
 			<div className="md:hidden">
@@ -19,10 +22,10 @@ const CategoriesNavbar = (props: Props) => {
 				<div className="flex flex-col items-start">
 					<h2 className="text-lg md:text-xl font-bold">Categories</h2>
 					<p className="text-gray-400 text-xs md:text-sm">
-						3 Categories
+						{categoriesCount} Categories
 					</p>
 				</div>
-				<AddCategory />
+				<AddCategory fetchCategoriesList={fetchCategoriesList} />
 			</div>
 		</header>
 	);
