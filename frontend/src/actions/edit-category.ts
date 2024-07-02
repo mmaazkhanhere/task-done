@@ -17,11 +17,25 @@ export async function editCategory(
 			}
 		);
 
+		console.log(response.status);
+
 		if (response.status === 200) {
 			return { status: 200, message: "Category Successfully Edited" };
 		}
 	} catch (error) {
-		console.error(`[CATEGORIES_EDIT_ERROR]: `, error);
-		return { status: 500, message: "Something went wrong" };
+		if (axios.isAxiosError(error) && error.response) {
+			const status = error.response.status;
+			let message = "Something went wrong";
+
+			if (status === 409) {
+				message = "Category already exists";
+			} else {
+				message = error.response.data.detail || message;
+			}
+
+			return { status, message };
+		} else {
+			return { status: 500, message: "Something went wrong" };
+		}
 	}
 }

@@ -61,14 +61,16 @@ const EditCategory = ({ categoryId, fetchCategoriesList }: Props) => {
 	const { isSubmitting, isValid } = form.formState;
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values);
 		try {
-			console.log("try");
 			const response = await editCategory(
 				categoryId,
 				userId as string,
 				values.title
 			);
+
+			console.log(response?.status);
+			console.log(response?.message);
+
 			if (response?.status === 200) {
 				toast({
 					title: "Category Edit Successful",
@@ -76,6 +78,11 @@ const EditCategory = ({ categoryId, fetchCategoriesList }: Props) => {
 				form.reset();
 				fetchCategoriesList();
 				router.refresh();
+			} else if (response?.message.includes("409")) {
+				toast({
+					title: "Category already exists",
+					variant: "destructive",
+				});
 			} else {
 				toast({
 					title: "Something went wrong",

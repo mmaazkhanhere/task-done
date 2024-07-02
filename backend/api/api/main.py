@@ -244,11 +244,24 @@ async def handle_edit_category(
     x_user_id: str = Header(...)
 ):
     try:
+        # Check if the category to be edited exists and belongs to the user
         category = session.exec(
             select(Category).where((Category.id == category_id) & (Category.creator_id == x_user_id))
         ).first()
         
         if category:
+            # Check if a different category with the same title already exists for the user
+            existing_category = session.exec(
+                select(Category).where(
+                    (Category.creator_id == x_user_id) & (Category.title == category_data.title) & (Category.id != category_id)
+                )
+            ).first()
+            
+            if existing_category:
+                logger.error("Category title already exists")
+                raise HTTPException(status_code=409, detail="Category title already exists")
+            
+            # Update the category title
             category.title = category_data.title
             session.commit()
             session.refresh(category)
