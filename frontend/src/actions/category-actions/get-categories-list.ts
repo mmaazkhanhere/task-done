@@ -10,10 +10,10 @@ export const getCategoriesList = async (userId: string) => {
 				},
 			}
 		);
-
 		const data = response.data;
 		return data;
 	} catch (error) {
+		console.log("[GET_CATEGORIES_LIST_ACTION_ERROR]: ", error);
 		return { status: 500, message: "Something went wrong" };
 	}
 };

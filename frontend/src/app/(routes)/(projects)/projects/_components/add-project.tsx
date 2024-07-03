@@ -25,7 +25,13 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 
-import MultipleSelector from "@/components/multiple-selector";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 import { Button } from "@/components/ui/button";
 
@@ -83,12 +89,6 @@ const icons = [
 	{ name: "Gaming", component: IoGameController },
 ];
 
-const optionSchema = z.object({
-	label: z.string(),
-	value: z.string(),
-	disable: z.boolean().optional(),
-});
-
 const formSchema = z.object({
 	title: z
 		.string()
@@ -107,7 +107,7 @@ const formSchema = z.object({
 		.max(200, {
 			message: "Project description must be less than 200 characters.",
 		}),
-	category: z.array(optionSchema),
+	category_id: z.string().min(1),
 	icon: z.string().min(1, {
 		message: "Please select an icon.",
 	}),
@@ -132,11 +132,6 @@ const AddProject = ({ fetchProjectList }: Props) => {
 	useEffect(() => {
 		getCategories();
 	}, [getCategories]);
-
-	const OPTIONS: Option[] = categories.map((category) => ({
-		label: category.title,
-		value: category.id,
-	}));
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -314,22 +309,30 @@ const AddProject = ({ fetchProjectList }: Props) => {
 
 						<FormField
 							control={form.control}
-							name="category"
+							name="category_id"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Category</FormLabel>
-									<FormControl>
-										<MultipleSelector
-											defaultOptions={OPTIONS}
-											{...field}
-											placeholder="Select category..."
-											emptyIndicator={
-												<p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-													no results found.
-												</p>
-											}
-										/>
-									</FormControl>
+									<FormLabel>Select Category</FormLabel>
+									<Select
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+									>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder="Select a cateogry" />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											{categories.map((category) => (
+												<SelectItem
+													key={category.id}
+													value={category.id}
+												>
+													{category.title}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
 									<FormMessage />
 								</FormItem>
 							)}

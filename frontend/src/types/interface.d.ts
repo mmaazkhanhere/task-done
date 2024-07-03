@@ -36,6 +36,6 @@ export interface Category {
 export interface AddProjectData {
 	title: string;
 	description: string;
-	category: { label: string; value: string }[];
+	category_id: string;
 	icon: string;
 }

@@ -6,8 +6,6 @@ import { useAuth } from "@clerk/nextjs";
 import CategoriesNavbar from "./_components/categories-navbar";
 import CategoriesList from "./_components/categories-list";
 
-import { Skeleton } from "@/components/ui/skeleton";
-
 import { getCategoriesList } from "@/actions/category-actions/get-categories-list";
 
 import { Category } from "@/types/interface";
@@ -15,21 +13,22 @@ import { Category } from "@/types/interface";
 type Props = {};
 
 const CategoriesPage = (props: Props) => {
-	const [categoryList, setCategoryList] = useState<Category[] | null>(null);
+	const [categoryList, setCategoryList] = useState<Category[] | null>([]);
 	const { userId } = useAuth();
 
 	if (!userId) {
 		throw new Error("User not found");
 	}
 
-	const categoriesData = () => {
-		console.log("CategoriesPage");
-	};
-
 	const fetchCategoriesList = useCallback(async () => {
 		try {
 			const cateogriesData = await getCategoriesList(userId as string);
-			setCategoryList(cateogriesData);
+
+			if (cateogriesData.status === 500) {
+				setCategoryList(null);
+			} else {
+				setCategoryList(cateogriesData);
+			}
 		} catch (error) {
 			console.error(`[CATEGORIES_FETCH_CALLBACK_ERROR]: `, error);
 		}
@@ -39,19 +38,15 @@ const CategoriesPage = (props: Props) => {
 		fetchCategoriesList();
 	}, [fetchCategoriesList]);
 
-	if (categoryList === null) {
-		return <Skeleton className="h-9 w-32" />;
-	}
-
 	return (
 		<div className="w-full relative">
 			<CategoriesNavbar
-				categoriesCount={categoryList.length}
+				categoryList={categoryList!}
 				fetchCategoriesList={fetchCategoriesList}
 			/>
 
 			<CategoriesList
-				categoryList={categoryList}
+				categoryList={categoryList!}
 				fetchCategoriesList={fetchCategoriesList}
 			/>
 		</div>

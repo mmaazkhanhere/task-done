@@ -86,6 +86,7 @@ const AddCategory = ({ fetchCategoriesList }: Props) => {
 		} catch (error: any) {
 			console.log("[CATEGORY_CREATE_API_ERROR]: ", error);
 		}
+		console.log(values);
 	}
 
 	return (

@@ -9,17 +9,14 @@ from dotenv import load_dotenv
 from pydantic import ValidationError, EmailStr, BaseModel
 
 
-from sqlmodel import SQLModel, create_engine, Session, Field, Relationship, select
+from sqlmodel import SQLModel, create_engine, Session, Field, Relationship, select, ARRAY
 from fastapi import FastAPI, Depends, Request, Response, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
+import sqlalchemy.types as types
 
 from .setting import DATABASE_URL
 
 load_dotenv()
-
-class ProjectCategoryLink(SQLModel, table=True):
-    project_id: str = Field(default=None, foreign_key="project.id", primary_key=True)
-    category_id: str = Field(default=None, foreign_key="category.id", primary_key=True)
 
 # User Model
 class User(SQLModel, table=True):
@@ -74,8 +71,10 @@ class Project(SQLModel, table=True):
     creator: "User" = Relationship(back_populates="projects")
     
     tasks: List["Task"] = Relationship(back_populates="project", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
-    categories: List["Category"] = Relationship(back_populates="projects", link_model=ProjectCategoryLink)
-
+    
+    category: "Category" = Relationship(back_populates="projects")
+    category_id: str = Field(foreign_key="category.id", nullable=False)
+    
 # Category Model
 class Category(SQLModel, table=True):
     id: str = Field(primary_key=True)
@@ -85,7 +84,7 @@ class Category(SQLModel, table=True):
     creator_id: str = Field(foreign_key="user.id", nullable=False)
     creator: "User" = Relationship(back_populates="categories")
     
-    projects: List["Project"] = Relationship(back_populates="categories", link_model=ProjectCategoryLink)
+    projects: List["Project"] = Relationship(back_populates="category", sa_relationship_kwargs={'cascade':'all, delete-orphan'})
 
 class UserResponse(BaseModel):
     id: str
@@ -99,17 +98,13 @@ class UserUpdate(BaseModel):
     username: Optional[str]
     email: Optional[EmailStr]
 
-class CategoryData(BaseModel):
-    value: str
-    label: str
-
 class ProjectData(BaseModel):
     id: str
     title: str
     description: str
     icon: str
+    category_id: str
     creator_id: str
-    category: List[CategoryData]
 
 class TaskResponse(BaseModel):
     id: str
@@ -125,6 +120,7 @@ class TaskResponse(BaseModel):
     project_id: str
     project: 'ProjectResponse'  # Forward reference using a string
 
+
 class ProjectResponse(BaseModel):
     id: str
     title: str
@@ -135,12 +131,6 @@ class ProjectResponse(BaseModel):
 
     creator_id: str
     creator: UserResponse
-
-    tasks: List['TaskResponse']  # Forward reference using a string
-
-ProjectResponse.model_rebuild()  # Update forward references
-TaskResponse.model_rebuild()  # Update forward references
-
 
 
 class  CreateCategory(BaseModel):
@@ -154,10 +144,14 @@ class CategoryResponse(BaseModel):
     created_at: datetime
     creator_id: str
     creator: UserResponse
-    projects: List[ProjectResponse]
+    projects: list[ProjectResponse]
+    
 
 class EditCategory(BaseModel):
     title: str
+
+ProjectResponse.model_rebuild()  # Update forward references
+TaskResponse.model_rebuild()  # Update forward references
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -266,7 +260,7 @@ async def get_all_categories(session: Session = Depends(get_session), x_user_id:
         category_list = session.exec(select(Category).where(Category.creator_id == x_user_id)).all()
         return category_list
     except Exception as e:
-        logger.error(f"Error getting category list: {e}")
+        logger.error(f"\nError getting category list: {e}\n")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -290,7 +284,7 @@ async def handle_create_category(category_data: CreateCategory, session: Annotat
         session.refresh(category)
         return category
     except Exception as e:
-        logger.error(f"Error creating category: {e}")
+        logger.error(f"\nError creating category: {e}\n")
         raise HTTPException(status_code=500, detail=str(e))
     
 
@@ -349,41 +343,31 @@ async def handle_delete_category(category_id: str, session:Session = Depends(get
     except Exception as e:
         logger.error(f"Error deleting category: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-    
 
 
 # create project api endpoint
 @app.post('/project', response_model=Project)
 async def handle_create_project(project_data: ProjectData, session: Annotated[Session, Depends(get_session)]):
     try:
-        logger.info(f"Received project data: {project_data.json()}")
+        logger.info(f"Received project data: {project_data.model_dump_json()}")
         project = Project(
-            id=project_data.id,
-            title=project_data.title,
-            description=project_data.description,
-            icon=project_data.icon,
-            created_at=datetime.now(),
-            creator_id=project_data.creator_id
+            id = project_data.id,
+            title = project_data.title,
+            description = project_data.description,
+            icon = project_data.icon,
+            created_at = datetime.now(),
+            creator_id = project_data.creator_id,
+            category_id = project_data.category_id,
         )
         session.add(project)
         session.commit()
         session.refresh(project)
-
-        for category in project_data.category:
-            project_category_link = ProjectCategoryLink(
-                project_id=project.id,
-                category_id=category.value 
-            )
-            session.add(project_category_link)
-
-        session.commit()
-        session.refresh(project)
-
         return project
+    
     except Exception as e:
         logger.error(f"Error creating project: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-    
+
 
 # get all projects
 @app.get('/project/all', response_model=List[ProjectResponse])
