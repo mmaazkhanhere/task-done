@@ -5,10 +5,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
 	projectList: Project[];
+	fetchProjectList: () => void;
 	userId: string;
 };
 
-const Topbar = ({ projectList, userId }: Props) => {
+const ProjectList = ({ projectList, fetchProjectList, userId }: Props) => {
 	if (projectList === null) {
 		return (
 			<div className="flex flex-col gap-5">
@@ -26,10 +27,11 @@ const Topbar = ({ projectList, userId }: Props) => {
 					key={project.id}
 					project={project}
 					userId={userId}
+					fetchProjectList={fetchProjectList}
 				/>
 			))}
 		</div>
 	);
 };
 
-export default Topbar;
+export default ProjectList;

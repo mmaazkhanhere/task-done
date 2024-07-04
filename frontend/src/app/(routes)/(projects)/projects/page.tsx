@@ -2,10 +2,11 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import ProjectNavbar from "./_components/project-navbar";
-import Topbar from "./_components/top-bar";
+
 import { Project } from "@/types/interface";
 import { useAuth } from "@clerk/nextjs";
 import { getAllProject } from "@/actions/project-actions/get-all-project";
+import ProjectList from "./_components/project-list";
 
 type Props = {};
 
@@ -42,7 +43,11 @@ const Projects = (props: Props) => {
 				projectList={projectList!}
 				fetchProjectList={fetchProjectList}
 			/>
-			<Topbar projectList={projectList!} userId={userId} />
+			<ProjectList
+				projectList={projectList!}
+				fetchProjectList={fetchProjectList}
+				userId={userId}
+			/>
 		</div>
 	);
 };

@@ -11,12 +11,35 @@ import Link from "next/link";
 import { Category, Project } from "@/types/interface";
 import { getSpecificCategory } from "@/actions/category-actions/get-specific-category";
 
+import { IconBaseProps } from "react-icons";
+
+import {
+	IoAdd,
+	IoAirplane,
+	IoCafe,
+	IoCar,
+	IoFitness,
+	IoFootball,
+	IoGlobe,
+	IoHeart,
+	IoHome,
+	IoLaptop,
+	IoMusicalNote,
+	IoBody,
+	IoBusiness,
+	IoSchool,
+	IoBook,
+	IoCode,
+	IoGameController,
+} from "react-icons/io5";
+
 type Props = {
 	project: Project;
+	fetchProjectList: () => void;
 	userId: string;
 };
 
-const ProjectCard = ({ project, userId }: Props) => {
+const ProjectCard = ({ project, fetchProjectList, userId }: Props) => {
 	const [categoryData, setCategoryData] = useState<Category | null>(null);
 
 	const getCategoryData = useCallback(async () => {
@@ -38,17 +61,37 @@ const ProjectCard = ({ project, userId }: Props) => {
 
 	const progress = (tasksCompleted / totalTasks) * 100;
 
-	console.log(project);
-	console.log(categoryData);
+	let icon = project.icon;
+	let IconComponent: React.ComponentType<IconBaseProps> = FaProjectDiagram;
+
+	switch (icon) {
+		case "Personal":
+			IconComponent = IoBody;
+			break;
+		case "Business":
+			IconComponent = IoBusiness;
+			break;
+		case "School":
+			IconComponent = IoSchool;
+			break;
+		case "Travel":
+			IconComponent = IoAirplane;
+			break;
+		case "Code":
+			IconComponent = IoCode;
+			break;
+	}
 
 	return (
 		<div className="bg-gray-100 dark:bg-muted-foreground/30 p-4 rounded-lg flex flex-col items-start w-full gap-5">
 			<div className="flex items-center justify-between w-full">
 				<div className="flex items-center gap-2 w-full">
-					<FaProjectDiagram
-						size={24}
-						className="bg-primary rounded-full text-white p-1"
-					/>
+					{IconComponent &&
+						React.createElement(IconComponent, {
+							size: 28,
+							className: `bg-primary roundeed-full text-white p-1 rounded-lg`,
+						})}
+
 					<Link
 						href={`/projects/${project.id}`}
 						className="text-lg font-semibold hover:text-green-500 hover:underline hover:opacity-80 transition duration-300"
@@ -56,8 +99,14 @@ const ProjectCard = ({ project, userId }: Props) => {
 						{project.title}
 					</Link>
 				</div>
-				<ProjectDropdownMenu project={project} />
+				<ProjectDropdownMenu
+					userId={userId}
+					project={project}
+					fetchProjectList={fetchProjectList}
+				/>
 			</div>
+
+			<p className="text-sm text-gray-500">{project.description}</p>
 
 			{totalTasks > 0 ? (
 				<div className="flex flex-col items-start w-full gap-2">

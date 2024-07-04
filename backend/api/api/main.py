@@ -99,9 +99,10 @@ class UserUpdate(BaseModel):
     email: Optional[EmailStr]
 
 class EditProject(BaseModel):
-    title: Optional[str]
-    description: Optional[str]
-
+    title: str
+    description: str
+    icon: str
+    category_id: str
 
 class ProjectData(BaseModel):
     id: str
@@ -403,11 +404,20 @@ async def get_all_projects(session: Session = Depends(get_session), x_user_id: s
 
 # edit project
 @app.patch('/project/edit/{project_id}', response_model=Project)
-async def edit_project(project_id: str, project_data:ProjectData, session: Session = Depends(get_session), x_user_id: str = Header(...)):
+async def edit_project(project_id: str, project_data:EditProject, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         project = session.exec(
             select(Project).where((Project.id == project_id) & (Project.creator_id == x_user_id))
         ).first()
+
+        if project:
+            project.title = project_data.title
+            project.description = project_data.description
+            project.icon = project_data.icon
+            project.category_id = project_data.category_id
+            session.commit()
+            session.refresh(project)
+            return project
 
     except Exception as e:
         logger.error(f"Error getting project: {e}")

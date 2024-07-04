@@ -14,9 +14,11 @@ import EditProject from "./edit-project";
 
 type Props = {
 	project: Project;
+	fetchProjectList: () => void;
+	userId: string;
 };
 
-const ProjectDropdownMenu = ({ project }: Props) => {
+const ProjectDropdownMenu = ({ project, fetchProjectList, userId }: Props) => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className="text-gray-500 dark:text-gray-200 w-5 h-5 hover:opacity-70 transition duration-300">
@@ -24,7 +26,11 @@ const ProjectDropdownMenu = ({ project }: Props) => {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
 				<DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-					<EditProject project={project} />
+					<EditProject
+						project={project}
+						fetchProjectList={fetchProjectList}
+						userId={userId}
+					/>
 				</DropdownMenuItem>
 				<DropdownMenuItem className="flex items-center justify-center gap-2 text-sm cursor-pointer">
 					<MdDelete />

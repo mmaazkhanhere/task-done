@@ -46,7 +46,6 @@ import {
 import { Button } from "@/components/ui/button";
 
 import {
-	IoAdd,
 	IoAirplane,
 	IoCafe,
 	IoCar,
@@ -64,20 +63,22 @@ import {
 	IoCode,
 	IoGameController,
 } from "react-icons/io5";
+
 import { Input } from "@/components/ui/input";
 import { MdEdit } from "react-icons/md";
 
-import { editCategory } from "@/actions/category-actions/edit-category";
-import { useAuth } from "@clerk/nextjs";
 import { useToast } from "@/components/ui/use-toast";
 
 import { Category, Project } from "@/types/interface";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { getCategoriesList } from "@/actions/category-actions/get-categories-list";
+import { editProject } from "@/actions/project-actions/edit-project";
 
 type Props = {
 	project: Project;
+	fetchProjectList: () => void;
+	userId: string;
 };
 
 const icons = [
@@ -123,16 +124,11 @@ const formSchema = z.object({
 	}),
 });
 
-const EditProject = ({ project }: Props) => {
-	const [selectedIcon, setSelectedIcon] = useState("Personal");
+const EditProject = ({ project, userId, fetchProjectList }: Props) => {
+	const [selectedIcon, setSelectedIcon] = useState(project.icon);
 	const [categories, setCategories] = useState<Category[]>([]);
 
-	const { userId } = useAuth();
 	const { toast } = useToast();
-
-	if (!userId) {
-		throw new Error("No authorized!");
-	}
 
 	const getCategories = useCallback(async () => {
 		try {
@@ -165,7 +161,25 @@ const EditProject = ({ project }: Props) => {
 	};
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values);
+		try {
+			const response = await editProject(
+				values,
+				project.id,
+				userId as string
+			);
+			if (response?.status == 200) {
+				toast({
+					title: "Project Edited Successfully",
+				});
+				fetchProjectList();
+			}
+		} catch (error) {
+			toast({
+				title: "Something went wrong",
+				variant: "destructive",
+				description: "Error editing project",
+			});
+		}
 	}
 
 	return (

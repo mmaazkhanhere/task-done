@@ -58,3 +58,10 @@ export interface AddProjectData {
 	category_id: string;
 	icon: string;
 }
+
+export interface EditProjectData {
+	title: string;
+	description: string;
+	category_id: string;
+	icon: string;
+}
