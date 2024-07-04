@@ -51,6 +51,14 @@ export interface Task {
 	creator: User;
 	project_id: string;
 	project: Project;
+
+	subTasks: SubTasks[];
+}
+
+export interface SubTasks {
+	title: string;
+	isCompleted: boolean;
+	priority: string;
 }
 
 export interface AddProjectData {

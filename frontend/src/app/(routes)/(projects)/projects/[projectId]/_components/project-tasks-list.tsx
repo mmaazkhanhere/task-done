@@ -1,60 +1,24 @@
 import React from "react";
 import ProjectTaskCard from "./project-task-card";
+import { Task } from "@/types/interface";
 
-type Props = {};
+type Props = {
+	projectTask: Task[];
+};
 
-const projectTask = [
-	{
-		id: 1,
-		title: "Task 1",
-		priority: "Low",
-		isCompleted: false,
-		subTasks: [
-			{
-				title: "Subtask 1",
-				priority: "Medium",
-				isCompleted: true,
-			},
-			{
-				title: "Subtask 2",
-				priority: "Low",
-				isCompleted: false,
-			},
-		],
-	},
-	{
-		id: 2,
-		title: "Task 2",
-		priority: "High",
-		isCompleted: true,
-		subTasks: [],
-	},
-	{
-		id: 3,
-		title: "Task 3",
-		priority: "Medium",
-		isCompleted: false,
-		subTasks: [
-			{
-				title: "Subtask 1",
-				priority: "High",
-				isCompleted: true,
-			},
-		],
-	},
-];
+const ProjectTasksList = ({ projectTask }: Props) => {
+	if (projectTask.length === 0) {
+		return (
+			<p className="text-gray-400 font-semibold p-4">
+				No tasks created. Create a new one!
+			</p>
+		);
+	}
 
-const ProjectTasksList = (props: Props) => {
 	return (
 		<section className="flex flex-col gap-y-2">
 			{projectTask.map((task) => (
-				<ProjectTaskCard
-					key={task.id}
-					title={task.title}
-					priority={task.priority}
-					isCompleted={task.isCompleted}
-					subTasks={task.subTasks}
-				/>
+				<ProjectTaskCard key={task.id} task={task} />
 			))}
 		</section>
 	);

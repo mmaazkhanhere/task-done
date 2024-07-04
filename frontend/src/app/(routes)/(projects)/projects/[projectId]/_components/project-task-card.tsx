@@ -9,19 +9,13 @@ import { cn } from "@/lib/utils";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import SubTaskCard from "./sub-task-card";
 import AddSubTask from "./add-sub-task-button";
+import { Task } from "@/types/interface";
 
 type Props = {
-	title: string;
-	priority: string;
-	isCompleted: boolean;
-	subTasks: {
-		title: string;
-		priority: string;
-		isCompleted: boolean;
-	}[];
+	task: Task;
 };
 
-const ProjectTaskCard = ({ title, priority, isCompleted, subTasks }: Props) => {
+const ProjectTaskCard = ({ task }: Props) => {
 	const [showSubTask, setShowSubTask] = useState<boolean>(false);
 
 	const handleShowSubTask = () => {
@@ -36,23 +30,24 @@ const ProjectTaskCard = ({ title, priority, isCompleted, subTasks }: Props) => {
 						<button
 							className={cn(
 								"flex items-center justify-center w-6 h-6 bg-white rounded-full",
-								isCompleted && "border border-gray-300"
+								task.is_completed && "border border-gray-300"
 							)}
 						>
 							<button
 								className={cn(
 									"w-5 h-5 rounded-full",
-									isCompleted && "bg-primary"
+									task.is_completed && "bg-primary"
 								)}
 							/>
 						</button>
 						<p
 							className={cn(
 								"md:text-lg font-medium",
-								isCompleted && "line-through text-gray-500"
+								task.is_completed &&
+									"line-through text-gray-500"
 							)}
 						>
-							{title}
+							{task.title}
 						</p>
 						<button onClick={handleShowSubTask}>
 							{showSubTask ? (
@@ -64,7 +59,7 @@ const ProjectTaskCard = ({ title, priority, isCompleted, subTasks }: Props) => {
 					</div>
 					{showSubTask && (
 						<div className="pl-12 flex flex-col items-start gap-2 mt-2">
-							{subTasks.map((task) => (
+							{task.subTasks.map((task) => (
 								<SubTaskCard
 									key={task.title}
 									title={task.title}
@@ -82,12 +77,13 @@ const ProjectTaskCard = ({ title, priority, isCompleted, subTasks }: Props) => {
 			<p
 				className={cn(
 					"px-4 py-0.5 text-sm rounded-lg",
-					priority === "High" && "bg-red-500 text-red-100",
-					priority === "Medium" && "bg-yellow-500 text-yellow-200",
-					priority === "Low" && "bg-green-500 text-green-200"
+					task.priority === "High" && "bg-red-500 text-red-100",
+					task.priority === "Medium" &&
+						"bg-yellow-500 text-yellow-200",
+					task.priority === "Low" && "bg-green-500 text-green-200"
 				)}
 			>
-				{priority}
+				{task.priority}
 			</p>
 		</article>
 	);
