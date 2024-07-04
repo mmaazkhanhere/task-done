@@ -56,7 +56,7 @@ const ProjectCard = ({ project, userId }: Props) => {
 						{project.title}
 					</Link>
 				</div>
-				<ProjectDropdownMenu />
+				<ProjectDropdownMenu project={project} />
 			</div>
 
 			{totalTasks > 0 ? (

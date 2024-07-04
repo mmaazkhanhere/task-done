@@ -58,7 +58,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-import { Option } from "@/components/multiple-selector";
 import { Textarea } from "@/components/ui/textarea";
 import { Category } from "@/types/interface";
 import { useAuth } from "@clerk/nextjs";

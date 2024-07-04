@@ -98,6 +98,11 @@ class UserUpdate(BaseModel):
     username: Optional[str]
     email: Optional[EmailStr]
 
+class EditProject(BaseModel):
+    title: Optional[str]
+    description: Optional[str]
+
+
 class ProjectData(BaseModel):
     id: str
     title: str
@@ -393,4 +398,17 @@ async def get_all_projects(session: Session = Depends(get_session), x_user_id: s
         return project_list
     except Exception as e:
         logger.error(f"Error getting project list: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+# edit project
+@app.patch('/project/edit/{project_id}', response_model=Project)
+async def edit_project(project_id: str, project_data:ProjectData, session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        project = session.exec(
+            select(Project).where((Project.id == project_id) & (Project.creator_id == x_user_id))
+        ).first()
+
+    except Exception as e:
+        logger.error(f"Error getting project: {e}")
         raise HTTPException(status_code=500, detail=str(e))

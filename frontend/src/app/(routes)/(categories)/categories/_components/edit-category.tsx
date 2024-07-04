@@ -118,6 +118,14 @@ const EditCategory = ({ categoryId, fetchCategoriesList }: Props) => {
 											<Input
 												placeholder="Enter category title..."
 												{...field}
+												onClick={(e) =>
+													e.stopPropagation()
+												}
+												onKeyDown={(e) =>
+													e.keyCode === 32
+														? e.stopPropagation()
+														: null
+												}
 											/>
 										</FormControl>
 										<FormMessage />
