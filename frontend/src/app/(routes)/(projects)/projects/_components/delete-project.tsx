@@ -16,6 +16,7 @@ import {
 import React from "react";
 import { MdDelete } from "react-icons/md";
 import { Button } from "@/components/ui/button";
+import { deleteProject } from "@/actions/project-actions/delete_project";
 
 type Props = {
 	projectId: string;
@@ -38,7 +39,7 @@ const DeleteProject = ({
 
 	const handleOnClick = async () => {
 		try {
-			const response = await deleteCategory(userId, projectId);
+			const response = await deleteProject(projectId, userId);
 
 			console.log(response);
 

@@ -422,3 +422,22 @@ async def edit_project(project_id: str, project_data:EditProject, session: Sessi
     except Exception as e:
         logger.error(f"Error getting project: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# delete project
+@app.delete("/project/delete/{project_id}", response_model = Project)
+async def handle_delete_project(project_id: str, session:Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        project = session.exec(
+            select(Project).where((Project.id == project_id) & (Project.creator_id == x_user_id))
+        ).first()
+        if project:
+            session.delete(project)
+            session.commit()
+            return project
+        else:
+            logger.error("Project not found")
+            raise HTTPException(status_code = 400, detail = "Project not found")
+    except Exception as e:
+        logger.error(f"Error deleting project: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
