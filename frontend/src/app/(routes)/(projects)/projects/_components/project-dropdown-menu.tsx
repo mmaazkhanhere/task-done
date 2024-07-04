@@ -11,6 +11,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 import { Project } from "@/types/interface";
 import EditProject from "./edit-project";
+import DeleteProject from "./delete-project";
 
 type Props = {
 	project: Project;
@@ -32,9 +33,13 @@ const ProjectDropdownMenu = ({ project, fetchProjectList, userId }: Props) => {
 						userId={userId}
 					/>
 				</DropdownMenuItem>
-				<DropdownMenuItem className="flex items-center justify-center gap-2 text-sm cursor-pointer">
-					<MdDelete />
-					Delete
+				<DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+					<DeleteProject
+						userId={userId}
+						projectId={project.id}
+						projectTitle={project.title}
+						fetchProjectList={fetchProjectList}
+					/>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

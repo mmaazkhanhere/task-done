@@ -21,7 +21,7 @@ const ProjectList = ({ projectList, fetchProjectList, userId }: Props) => {
 	}
 	console.log(projectList);
 	return (
-		<div className="bg-gray-100/50 dark:bg-muted m-4 p-4 md:p-6 mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 rounded-3xl gap-4 ">
+		<div className="bg-gray-100/50 dark:bg-muted m-4 p-4 md:p-6 mt-8 grid grid-cols-1 md:grid-cols-2  rounded-3xl gap-4 ">
 			{projectList.map((project) => (
 				<ProjectCard
 					key={project.id}
