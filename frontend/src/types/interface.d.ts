@@ -22,6 +22,10 @@ export interface Project {
 	created_at: Date;
 	creator_id: string;
 	creator: User[];
+
+	category_id: string;
+
+	tasks: Task[];
 }
 
 export interface Category {
@@ -31,6 +35,21 @@ export interface Category {
 	creator_id: string;
 	creator: User[];
 	projects?: Project[];
+}
+
+export interface Task {
+	id: string;
+	title: string;
+	description: string;
+	priority: string;
+	due_time: Date;
+	is_completed: Boolean;
+	created_at: Date;
+
+	creator_id: string;
+	creator: User;
+	project_id: string;
+	project: Project;
 }
 
 export interface AddProjectData {

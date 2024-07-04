@@ -10,9 +10,12 @@ import { getAllProject } from "@/actions/project-actions/get-all-project";
 type Props = {};
 
 const Projects = (props: Props) => {
+	const [projectList, setProjectList] = useState<Project[] | null>(null);
 	const { userId } = useAuth();
 
-	const [projectList, setProjectList] = useState<Project[] | null>(null);
+	if (!userId) {
+		throw new Error("Not authorized");
+	}
 
 	const fetchProjectList = useCallback(async () => {
 		try {
@@ -39,7 +42,7 @@ const Projects = (props: Props) => {
 				projectList={projectList!}
 				fetchProjectList={fetchProjectList}
 			/>
-			<Topbar />
+			<Topbar projectList={projectList!} userId={userId} />
 		</div>
 	);
 };

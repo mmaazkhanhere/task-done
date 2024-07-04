@@ -117,9 +117,6 @@ class TaskResponse(BaseModel):
     creator_id: str
     creator: UserResponse
 
-    project_id: str
-    project: 'ProjectResponse'  # Forward reference using a string
-
 
 class ProjectResponse(BaseModel):
     id: str
@@ -132,6 +129,9 @@ class ProjectResponse(BaseModel):
     creator_id: str
     creator: UserResponse
 
+    category_id: str
+
+    tasks: List['TaskResponse']
 
 class  CreateCategory(BaseModel):
     id: str
@@ -253,17 +253,6 @@ async def handle_delete_user(user_id: str, session: Annotated[Session, Depends(g
         raise HTTPException(status_code=500, detail=str(e))
     
 
-# Get the list of all categories
-@app.get('/category/all', response_model=List[CategoryResponse])
-async def get_all_categories(session: Session = Depends(get_session), x_user_id: str = Header(...)):
-    try:
-        category_list = session.exec(select(Category).where(Category.creator_id == x_user_id)).all()
-        return category_list
-    except Exception as e:
-        logger.error(f"\nError getting category list: {e}\n")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
 # Create a category api endpoint
 @app.post('/category', response_model=Category)
 async def handle_create_category(category_data: CreateCategory, session: Annotated[Session, Depends(get_session)]):
@@ -287,6 +276,33 @@ async def handle_create_category(category_data: CreateCategory, session: Annotat
         logger.error(f"\nError creating category: {e}\n")
         raise HTTPException(status_code=500, detail=str(e))
     
+
+# Get the list of all categories
+@app.get('/category/all', response_model=List[CategoryResponse])
+async def get_all_categories(session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        category_list = session.exec(select(Category).where(Category.creator_id == x_user_id)).all()
+        return category_list
+    except Exception as e:
+        logger.error(f"\nError getting category list: {e}\n")
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+# Get specific category data
+@app.get('/category/{category_id}', response_model=CategoryResponse)
+async def get_category(category_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        category = session.exec(
+            select(Category).where((Category.id == category_id) & (Category.creator_id == x_user_id))
+        ).first()
+        if category:
+            return category
+        else:
+            raise HTTPException(status_code=404, detail="Category not found")
+    except Exception as e:
+        logger.error(f"\nError getting category: {e}\n")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 # Edit category api endpoint
 @app.patch('/category/edit/{category_id}', response_model=Category)
