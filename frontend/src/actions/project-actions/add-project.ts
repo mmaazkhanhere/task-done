@@ -4,13 +4,14 @@ import { uuid } from "uuidv4";
 
 export async function addProject(values: AddProjectData, creator_id: string) {
 	const id = uuid();
-	const { title, description, category_id, icon } = values;
+	const { title, description, category_id, icon, due_date } = values;
 
 	try {
 		const response = await axios.post("http://localhost:8000/project", {
 			id,
 			title,
 			description,
+			due_date,
 			icon,
 			category_id,
 			creator_id,

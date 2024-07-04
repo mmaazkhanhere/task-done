@@ -63,6 +63,7 @@ class Project(SQLModel, table=True):
     id: str = Field(default_factory=uuid.uuid4, primary_key=True)
     title: str = Field(nullable=False, index=True)
     description: str = Field(nullable=False)
+    due_date: datetime = Field(nullable=False)
     is_completed: bool = Field(default=False)
     icon: str = Field(default="")
     created_at: datetime = Field(default=datetime.now, nullable=False)
@@ -109,6 +110,7 @@ class ProjectData(BaseModel):
     title: str
     description: str
     icon: str
+    due_date: datetime
     category_id: str
     creator_id: str
 
@@ -123,13 +125,14 @@ class TaskResponse(BaseModel):
     creator_id: str
     creator: UserResponse
 
-
 class ProjectResponse(BaseModel):
     id: str
     title: str
     description: str
-    is_completed: bool
     icon: str
+    due_date: datetime
+    is_completed: bool
+    
     created_at: datetime
 
     creator_id: str
@@ -377,6 +380,7 @@ async def handle_create_project(project_data: ProjectData, session: Annotated[Se
             title = project_data.title,
             description = project_data.description,
             icon = project_data.icon,
+            due_date = project_data.due_date,
             created_at = datetime.now(),
             creator_id = project_data.creator_id,
             category_id = project_data.category_id,
@@ -401,6 +405,22 @@ async def get_all_projects(session: Session = Depends(get_session), x_user_id: s
         logger.error(f"Error getting project list: {e}")
         raise HTTPException(status_code=500, detail=str(e))
     
+
+
+# get project
+@app.get('/project/{project_id}', response_model=ProjectResponse)
+async def get_project(project_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        project = session.exec(
+            select(Project).where((Project.id == project_id) & (Project.creator_id == x_user_id))
+        ).first()
+        if project:
+            return project
+        else:
+            raise HTTPException(status_code=404, detail="Project not found")
+    except Exception as e:
+        logger.error(f"\nError getting project: {e}\n")
+        raise HTTPException(status_code=500, detail=str(e))
 
 # edit project
 @app.patch('/project/edit/{project_id}', response_model=Project)

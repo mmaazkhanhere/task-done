@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { format } from "date-fns";
 
 import {
 	AlertDialog,
@@ -33,6 +34,14 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+
+import { Calendar } from "@/components/ui/calendar";
+
 import { Button } from "@/components/ui/button";
 
 import {
@@ -53,6 +62,7 @@ import {
 	IoBook,
 	IoCode,
 	IoGameController,
+	IoCalendar,
 } from "react-icons/io5";
 
 import { Input } from "@/components/ui/input";
@@ -106,7 +116,13 @@ const formSchema = z.object({
 		.max(200, {
 			message: "Project description must be less than 200 characters.",
 		}),
+
+	due_date: z.date({
+		required_error: "A date of birth is required.",
+	}),
+
 	category_id: z.string().min(1),
+
 	icon: z.string().min(1, {
 		message: "Please select an icon.",
 	}),
@@ -149,7 +165,6 @@ const AddProject = ({ fetchProjectList }: Props) => {
 	};
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values);
 		try {
 			const response = await addProject(values, userId as string);
 			if (response?.status == 200) {
@@ -190,6 +205,7 @@ const AddProject = ({ fetchProjectList }: Props) => {
 						className="space-y-8"
 					>
 						<div className="flex flex-wrap items-end gap-4">
+							{/*title field */}
 							<FormField
 								control={form.control}
 								name="title"
@@ -209,6 +225,7 @@ const AddProject = ({ fetchProjectList }: Props) => {
 								)}
 							/>
 
+							{/*icon field */}
 							<FormField
 								control={form.control}
 								name="icon"
@@ -287,6 +304,57 @@ const AddProject = ({ fetchProjectList }: Props) => {
 							/>
 						</div>
 
+						{/*date field */}
+						<FormField
+							control={form.control}
+							name="due_date"
+							render={({ field }) => (
+								<FormItem className="flex flex-col">
+									<FormLabel>Date of birth</FormLabel>
+									<Popover modal={true}>
+										<PopoverTrigger asChild>
+											<FormControl>
+												<Button
+													variant={"outline"}
+													className={cn(
+														"w-[240px] pl-3 text-left font-normal",
+														!field.value &&
+															"text-muted-foreground"
+													)}
+												>
+													{field.value ? (
+														format(
+															field.value,
+															"PPP"
+														)
+													) : (
+														<span>Pick a date</span>
+													)}
+													<IoCalendar className="ml-auto h-4 w-4 opacity-50" />
+												</Button>
+											</FormControl>
+										</PopoverTrigger>
+										<PopoverContent
+											className="w-auto p-0"
+											align="start"
+										>
+											<Calendar
+												mode="single"
+												selected={field.value}
+												onSelect={field.onChange}
+												disabled={(date) =>
+													date < new Date()
+												}
+												initialFocus
+											/>
+										</PopoverContent>
+									</Popover>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						{/*description field */}
 						<FormField
 							control={form.control}
 							name="description"
@@ -306,6 +374,7 @@ const AddProject = ({ fetchProjectList }: Props) => {
 							)}
 						/>
 
+						{/*category field */}
 						<FormField
 							control={form.control}
 							name="category_id"

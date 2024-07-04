@@ -21,6 +21,7 @@ export interface Project {
 	icon: string;
 	created_at: Date;
 	creator_id: string;
+	due_date: Date;
 	creator: User[];
 
 	category_id: string;
@@ -57,6 +58,7 @@ export interface AddProjectData {
 	description: string;
 	category_id: string;
 	icon: string;
+	due_date: Date;
 }
 
 export interface EditProjectData {
@@ -64,4 +66,5 @@ export interface EditProjectData {
 	description: string;
 	category_id: string;
 	icon: string;
+	due_date: Date;
 }

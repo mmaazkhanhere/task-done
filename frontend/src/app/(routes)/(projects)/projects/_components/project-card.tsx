@@ -32,6 +32,7 @@ import {
 	IoCode,
 	IoGameController,
 } from "react-icons/io5";
+import { formatDate } from "@/helper/format-date";
 
 type Props = {
 	project: Project;
@@ -61,6 +62,8 @@ const ProjectCard = ({ project, fetchProjectList, userId }: Props) => {
 
 	const progress = (tasksCompleted / totalTasks) * 100;
 
+	const formattedDueDate = formatDate(project.due_date);
+
 	let icon = project.icon;
 	let IconComponent: React.ComponentType<IconBaseProps> = FaProjectDiagram;
 
@@ -77,10 +80,44 @@ const ProjectCard = ({ project, fetchProjectList, userId }: Props) => {
 		case "Travel":
 			IconComponent = IoAirplane;
 			break;
+		case "Cafe":
+			IconComponent = IoCafe;
+			break;
+		case "Transport":
+			IconComponent = IoCar;
+			break;
+		case "Fitness":
+			IconComponent = IoFitness;
+			break;
+		case "Sports":
+			IconComponent = IoFootball;
+			break;
+		case "Global":
+			IconComponent = IoGlobe;
+			break;
+		case "Health":
+			IconComponent = IoHeart;
+			break;
+		case "Home":
+			IconComponent = IoHome;
+			break;
+		case "Tech":
+			IconComponent = IoLaptop;
+			break;
+		case "Music":
+			IconComponent = IoMusicalNote;
+			break;
+		case "Book":
+			IconComponent = IoBook;
+			break;
+		case "Gaming":
+			IconComponent = IoGameController;
 		case "Code":
 			IconComponent = IoCode;
 			break;
 	}
+
+	console.log(project);
 
 	return (
 		<div className="bg-gray-100 dark:bg-muted-foreground/30 p-4 rounded-lg flex flex-col items-start w-full gap-5">
@@ -106,7 +143,15 @@ const ProjectCard = ({ project, fetchProjectList, userId }: Props) => {
 				/>
 			</div>
 
-			<p className="text-sm text-gray-500">{project.description}</p>
+			<div className="flex flex-col gap-1">
+				<p className="text-sm text-gray-400">
+					Due Date:{" "}
+					<span className="text-red-500 font-semibold">
+						{formattedDueDate}
+					</span>
+				</p>
+				<p className="text-sm text-gray-500">{project.description}</p>
+			</div>
 
 			{totalTasks > 0 ? (
 				<div className="flex flex-col items-start w-full gap-2">
@@ -123,7 +168,7 @@ const ProjectCard = ({ project, fetchProjectList, userId }: Props) => {
 					<Progress value={progress} />
 				</div>
 			) : (
-				<p className="text-gray-600 text-sm">
+				<p className="text-gray-600 text-sm font-medium">
 					No tasks created yet. Create new one
 				</p>
 			)}
