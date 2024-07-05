@@ -43,6 +43,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { IoAdd } from "react-icons/io5";
+import { useToast } from "@/components/ui/use-toast";
+import { addTask } from "@/actions/task-actions/add-task";
 
 type Props = {
 	projectId: string;
@@ -60,6 +62,8 @@ const formSchema = z.object({
 });
 
 const AddProjectTask = ({ projectId, userId }: Props) => {
+	const { toast } = useToast();
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -68,10 +72,22 @@ const AddProjectTask = ({ projectId, userId }: Props) => {
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(values);
+	async function onSubmit(values: z.infer<typeof formSchema>) {
+		try {
+			const response = await addTask(values, projectId, userId);
+			if (response?.status === 200) {
+				toast({
+					title: "Task Added",
+				});
+			}
+		} catch (error) {
+			console.log("[ERROR_TASK_SUBMIT]: ", error);
+			toast({
+				title: "Something went wrong",
+				description: "Task not created",
+				variant: "destructive",
+			});
+		}
 	}
 
 	return (

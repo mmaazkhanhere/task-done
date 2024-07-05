@@ -76,3 +76,9 @@ export interface EditProjectData {
 	icon: string;
 	due_date: Date;
 }
+
+export interface AddTaskData {
+	title: string;
+	due_date: Date;
+	priority: string;
+}

@@ -34,9 +34,8 @@ class User(SQLModel, table=True):
 class Task(SQLModel, table=True):
     id: str = Field(default_factory=uuid.uuid4, primary_key=True)
     title: str = Field(nullable=False)
-    description: str = Field(nullable=False)
     priority: str = Field(nullable=False)
-    due_time: datetime = Field(nullable=False)
+    due_date: datetime = Field(nullable=False)
     is_completed: bool = Field(default=False, nullable=False)
     created_at: datetime = Field(default=datetime.now, nullable=False)
     
@@ -124,6 +123,14 @@ class TaskResponse(BaseModel):
 
     creator_id: str
     creator: UserResponse
+
+class TaskData(BaseModel):
+    id: str
+    title: str
+    priority: str
+    due_date: datetime
+    project_id: str
+    creator_id: str
 
 class ProjectResponse(BaseModel):
     id: str
@@ -460,4 +467,27 @@ async def handle_delete_project(project_id: str, session:Session = Depends(get_s
             raise HTTPException(status_code = 400, detail = "Project not found")
     except Exception as e:
         logger.error(f"Error deleting project: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+# create task
+@app.post('/task', response_model=Task)
+async def create_task(task_data: TaskData, session: Annotated[Session, Depends(get_session)]):
+    try:
+        task = Task(
+            id = task_data.id,
+            title = task_data.title,
+            priority= task_data.priority,
+            due_date = task_data.due_date,
+            project_id = task_data.project_id,
+            creator_id = task_data.creator_id,
+            created_at= datetime.now()
+        )
+        session.add(task)
+        session.commit()
+        session.refresh(task)
+        return task
+    
+    except Exception as e:
+        logger.error(f"Error creating task: {e}")
         raise HTTPException(status_code=500, detail=str(e))
