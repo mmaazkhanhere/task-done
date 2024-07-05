@@ -1,24 +1,21 @@
 import axios from "axios";
 
-export async function getAllProject(project_id: string, creator_id: string) {
+export async function getAllTasks(project_id: string, creator_id: string) {
 	try {
 		const response = await axios.get(
-			`http://localhost:8000/project/all/${project_id}`,
+			`http://localhost:8000/task/all/${project_id}`,
 			{
 				headers: {
 					"X-User-Id": creator_id,
 				},
 			}
 		);
-
-		console.log(response.data);
-
-		if (response?.status == 200) {
+		if (response.status == 200) {
 			return response.data;
 		} else {
 			return { status: 500, message: "Something went wrong" };
 		}
 	} catch (error) {
-		console.error(`[GET_ALL_PROJECTS_API_ERROR]: `, error);
+		console.log(`[GET_ALL_TASKS_ACTION_ERROR]: ${error}`);
 	}
 }

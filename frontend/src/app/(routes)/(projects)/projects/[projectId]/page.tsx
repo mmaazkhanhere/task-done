@@ -48,6 +48,8 @@ const ProjectDetailPage = ({ params }: Props) => {
 		);
 	}
 
+	console.log(userId, params.projectId);
+
 	return (
 		<div className="relative w-full">
 			<ProjectDetailNavbar projectData={projectData} />

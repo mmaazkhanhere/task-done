@@ -113,16 +113,28 @@ class ProjectData(BaseModel):
     category_id: str
     creator_id: str
 
+class SubTaskResponse(BaseModel):
+    id: str
+    title: str
+    priority: str
+    created_at: datetime
+
 class TaskResponse(BaseModel):
     id: str
     title: str
-    description: str
     priority: str
+    due_date: datetime
     is_completed: bool
+    
     created_at: datetime
 
     creator_id: str
     creator: UserResponse
+
+    project_id: str
+
+    sub_tasks: List['SubTaskResponse']
+
 
 class TaskData(BaseModel):
     id: str
@@ -413,7 +425,6 @@ async def get_all_projects(session: Session = Depends(get_session), x_user_id: s
         raise HTTPException(status_code=500, detail=str(e))
     
 
-
 # get project
 @app.get('/project/{project_id}', response_model=ProjectResponse)
 async def get_project(project_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
@@ -490,4 +501,23 @@ async def create_task(task_data: TaskData, session: Annotated[Session, Depends(g
     
     except Exception as e:
         logger.error(f"Error creating task: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+# get all tasks
+@app.get('/task/all/${project_id}', response_model=List[TaskResponse])
+async def get_all_tasks(project_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+
+        if not project_id or not x_user_id:
+            raise HTTPException(status_code=400, detail="Project and User ID is required")
+        
+
+        task_list = session.exec(select(Task).where((Task.project_id == project_id)&(Task.creator_id == x_user_id))).all()
+        if not task_list:
+            raise HTTPException(status_code=404, detail="No tasks found for this project")
+        else:
+            return task_list
+    except Exception as e:
+        logger.error(f"Error getting project list: {e}")
         raise HTTPException(status_code=500, detail=str(e))
