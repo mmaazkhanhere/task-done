@@ -51,7 +51,11 @@ const ProjectDetailPage = ({ params }: Props) => {
 	return (
 		<div className="relative w-full">
 			<ProjectDetailNavbar projectData={projectData} />
-			<ProjectDetailsTopBar projectData={projectData} />
+			<ProjectDetailsTopBar
+				projectData={projectData}
+				projectId={params.projectId}
+				userId={userId}
+			/>
 			<ProjectTasksList projectTask={projectData.tasks} />
 		</div>
 	);

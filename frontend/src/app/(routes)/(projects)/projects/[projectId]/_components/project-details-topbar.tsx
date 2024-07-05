@@ -12,9 +12,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
 	projectData: Project;
+	projectId: string;
+	userId: string;
 };
 
-const ProjectDetailsTopBar = ({ projectData }: Props) => {
+const ProjectDetailsTopBar = ({ projectData, projectId, userId }: Props) => {
 	const [sortValue, setSortValue] = useState<string>("name");
 	const router = useRouter();
 
@@ -46,7 +48,7 @@ const ProjectDetailsTopBar = ({ projectData }: Props) => {
 			<div className="flex items-center justify-between w-full">
 				<div className="flex items-center gap-x-4">
 					<h2 className="text-2xl font-semibold">All Tasks</h2>
-					<AddProjectTask />
+					<AddProjectTask projectId={projectId} userId={userId} />
 				</div>
 				<div className="flex items-center gap-2">
 					<p className="text-gray-500">Sort by:</p>

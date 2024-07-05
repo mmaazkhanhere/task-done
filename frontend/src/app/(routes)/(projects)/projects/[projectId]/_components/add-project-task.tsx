@@ -5,6 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import DateTimePicker from "react-datetime-picker";
+import "react-datetime-picker/dist/DateTimePicker.css";
+import "react-calendar/dist/Calendar.css";
+import "react-clock/dist/Clock.css";
+
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -35,62 +40,26 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-import {
-	IoAdd,
-	IoAirplane,
-	IoCafe,
-	IoCar,
-	IoFitness,
-	IoFootball,
-	IoGlobe,
-	IoHeart,
-	IoHome,
-	IoLaptop,
-	IoMusicalNote,
-	IoBody,
-	IoBusiness,
-	IoSchool,
-	IoBook,
-	IoCode,
-	IoGameController,
-} from "react-icons/io5";
-
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { IoAdd } from "react-icons/io5";
 
-type Props = {};
-
-const icons = [
-	{ name: "Personal", component: IoBody },
-	{ name: "Business", component: IoBusiness },
-	{ name: "School", component: IoSchool },
-	{ name: "Travel", component: IoAirplane },
-	{ name: "Cafe", component: IoCafe },
-	{ name: "Transport", component: IoCar },
-	{ name: "Fitness", component: IoFitness },
-	{ name: "Sports", component: IoFootball },
-	{ name: "Global", component: IoGlobe },
-	{ name: "Health", component: IoHeart },
-	{ name: "Home", component: IoHome },
-	{ name: "Tech", component: IoLaptop },
-	{ name: "Music", component: IoMusicalNote },
-	{ name: "Book", component: IoBook },
-	{ name: "Code", component: IoCode },
-	{ name: "Gaming", component: IoGameController },
-];
+type Props = {
+	projectId: string;
+	userId: string;
+};
 
 const formSchema = z.object({
 	title: z.string().min(2, {
 		message: "Task title must be at least 2 characters.",
 	}),
+	due_date: z.date(),
 	priority: z.string().min(1, {
 		message: "Please assign priority.",
 	}),
 });
 
-const AddProjectTask = (props: Props) => {
-	const [selectedIcon, setSelectedIcon] = useState("Personal");
-
+const AddProjectTask = ({ projectId, userId }: Props) => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -134,11 +103,28 @@ const AddProjectTask = (props: Props) => {
 									<FormControl>
 										<Input
 											placeholder="What you want to do..."
-											className=" w-96"
 											{...field}
 										/>
 									</FormControl>
 									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name="due_date"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Due Date</FormLabel>
+									<DateTimePicker
+										value={field.value}
+										onChange={(value) =>
+											field.onChange(value)
+										}
+										minDate={new Date()}
+										className="ml-4"
+									/>
 								</FormItem>
 							)}
 						/>
@@ -159,13 +145,13 @@ const AddProjectTask = (props: Props) => {
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent>
-											<SelectItem value="hidh">
+											<SelectItem value="High">
 												High
 											</SelectItem>
-											<SelectItem value="medium">
+											<SelectItem value="Medium">
 												Medium
 											</SelectItem>
-											<SelectItem value="low">
+											<SelectItem value="Low">
 												Low
 											</SelectItem>
 										</SelectContent>
