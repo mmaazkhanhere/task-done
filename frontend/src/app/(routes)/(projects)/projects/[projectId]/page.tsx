@@ -48,8 +48,6 @@ const ProjectDetailPage = ({ params }: Props) => {
 		);
 	}
 
-	console.log(userId, params.projectId);
-
 	return (
 		<div className="relative w-full">
 			<ProjectDetailNavbar projectData={projectData} />
@@ -57,8 +55,9 @@ const ProjectDetailPage = ({ params }: Props) => {
 				projectData={projectData}
 				projectId={params.projectId}
 				userId={userId}
+				getProjectData={getProjectData}
 			/>
-			<ProjectTasksList projectTask={projectData.tasks} />
+			<ProjectTasksList projectId={params.projectId} userId={userId} />
 		</div>
 	);
 };

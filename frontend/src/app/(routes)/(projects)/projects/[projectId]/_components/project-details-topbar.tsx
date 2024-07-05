@@ -14,9 +14,15 @@ type Props = {
 	projectData: Project;
 	projectId: string;
 	userId: string;
+	getProjectData: () => void;
 };
 
-const ProjectDetailsTopBar = ({ projectData, projectId, userId }: Props) => {
+const ProjectDetailsTopBar = ({
+	projectData,
+	projectId,
+	userId,
+	getProjectData,
+}: Props) => {
 	const [sortValue, setSortValue] = useState<string>("name");
 	const router = useRouter();
 
@@ -48,7 +54,11 @@ const ProjectDetailsTopBar = ({ projectData, projectId, userId }: Props) => {
 			<div className="flex items-center justify-between w-full">
 				<div className="flex items-center gap-x-4">
 					<h2 className="text-2xl font-semibold">All Tasks</h2>
-					<AddProjectTask projectId={projectId} userId={userId} />
+					<AddProjectTask
+						projectId={projectId}
+						userId={userId}
+						getProjectData={getProjectData}
+					/>
 				</div>
 				<div className="flex items-center gap-2">
 					<p className="text-gray-500">Sort by:</p>

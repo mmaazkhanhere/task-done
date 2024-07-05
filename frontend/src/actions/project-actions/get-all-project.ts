@@ -1,15 +1,12 @@
 import axios from "axios";
 
-export async function getAllProject(project_id: string, creator_id: string) {
+export async function getAllProject(creator_id: string) {
 	try {
-		const response = await axios.get(
-			`http://localhost:8000/project/all/${project_id}`,
-			{
-				headers: {
-					"X-User-Id": creator_id,
-				},
-			}
-		);
+		const response = await axios.get(`http://localhost:8000/project/all/`, {
+			headers: {
+				"X-User-Id": creator_id,
+			},
+		});
 
 		console.log(response.data);
 

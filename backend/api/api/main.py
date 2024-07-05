@@ -505,15 +505,15 @@ async def create_task(task_data: TaskData, session: Annotated[Session, Depends(g
     
 
 # get all tasks
-@app.get('/task/all/${project_id}', response_model=List[TaskResponse])
+@app.get('/task/all/{project_id}', response_model=List[TaskResponse])
 async def get_all_tasks(project_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
-
         if not project_id or not x_user_id:
-            raise HTTPException(status_code=400, detail="Project and User ID is required")
-        
+            raise HTTPException(status_code=400, detail="Project and User ID are required")
 
-        task_list = session.exec(select(Task).where((Task.project_id == project_id)&(Task.creator_id == x_user_id))).all()
+        task_list = session.exec(
+            select(Task).where((Task.project_id == project_id) & (Task.creator_id == x_user_id))
+        ).all()
         if not task_list:
             raise HTTPException(status_code=404, detail="No tasks found for this project")
         else:

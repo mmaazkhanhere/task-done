@@ -49,6 +49,7 @@ import { addTask } from "@/actions/task-actions/add-task";
 type Props = {
 	projectId: string;
 	userId: string;
+	getProjectData: () => void;
 };
 
 const formSchema = z.object({
@@ -61,7 +62,7 @@ const formSchema = z.object({
 	}),
 });
 
-const AddProjectTask = ({ projectId, userId }: Props) => {
+const AddProjectTask = ({ projectId, userId, getProjectData }: Props) => {
 	const { toast } = useToast();
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -79,6 +80,7 @@ const AddProjectTask = ({ projectId, userId }: Props) => {
 				toast({
 					title: "Task Added",
 				});
+				getProjectData();
 			}
 		} catch (error) {
 			console.log("[ERROR_TASK_SUBMIT]: ", error);
