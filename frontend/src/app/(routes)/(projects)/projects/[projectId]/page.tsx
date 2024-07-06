@@ -71,7 +71,12 @@ const ProjectDetailPage = ({ params }: Props) => {
 
 	return (
 		<div className="relative w-full">
-			<ProjectDetailNavbar projectData={projectData} />
+			<ProjectDetailNavbar
+				projectTitle={projectData.title}
+				taskList={taskList}
+				icon={projectData.icon}
+				projectDueDate={projectData.due_date}
+			/>
 			<ProjectDetailsTopBar
 				projectData={projectData}
 				projectId={params.projectId}

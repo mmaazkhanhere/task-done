@@ -3,7 +3,7 @@ import React from "react";
 import CircularProgressBar from "./circular-progress-bar";
 
 import { FaProjectDiagram } from "react-icons/fa";
-import { Project } from "@/types/interface";
+import { Project, Task } from "@/types/interface";
 
 import { IconBaseProps } from "react-icons";
 
@@ -29,14 +29,22 @@ import {
 import { formatDate } from "@/helper/format-date";
 import { cn } from "@/lib/utils";
 type Props = {
-	projectData: Project;
+	icon: string;
+	projectTitle: string;
+	projectDueDate: Date;
+	taskList: Task[];
 };
 
-const ProjectDetailNavbar = ({ projectData }: Props) => {
-	let icon = projectData.icon;
+const ProjectDetailNavbar = ({
+	projectTitle,
+	taskList,
+	icon,
+	projectDueDate,
+}: Props) => {
+	let projectIcon = icon;
 	let IconComponent: React.ComponentType<IconBaseProps> = FaProjectDiagram;
 
-	switch (icon) {
+	switch (projectIcon) {
 		case "Personal":
 			IconComponent = IoBody;
 			break;
@@ -86,16 +94,17 @@ const ProjectDetailNavbar = ({ projectData }: Props) => {
 			break;
 	}
 
-	const tasksCompleted = projectData.tasks.filter((task) =>
+	const tasksCompleted = taskList.filter((task) =>
 		Boolean(task.is_completed)
 	).length;
-	const totalTasks = projectData.tasks.length;
+
+	const totalTasks = taskList.length;
 
 	const currentTime: Date = new Date();
 
-	const overdue: boolean = currentTime > new Date(projectData.due_date);
+	const overdue: boolean = currentTime > new Date(projectDueDate);
 
-	const formattedDueDate = formatDate(projectData.due_date);
+	const formattedDueDate = formatDate(projectDueDate);
 
 	return (
 		<header
@@ -116,7 +125,7 @@ const ProjectDetailNavbar = ({ projectData }: Props) => {
 				<div className="flex flex-col items-start">
 					<div className="flex items-center gap-4">
 						<h1 className="text-3xl text-white font-bold">
-							{projectData.title}
+							{projectTitle}
 						</h1>
 						<p
 							className={cn(
@@ -131,7 +140,7 @@ const ProjectDetailNavbar = ({ projectData }: Props) => {
 					</div>
 
 					<p className="bg-gray-100 text-gray-600 px-3 py-1 text-sm mt-2 rounded-lg">
-						{projectData.tasks.length} Tasks
+						{taskList.length} Tasks
 					</p>
 				</div>
 			</div>
