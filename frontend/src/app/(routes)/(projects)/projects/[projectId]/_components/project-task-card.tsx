@@ -16,9 +16,11 @@ import TaskDueDateCountdown from "./task-duedate-countdown";
 
 type Props = {
 	task: Task;
+	getProjectData: () => void;
+	getTaskList: () => void;
 };
 
-const ProjectTaskCard = ({ task }: Props) => {
+const ProjectTaskCard = ({ task, getProjectData, getTaskList }: Props) => {
 	const [showSubTask, setShowSubTask] = useState<boolean>(false);
 
 	const handleShowSubTask = () => {
@@ -90,7 +92,12 @@ const ProjectTaskCard = ({ task }: Props) => {
 					)}
 				</div>
 
-				<ProjecTaskDropdownMenu />
+				<ProjecTaskDropdownMenu
+					task={task}
+					projectId={task.project_id}
+					getProjectData={getProjectData}
+					getTaskList={getTaskList}
+				/>
 			</div>
 			<p
 				className={cn(

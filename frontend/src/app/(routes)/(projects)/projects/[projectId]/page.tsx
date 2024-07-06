@@ -79,7 +79,11 @@ const ProjectDetailPage = ({ params }: Props) => {
 				getProjectData={getProjectData}
 				getTaskList={getTaskList}
 			/>
-			<ProjectTasksList taskList={taskList} />
+			<ProjectTasksList
+				taskList={taskList}
+				getProjectData={getProjectData}
+				getTaskList={getTaskList}
+			/>
 		</div>
 	);
 };

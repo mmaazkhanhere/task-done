@@ -11,19 +11,35 @@ import {
 
 import { BsThreeDots } from "react-icons/bs";
 import { MdEdit, MdDelete } from "react-icons/md";
+import EditProjectTask from "./edit-project-task";
+import { Task } from "@/types/interface";
 
-type Props = {};
+type Props = {
+	projectId: string;
+	task: Task;
+	getProjectData: () => void;
+	getTaskList: () => void;
+};
 
-const ProjecTaskDropdownMenu = (props: Props) => {
+const ProjecTaskDropdownMenu = ({
+	projectId,
+	task,
+	getProjectData,
+	getTaskList,
+}: Props) => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className="text-gray-500 dark:text-gray-200 w-5 h-5 hover:opacity-70 transition duration-300">
 				<BsThreeDots />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
-				<DropdownMenuItem className="flex items-center justify-center gap-2 text-sm cursor-pointer">
-					<MdEdit />
-					Edit
+				<DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+					<EditProjectTask
+						projectId={projectId}
+						task={task}
+						getProjectData={getProjectData}
+						getTaskList={getTaskList}
+					/>
 				</DropdownMenuItem>
 				<DropdownMenuItem className="flex items-center justify-center gap-2 text-sm cursor-pointer">
 					<MdDelete />

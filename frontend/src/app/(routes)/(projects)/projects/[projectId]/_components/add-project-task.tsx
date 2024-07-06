@@ -44,7 +44,6 @@ import { Input } from "@/components/ui/input";
 import { IoAdd } from "react-icons/io5";
 import { useToast } from "@/components/ui/use-toast";
 import { addTask } from "@/actions/task-actions/add-task";
-import { formatTimezone } from "@/helper/format-timezone";
 
 type Props = {
 	projectId: string;
