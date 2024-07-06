@@ -116,6 +116,14 @@ class ProjectData(BaseModel):
     category_id: str
     creator_id: str
 
+class SubTaskData(BaseModel):
+    id: str
+    title: str
+    priority: str
+    due_date: datetime
+    creator_id: str
+    task_id: str
+
 class SubTaskResponse(BaseModel):
     id: str
     title: str
@@ -589,3 +597,24 @@ async def delete_task(task_id: str, session: Session = Depends(get_session), x_u
     
 
 # add sub task
+@app.post('/subtask', response_model=SubTask)
+async def create_subtask(task_data: SubTaskData, session : Annotated[Session, Depends(get_session)]):
+    try:
+        sub_task = SubTask(
+            id = task_data.id,
+            title = task_data.title,\
+            priority = task_data.priority,
+            due_date = task_data.due_date,
+            created_at = datetime.now(),
+            task_id = task_data.task_id,
+            creator_id = task_data.creator_id
+        )
+
+        session.add(sub_task)
+        session.commit()
+        session.refresh(sub_task)
+        return sub_task
+    
+    except Exception as e:
+        logger.error(f"Error creating sub task: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

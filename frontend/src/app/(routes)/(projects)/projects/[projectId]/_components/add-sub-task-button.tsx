@@ -37,14 +37,16 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
-import { Button } from "@/components/ui/button";
-
 import { Input } from "@/components/ui/input";
 
 import { IoIosAdd } from "react-icons/io";
 import { useToast } from "@/components/ui/use-toast";
+import { addSubTask } from "@/actions/subtask_actions/add-subtask";
 
-type Props = {};
+type Props = {
+	taskId: string;
+	userId: string;
+};
 
 const formSchema = z.object({
 	title: z.string().min(2, {
@@ -56,7 +58,7 @@ const formSchema = z.object({
 	}),
 });
 
-const AddSubTask = (props: Props) => {
+const AddSubTask = ({ taskId, userId }: Props) => {
 	const { toast } = useToast();
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -70,7 +72,18 @@ const AddSubTask = (props: Props) => {
 	const { isSubmitting, isValid } = form.formState;
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		console.log(values);
+		const response = await addSubTask(values, taskId, userId);
+		if (response?.status === 200) {
+			toast({
+				title: "Sub task added successfully",
+			});
+		} else {
+			toast({
+				variant: "destructive",
+				title: "Something went wrong",
+				description: "Failed to add sub task.",
+			});
+		}
 	};
 
 	return (

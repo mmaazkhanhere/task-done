@@ -84,7 +84,7 @@ const ProjectTaskCard = ({
 									priority={task.priority}
 								/>
 							))}
-							<AddSubTask />
+							<AddSubTask taskId={task.id} userId={userId} />
 						</div>
 					)}
 				</div>
