@@ -3,12 +3,18 @@ import ProjectTaskCard from "./project-task-card";
 import { Task } from "@/types/interface";
 
 type Props = {
+	userId: string;
 	taskList: Task[];
 	getProjectData: () => void;
 	getTaskList: () => void;
 };
 
-const ProjectTasksList = ({ taskList, getProjectData, getTaskList }: Props) => {
+const ProjectTasksList = ({
+	taskList,
+	userId,
+	getProjectData,
+	getTaskList,
+}: Props) => {
 	if (taskList.length === 0) {
 		return (
 			<p className="text-gray-400 font-semibold p-4">
@@ -23,6 +29,7 @@ const ProjectTasksList = ({ taskList, getProjectData, getTaskList }: Props) => {
 				<ProjectTaskCard
 					key={task.id}
 					task={task}
+					userId={userId}
 					getProjectData={getProjectData}
 					getTaskList={getTaskList}
 				/>

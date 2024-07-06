@@ -15,14 +15,14 @@ import EditProjectTask from "./edit-project-task";
 import { Task } from "@/types/interface";
 
 type Props = {
-	projectId: string;
+	userId: string;
 	task: Task;
 	getProjectData: () => void;
 	getTaskList: () => void;
 };
 
-const ProjecTaskDropdownMenu = ({
-	projectId,
+const ProjectTaskDropdownMenu = ({
+	userId,
 	task,
 	getProjectData,
 	getTaskList,
@@ -35,7 +35,7 @@ const ProjecTaskDropdownMenu = ({
 			<DropdownMenuContent>
 				<DropdownMenuItem onSelect={(e) => e.preventDefault()}>
 					<EditProjectTask
-						projectId={projectId}
+						userId={userId}
 						task={task}
 						getProjectData={getProjectData}
 						getTaskList={getTaskList}
@@ -50,4 +50,4 @@ const ProjecTaskDropdownMenu = ({
 	);
 };
 
-export default ProjecTaskDropdownMenu;
+export default ProjectTaskDropdownMenu;

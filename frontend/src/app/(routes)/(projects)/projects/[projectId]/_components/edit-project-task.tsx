@@ -41,9 +41,10 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Task } from "@/types/interface";
 import { MdEdit } from "react-icons/md";
+import { editTask } from "@/actions/task-actions/edit-task";
 
 type Props = {
-	projectId: string;
+	userId: string;
 	task: Task;
 	getProjectData: () => void;
 	getTaskList: () => void;
@@ -60,8 +61,8 @@ const formSchema = z.object({
 });
 
 const EditProjectTask = ({
-	projectId,
 	task,
+	userId,
 	getProjectData,
 	getTaskList,
 }: Props) => {
@@ -78,7 +79,20 @@ const EditProjectTask = ({
 	const { isSubmitting, isValid } = form.formState;
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		console.log(values);
+		const response = await editTask(task.id, userId, values);
+		if (response?.status == 200) {
+			toast({
+				title: "Task updated successfully",
+			});
+			getProjectData();
+			getTaskList();
+		} else {
+			toast({
+				variant: "destructive",
+				title: "Something went wrong",
+				description: "Cannot update the task",
+			});
+		}
 	};
 
 	return (
@@ -104,6 +118,14 @@ const EditProjectTask = ({
 										<FormControl>
 											<Input
 												placeholder="What you want to do..."
+												onClick={(e) =>
+													e.stopPropagation()
+												}
+												onKeyDown={(e) =>
+													e.keyCode === 32
+														? e.stopPropagation()
+														: null
+												}
 												{...field}
 											/>
 										</FormControl>

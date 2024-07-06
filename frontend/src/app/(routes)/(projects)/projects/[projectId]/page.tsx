@@ -80,6 +80,7 @@ const ProjectDetailPage = ({ params }: Props) => {
 				getTaskList={getTaskList}
 			/>
 			<ProjectTasksList
+				userId={userId}
 				taskList={taskList}
 				getProjectData={getProjectData}
 				getTaskList={getTaskList}

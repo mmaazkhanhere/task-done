@@ -2,25 +2,28 @@
 
 import React, { useState } from "react";
 
-import ProjecTaskDropdownMenu from "./project-task-dropdown-menu";
-
 import { cn } from "@/lib/utils";
 
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import SubTaskCard from "./sub-task-card";
 import AddSubTask from "./add-sub-task-button";
 import { Task } from "@/types/interface";
-import { formatDate } from "@/helper/format-date";
-import { formatDateTime } from "@/helper/format-date-time";
 import TaskDueDateCountdown from "./task-duedate-countdown";
+import ProjectTaskDropdownMenu from "./project-task-dropdown-menu";
 
 type Props = {
+	userId: string;
 	task: Task;
 	getProjectData: () => void;
 	getTaskList: () => void;
 };
 
-const ProjectTaskCard = ({ task, getProjectData, getTaskList }: Props) => {
+const ProjectTaskCard = ({
+	task,
+	userId,
+	getProjectData,
+	getTaskList,
+}: Props) => {
 	const [showSubTask, setShowSubTask] = useState<boolean>(false);
 
 	const handleShowSubTask = () => {
@@ -92,9 +95,9 @@ const ProjectTaskCard = ({ task, getProjectData, getTaskList }: Props) => {
 					)}
 				</div>
 
-				<ProjecTaskDropdownMenu
+				<ProjectTaskDropdownMenu
 					task={task}
-					projectId={task.project_id}
+					userId={userId}
 					getProjectData={getProjectData}
 					getTaskList={getTaskList}
 				/>

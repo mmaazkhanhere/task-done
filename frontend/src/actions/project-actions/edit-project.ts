@@ -18,7 +18,7 @@ export async function editProject(
 			}
 		);
 		if (response.status === 200) {
-			return { status: 200, message: "Category Successfully Edited" };
+			return { status: 200, message: "Project Successfully Edited" };
 		}
 	} catch (error) {
 		console.log("[EDIT_PROJECT_ACTION_ERROR]: ", error);

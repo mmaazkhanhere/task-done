@@ -145,6 +145,11 @@ class TaskData(BaseModel):
     project_id: str
     creator_id: str
 
+class TaskEditData(BaseModel):
+    title: str
+    priority: str
+    due_date: datetime
+
 class ProjectResponse(BaseModel):
     id: str
     title: str
@@ -522,4 +527,21 @@ async def get_all_tasks(project_id: str, session: Session = Depends(get_session)
             return task_list
     except Exception as e:
         logger.error(f"Error getting project list: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+#edit tasks
+@app.patch('/task/edit/{task_id}', response_model=Task)
+async def edit_task(task_id: str, task_data: TaskEditData,session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id))).first()
+        if task:
+            task.title  = task_data.title
+            task.priority = task_data.priority
+            task.due_date = task_data.due_date
+            session.commit()
+            session.refresh(task)
+            return task
+        
+    except Exception as e:
+        logger.error(f"Error getting task: {e}")
         raise HTTPException(status_code=500, detail=str(e))

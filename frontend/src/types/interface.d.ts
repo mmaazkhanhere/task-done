@@ -82,3 +82,9 @@ export interface AddTaskData {
 	due_date: Date;
 	priority: string;
 }
+
+export interface EditTaskData {
+	title: string;
+	due_date: Date;
+	priority: string;
+}
