@@ -24,7 +24,7 @@ const TaskDueDateCountdown = ({ dueDate }: Props) => {
 		return () => clearInterval(timer);
 	}, [dueDate, timeLeftMemoized]);
 
-	return <div>{<div>{timeLeft || "Time is up!"}</div>}</div>;
+	return <div>{<p>{timeLeft || "Overdue!"}</p>}</div>;
 };
 
 export default TaskDueDateCountdown;

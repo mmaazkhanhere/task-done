@@ -1,3 +1,4 @@
+import { formatTimezone } from "@/helper/format-timezone";
 import { AddTaskData } from "@/types/interface";
 import axios from "axios";
 import { uuid } from "uuidv4";
@@ -8,7 +9,8 @@ export async function addTask(
 	creator_id: string
 ) {
 	const id = uuid();
-	const { title, due_date, priority } = values;
+	const { title, priority } = values;
+	const due_date = formatTimezone(values.due_date);
 	console.log({ id, title, due_date, priority, project_id, creator_id });
 	try {
 		const response = await axios.post("http://localhost:8000/task", {
