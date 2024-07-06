@@ -44,7 +44,7 @@ export interface Task {
 	description: string;
 	priority: string;
 	due_date: Date;
-	is_completed: Boolean;
+	is_completed: boolean;
 	created_at: Date;
 
 	creator_id: string;

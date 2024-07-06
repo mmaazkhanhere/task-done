@@ -10,6 +10,7 @@ import AddSubTask from "./add-sub-task-button";
 import { Task } from "@/types/interface";
 import TaskDueDateCountdown from "./task-duedate-countdown";
 import ProjectTaskDropdownMenu from "./project-task-dropdown-menu";
+import TaskCompletionButton from "./task_completion_button";
 
 type Props = {
 	userId: string;
@@ -38,19 +39,12 @@ const ProjectTaskCard = ({
 			<div className="flex items-center justify-between w-full">
 				<div className="flex flex-col items-start">
 					<div className="items-center flex gap-4">
-						<button
-							className={cn(
-								"flex items-center justify-center w-6 h-6 bg-white rounded-full",
-								task.is_completed && "border border-gray-300"
-							)}
-						>
-							<button
-								className={cn(
-									"w-5 h-5 rounded-full",
-									task.is_completed && "bg-primary"
-								)}
-							/>
-						</button>
+						<TaskCompletionButton
+							taskId={task.id}
+							isCompleted={task.is_completed}
+							userId={userId}
+							getTaskList={getTaskList}
+						/>
 						<div className="flex flex-col items-start">
 							<p
 								className={cn(

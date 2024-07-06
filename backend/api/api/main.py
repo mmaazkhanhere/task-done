@@ -52,6 +52,8 @@ class SubTask(SQLModel, table=True):
     id: str = Field(default_factory=uuid.uuid4, primary_key=True)
     title: str = Field(nullable=False)
     priority: str = Field(nullable=False)
+    due_date: datetime = Field(nullable=False)
+    is_completed: bool = Field(default=False, nullable=False)
     created_at: datetime = Field(default=datetime.now, nullable=False)
     
     task_id: str = Field(foreign_key="task.id", nullable=False)
@@ -150,6 +152,9 @@ class TaskEditData(BaseModel):
     priority: str
     due_date: datetime
 
+class TaskComplete(BaseModel):
+    is_complete: bool
+
 class ProjectResponse(BaseModel):
     id: str
     title: str
@@ -180,7 +185,6 @@ class CategoryResponse(BaseModel):
     creator: UserResponse
     projects: list[ProjectResponse]
     
-
 class EditCategory(BaseModel):
     title: str
 
@@ -544,4 +548,25 @@ async def edit_task(task_id: str, task_data: TaskEditData,session: Session = Dep
         
     except Exception as e:
         logger.error(f"Error getting task: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+# task complete api
+@app.patch('/task/complete/{task_id}')
+async def task_completion(task_id: str, recieved_data: TaskComplete ,session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id))).first()
+        if task:
+            incomplete_sub_tasks = session.exec(select(SubTask).where((SubTask.task_id == task.id) & (SubTask.is_completed == False))).all()
+            if incomplete_sub_tasks:
+                raise HTTPException(status_code=409, detail="Sub-tasks are not completed")
+            else:
+                task.is_completed = recieved_data.is_complete
+                session.commit()
+                session.refresh(task)
+                return task
+        else:
+            raise HTTPException(status_code=400, detail="Task not found")
+    except Exception as e:
+        logger.error(f"Error completing task: {e}")
         raise HTTPException(status_code=500, detail=str(e))
