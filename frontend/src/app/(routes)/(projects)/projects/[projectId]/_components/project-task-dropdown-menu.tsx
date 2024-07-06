@@ -13,6 +13,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { MdEdit, MdDelete } from "react-icons/md";
 import EditProjectTask from "./edit-project-task";
 import { Task } from "@/types/interface";
+import ProjectTaskDeletion from "./project-task-deletion";
 
 type Props = {
 	userId: string;
@@ -41,9 +42,12 @@ const ProjectTaskDropdownMenu = ({
 						getTaskList={getTaskList}
 					/>
 				</DropdownMenuItem>
-				<DropdownMenuItem className="flex items-center justify-center gap-2 text-sm cursor-pointer">
-					<MdDelete />
-					Delete
+				<DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+					<ProjectTaskDeletion
+						userId={userId}
+						taskId={task.id}
+						getTaskList={getTaskList}
+					/>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

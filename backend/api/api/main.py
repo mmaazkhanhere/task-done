@@ -570,3 +570,22 @@ async def task_completion(task_id: str, recieved_data: TaskComplete ,session: Se
     except Exception as e:
         logger.error(f"Error completing task: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+# task delete api
+@app.delete('/task/delete/{task_id}')
+async def delete_task(task_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        task = session.exec(select(Task).where((Task.id == task_id)&(Task.creator_id == x_user_id))).first()
+        if task:
+            session.delete(task)
+            session.commit()
+            return task
+        else:
+            raise HTTPException(status_code=400, detail="Task not found")
+    except Exception as e:
+        logger.error(f"Error deleting task: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+# task

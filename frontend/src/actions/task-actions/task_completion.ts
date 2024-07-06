@@ -6,7 +6,6 @@ export async function taskCompletion(
 	is_complete: boolean
 ) {
 	try {
-		console.log(task_id, creator_id, is_complete);
 		const response = await axios.patch(
 			`http://localhost:8000/task/complete/${task_id}`,
 			{ is_complete },
