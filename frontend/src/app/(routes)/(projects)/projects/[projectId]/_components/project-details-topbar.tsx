@@ -15,6 +15,7 @@ type Props = {
 	projectId: string;
 	userId: string;
 	getProjectData: () => void;
+	getTaskList: () => void;
 };
 
 const ProjectDetailsTopBar = ({
@@ -22,6 +23,7 @@ const ProjectDetailsTopBar = ({
 	projectId,
 	userId,
 	getProjectData,
+	getTaskList,
 }: Props) => {
 	const [sortValue, setSortValue] = useState<string>("name");
 	const router = useRouter();
@@ -58,6 +60,7 @@ const ProjectDetailsTopBar = ({
 						projectId={projectId}
 						userId={userId}
 						getProjectData={getProjectData}
+						getTaskList={getTaskList}
 					/>
 				</div>
 				<div className="flex items-center gap-2">

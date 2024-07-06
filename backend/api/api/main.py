@@ -103,6 +103,7 @@ class EditProject(BaseModel):
     description: str
     icon: str
     category_id: str
+    due_date: datetime
 
 class ProjectData(BaseModel):
     id: str
@@ -453,6 +454,7 @@ async def edit_project(project_id: str, project_data:EditProject, session: Sessi
             project.description = project_data.description
             project.icon = project_data.icon
             project.category_id = project_data.category_id
+            project.due_date = project_data.due_date
             session.commit()
             session.refresh(project)
             return project
@@ -515,7 +517,7 @@ async def get_all_tasks(project_id: str, session: Session = Depends(get_session)
             select(Task).where((Task.project_id == project_id) & (Task.creator_id == x_user_id))
         ).all()
         if not task_list:
-            raise HTTPException(status_code=404, detail="No tasks found for this project")
+            return []
         else:
             return task_list
     except Exception as e:

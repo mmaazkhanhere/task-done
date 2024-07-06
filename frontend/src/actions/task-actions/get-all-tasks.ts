@@ -10,6 +10,7 @@ export async function getAllTasks(project_id: string, creator_id: string) {
 				},
 			}
 		);
+		console.log(response);
 		if (response.status == 200) {
 			return response.data;
 		} else {

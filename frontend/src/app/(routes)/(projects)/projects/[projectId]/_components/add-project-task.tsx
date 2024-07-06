@@ -41,7 +41,6 @@ import {
 import { Button } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import { IoAdd } from "react-icons/io5";
 import { useToast } from "@/components/ui/use-toast";
 import { addTask } from "@/actions/task-actions/add-task";
@@ -50,6 +49,7 @@ type Props = {
 	projectId: string;
 	userId: string;
 	getProjectData: () => void;
+	getTaskList: () => void;
 };
 
 const formSchema = z.object({
@@ -62,7 +62,12 @@ const formSchema = z.object({
 	}),
 });
 
-const AddProjectTask = ({ projectId, userId, getProjectData }: Props) => {
+const AddProjectTask = ({
+	projectId,
+	userId,
+	getProjectData,
+	getTaskList,
+}: Props) => {
 	const { toast } = useToast();
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -80,6 +85,7 @@ const AddProjectTask = ({ projectId, userId, getProjectData }: Props) => {
 				toast({
 					title: "Task Added",
 				});
+				getTaskList();
 				getProjectData();
 			}
 		} catch (error) {

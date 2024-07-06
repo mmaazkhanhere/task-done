@@ -5,9 +5,14 @@ import React, { useState, useEffect } from "react";
 type Props = {
 	totalTasks: number;
 	completedTasks: number;
+	overdue: boolean;
 };
 
-const CircularProgressBar = ({ totalTasks, completedTasks }: Props) => {
+const CircularProgressBar = ({
+	totalTasks,
+	completedTasks,
+	overdue,
+}: Props) => {
 	const [percentage, setPercentage] = useState(0);
 
 	useEffect(() => {
@@ -31,7 +36,7 @@ const CircularProgressBar = ({ totalTasks, completedTasks }: Props) => {
 				cy="60"
 				r={radius}
 				fill="none"
-				stroke="green"
+				stroke={overdue ? "white" : "green"}
 				strokeWidth={strokeWidth}
 			/>
 			<circle
@@ -39,7 +44,9 @@ const CircularProgressBar = ({ totalTasks, completedTasks }: Props) => {
 				cy="60"
 				r={radius}
 				fill="none"
-				stroke="white" /* Change color as needed */
+				stroke={
+					overdue ? "green" : "white"
+				} /* Change color as needed */
 				strokeWidth={strokeWidth}
 				strokeDasharray={circumference}
 				strokeDashoffset={offset}

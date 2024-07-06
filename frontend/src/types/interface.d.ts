@@ -43,7 +43,7 @@ export interface Task {
 	title: string;
 	description: string;
 	priority: string;
-	due_time: Date;
+	due_date: Date;
 	is_completed: Boolean;
 	created_at: Date;
 
@@ -52,7 +52,7 @@ export interface Task {
 	project_id: string;
 	project: Project;
 
-	subTasks: SubTasks[];
+	sub_tasks: SubTasks[];
 }
 
 export interface SubTasks {

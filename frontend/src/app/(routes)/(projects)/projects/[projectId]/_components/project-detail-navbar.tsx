@@ -27,6 +27,7 @@ import {
 	IoGameController,
 } from "react-icons/io5";
 import { formatDate } from "@/helper/format-date";
+import { cn } from "@/lib/utils";
 type Props = {
 	projectData: Project;
 };
@@ -90,14 +91,26 @@ const ProjectDetailNavbar = ({ projectData }: Props) => {
 	).length;
 	const totalTasks = projectData.tasks.length;
 
+	const currentTime: Date = new Date();
+
+	const overdue: boolean = currentTime > new Date(projectData.due_date);
+
 	const formattedDueDate = formatDate(projectData.due_date);
 
 	return (
-		<header className="sticky h-32 bg-primary w-full flex items-center justify-between py-4 px-4 md:px-8">
+		<header
+			className={cn(
+				"sticky h-32 w-full flex items-center justify-between py-4 px-4 md:px-8",
+				overdue ? "bg-destructive" : "bg-primary"
+			)}
+		>
 			<div className="flex items-center gap-4">
 				{IconComponent &&
 					React.createElement(IconComponent, {
-						className: `w-11 h-11 bg-white text-green-500 rounded-full p-2`,
+						className: cn(
+							`w-11 h-11  bg-white rounded-full p-2`,
+							overdue ? "text-red-500" : "text-green-500"
+						),
 					})}
 
 				<div className="flex flex-col items-start">
@@ -105,7 +118,14 @@ const ProjectDetailNavbar = ({ projectData }: Props) => {
 						<h1 className="text-3xl text-white font-bold">
 							{projectData.title}
 						</h1>
-						<p className="px-2 py-1 bg-red-500 rounded-lg text-white text-sm font-semibold">
+						<p
+							className={cn(
+								"px-2 py-1 rounded-lg text-sm font-semibold",
+								overdue
+									? "bg-white text-black"
+									: "bg-red-500 text-white"
+							)}
+						>
 							{formattedDueDate}
 						</p>
 					</div>
@@ -118,6 +138,7 @@ const ProjectDetailNavbar = ({ projectData }: Props) => {
 			<CircularProgressBar
 				totalTasks={totalTasks}
 				completedTasks={tasksCompleted}
+				overdue={overdue}
 			/>
 		</header>
 	);

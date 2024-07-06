@@ -177,7 +177,6 @@ const EditProject = ({ project, userId, fetchProjectList }: Props) => {
 	};
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values);
 		try {
 			const response = await editProject(
 				values,

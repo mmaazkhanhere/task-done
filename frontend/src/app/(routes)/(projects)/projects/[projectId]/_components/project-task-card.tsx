@@ -10,6 +10,9 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import SubTaskCard from "./sub-task-card";
 import AddSubTask from "./add-sub-task-button";
 import { Task } from "@/types/interface";
+import { formatDate } from "@/helper/format-date";
+import { formatDateTime } from "@/helper/format-date-time";
+import TaskDueDateCountdown from "./task-duedate-countdown";
 
 type Props = {
 	task: Task;
@@ -22,11 +25,14 @@ const ProjectTaskCard = ({ task }: Props) => {
 		setShowSubTask(!showSubTask);
 	};
 
+	console.log(task);
+	console.log(task.due_date);
+
 	return (
 		<article className="flex flex-col items-start bg-gray-100 dark:bg-muted-foreground/30 p-4 m-4 gap-4 rounded-lg">
 			<div className="flex items-center justify-between w-full">
 				<div className="flex flex-col items-start">
-					<div className="items-center flex gap-2">
+					<div className="items-center flex gap-4">
 						<button
 							className={cn(
 								"flex items-center justify-center w-6 h-6 bg-white rounded-full",
@@ -40,15 +46,27 @@ const ProjectTaskCard = ({ task }: Props) => {
 								)}
 							/>
 						</button>
-						<p
-							className={cn(
-								"md:text-lg font-medium",
-								task.is_completed &&
-									"line-through text-gray-500"
-							)}
-						>
-							{task.title}
-						</p>
+						<div className="flex flex-col items-start">
+							<p
+								className={cn(
+									"md:text-lg font-medium",
+									task.is_completed &&
+										"line-through text-gray-500"
+								)}
+							>
+								{task.title}
+							</p>
+							<div>
+								<TaskDueDateCountdown dueDate={task.due_date} />
+							</div>
+							{/* <p className="text-sm text-gray-500">
+								Due:{" "}
+								<span className="text-red-500">
+									{formatDateTime(task.due_date)}
+								</span>
+							</p> */}
+						</div>
+
 						<button onClick={handleShowSubTask}>
 							{showSubTask ? (
 								<IoIosArrowUp />
@@ -58,8 +76,8 @@ const ProjectTaskCard = ({ task }: Props) => {
 						</button>
 					</div>
 					{showSubTask && (
-						<div className="pl-12 flex flex-col items-start gap-2 mt-2">
-							{task.subTasks.map((task) => (
+						<div className="pl-12 flex flex-col items-start gap-2 mt-4">
+							{task.sub_tasks.map((task) => (
 								<SubTaskCard
 									key={task.title}
 									title={task.title}
