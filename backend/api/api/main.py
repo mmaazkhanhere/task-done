@@ -27,6 +27,7 @@ class User(SQLModel, table=True):
     created_at: datetime = Field(default=datetime.now(), nullable=False)
     
     tasks: List["Task"] = Relationship(back_populates="creator", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
+    sub_tasks: List["SubTask"] = Relationship(back_populates="creator", sa_relationship_kwargs={"cascade": "all, delete-orphan"}) 
     projects: List["Project"] = Relationship(back_populates="creator", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
     categories: List["Category"] = Relationship(back_populates="creator", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
 
@@ -58,6 +59,9 @@ class SubTask(SQLModel, table=True):
     
     task_id: str = Field(foreign_key="task.id", nullable=False)
     task: "Task" = Relationship(back_populates="sub_tasks")
+
+    creator_id: str = Field(foreign_key="user.id", nullable=False)
+    creator: "User" = Relationship(back_populates="sub_tasks")
 
 # Project Model
 class Project(SQLModel, table=True):
@@ -618,3 +622,20 @@ async def create_subtask(task_data: SubTaskData, session : Annotated[Session, De
     except Exception as e:
         logger.error(f"Error creating sub task: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+
+# get all sub tasks
+@app.get('/subtask/all/{task_id}', response_model=List[SubTaskResponse])
+async def get_all_subtasks(task_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        sub_task_list = session.exec(select(SubTask).where((SubTask.task_id == task_id) & (SubTask.creator_id == x_user_id)))
+        if sub_task_list:
+            return sub_task_list
+        else:
+            return []
+    except Exception as e:
+        logger.error(f"Error getting sub task list: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    
+

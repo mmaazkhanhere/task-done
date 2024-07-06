@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import SubTaskCard from "./sub-task-card";
 import AddSubTask from "./add-sub-task-button";
-import { Task } from "@/types/interface";
+import { SubTasks, Task } from "@/types/interface";
 import TaskDueDateCountdown from "./task-duedate-countdown";
 import ProjectTaskDropdownMenu from "./project-task-dropdown-menu";
 import TaskCompletionButton from "./task_completion_button";
+import { getAllSubTasks } from "@/actions/subtask_actions/get-all-subtasks";
 
 type Props = {
 	userId: string;
@@ -26,13 +27,20 @@ const ProjectTaskCard = ({
 	getTaskList,
 }: Props) => {
 	const [showSubTask, setShowSubTask] = useState<boolean>(false);
+	const [subTaskList, setSubTaskList] = useState<SubTasks[]>([]);
+
+	const getSubTaskList = useCallback(async () => {
+		const response = await getAllSubTasks(task.id, userId);
+		setSubTaskList(response);
+	}, [task.id, userId]);
+
+	useEffect(() => {
+		getSubTaskList();
+	}, [getSubTaskList]);
 
 	const handleShowSubTask = () => {
 		setShowSubTask(!showSubTask);
 	};
-
-	console.log(task);
-	console.log(task.due_date);
 
 	return (
 		<article className="flex flex-col items-start bg-gray-100 dark:bg-muted-foreground/30 p-4 m-4 gap-4 rounded-lg">
@@ -58,12 +66,6 @@ const ProjectTaskCard = ({
 							<div>
 								<TaskDueDateCountdown dueDate={task.due_date} />
 							</div>
-							{/* <p className="text-sm text-gray-500">
-								Due:{" "}
-								<span className="text-red-500">
-									{formatDateTime(task.due_date)}
-								</span>
-							</p> */}
 						</div>
 
 						<button onClick={handleShowSubTask}>
@@ -76,14 +78,20 @@ const ProjectTaskCard = ({
 					</div>
 					{showSubTask && (
 						<div className="pl-12 flex flex-col items-start gap-2 mt-4">
-							{task.sub_tasks.map((task) => (
-								<SubTaskCard
-									key={task.title}
-									title={task.title}
-									isCompleted={task.isCompleted}
-									priority={task.priority}
-								/>
-							))}
+							{subTaskList.length == 0 ? (
+								<p className="text-sm font-semibold">
+									No subtasks yet. Create new one!
+								</p>
+							) : (
+								subTaskList.map((task) => (
+									<SubTaskCard
+										key={task.title}
+										title={task.title}
+										isCompleted={task.isCompleted}
+										priority={task.priority}
+									/>
+								))
+							)}
 							<AddSubTask taskId={task.id} userId={userId} />
 						</div>
 					)}
