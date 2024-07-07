@@ -86,13 +86,17 @@ const ProjectTaskCard = ({
 								subTaskList.map((task) => (
 									<SubTaskCard
 										key={task.title}
-										title={task.title}
-										isCompleted={task.isCompleted}
-										priority={task.priority}
+										subTask={task}
+										userId={userId}
+										getSubTaskList={getSubTaskList}
 									/>
 								))
 							)}
-							<AddSubTask taskId={task.id} userId={userId} />
+							<AddSubTask
+								taskId={task.id}
+								userId={userId}
+								getSubTaskList={getSubTaskList}
+							/>
 						</div>
 					)}
 				</div>

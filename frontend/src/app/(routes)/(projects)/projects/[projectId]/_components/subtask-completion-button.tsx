@@ -1,43 +1,41 @@
+import { subTaskCompletion } from "@/actions/subtask_actions/subtask-completion";
 import { taskCompletion } from "@/actions/task-actions/task_completion";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import React from "react";
 
 type Props = {
-	taskId: string;
+	subTaskId: string;
 	isCompleted: boolean;
 	userId: string;
-	getTaskList: () => void;
+	getSubTaskList: () => void;
 };
 
-const TaskCompletionButton = ({
-	taskId,
+const SubTaskCompletionButton = ({
+	subTaskId,
 	userId,
 	isCompleted,
-	getTaskList,
+	getSubTaskList,
 }: Props) => {
 	const { toast } = useToast();
 
 	const handleOnClick = async () => {
-		const response = await taskCompletion(taskId, userId, !isCompleted);
-		console.log(response?.state);
-		console.log(response?.message);
+		console.log(isCompleted);
+		const response = await subTaskCompletion(
+			subTaskId,
+			userId,
+			!isCompleted
+		);
 		if (response?.state == 200) {
 			toast({
-				title: "Task Completed",
+				title: "Subtask Completed",
 			});
-			getTaskList();
-		} else if (response?.message.includes("409")) {
-			toast({
-				variant: "destructive",
-				title: "Subtasks are not completed yet",
-				description: "Complete the subtasks",
-			});
+			getSubTaskList();
 		} else {
 			toast({
 				variant: "destructive",
 				title: "Something went wrong",
-				description: "Cannot update task completion state",
+				description: "Cannot update subtask completion state",
 			});
 		}
 	};
@@ -60,4 +58,4 @@ const TaskCompletionButton = ({
 	);
 };
 
-export default TaskCompletionButton;
+export default SubTaskCompletionButton;

@@ -46,6 +46,7 @@ import { addSubTask } from "@/actions/subtask_actions/add-subtask";
 type Props = {
 	taskId: string;
 	userId: string;
+	getSubTaskList: () => void;
 };
 
 const formSchema = z.object({
@@ -58,7 +59,7 @@ const formSchema = z.object({
 	}),
 });
 
-const AddSubTask = ({ taskId, userId }: Props) => {
+const AddSubTask = ({ taskId, userId, getSubTaskList }: Props) => {
 	const { toast } = useToast();
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -77,6 +78,7 @@ const AddSubTask = ({ taskId, userId }: Props) => {
 			toast({
 				title: "Sub task added successfully",
 			});
+			getSubTaskList();
 		} else {
 			toast({
 				variant: "destructive",

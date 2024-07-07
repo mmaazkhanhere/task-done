@@ -16,12 +16,26 @@ export async function taskCompletion(
 				},
 			}
 		);
+		console.log(response.status);
 
 		if (response.status == 200) {
-			return { state: 200, message: "Task updated successfully" };
+			return { state: 200, message: "Task completed successfully" };
 		}
 	} catch (error) {
 		console.log("[TASK_COMPLETION_ERROR]: ", error);
-		return { state: 500, message: "Internal server error" };
+		if (axios.isAxiosError(error) && error.response) {
+			const status = error.response.status;
+			let message = "Something went wrong";
+
+			if (status === 409) {
+				message = "Category already exists";
+			} else {
+				message = error.response.data.detail || message;
+			}
+
+			return { status, message };
+		} else {
+			return { status: 500, message: "Something went wrong" };
+		}
 	}
 }

@@ -56,9 +56,18 @@ export interface Task {
 }
 
 export interface SubTasks {
+	id: string;
 	title: string;
-	isCompleted: boolean;
 	priority: string;
+	due_date: Date;
+	is_completed: boolean;
+	created_at: Date;
+
+	task_id: string;
+	task: Task;
+
+	creator_id: string;
+	creator: User;
 }
 
 export interface AddProjectData {

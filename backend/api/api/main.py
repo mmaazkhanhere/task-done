@@ -132,7 +132,16 @@ class SubTaskResponse(BaseModel):
     id: str
     title: str
     priority: str
+    due_date: datetime
+    is_completed: bool
     created_at: datetime
+    task_id: str
+    creator_id: str
+    creator: 'UserResponse'
+    
+
+class SubTaskComplete(BaseModel):
+    is_complete: bool
 
 class TaskResponse(BaseModel):
     id: str
@@ -202,6 +211,7 @@ class EditCategory(BaseModel):
 
 ProjectResponse.model_rebuild()  # Update forward references
 TaskResponse.model_rebuild()  # Update forward references
+SubTaskResponse.model_rebuild()  # Update forward references
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -629,13 +639,37 @@ async def create_subtask(task_data: SubTaskData, session : Annotated[Session, De
 @app.get('/subtask/all/{task_id}', response_model=List[SubTaskResponse])
 async def get_all_subtasks(task_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
-        sub_task_list = session.exec(select(SubTask).where((SubTask.task_id == task_id) & (SubTask.creator_id == x_user_id)))
+        sub_task_list = session.exec(
+            select(SubTask)
+            .where((SubTask.task_id == task_id) & (SubTask.creator_id == x_user_id))
+            .order_by(SubTask.priority)
+        ).all()
         if sub_task_list:
             return sub_task_list
         else:
             return []
     except Exception as e:
         logger.error(f"Error getting sub task list: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# sub task completion
+@app.patch('/subtask/complete/{subtask_id}')
+async def subtask_completion(subtask_id: str, recieved_data: SubTaskComplete, session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        sub_task = session.exec(
+            select(SubTask).where((SubTask.id == subtask_id)&(SubTask.creator_id == x_user_id))
+        ).first()
+        if sub_task:
+            sub_task.is_completed = recieved_data.is_complete
+            session.commit()
+            session.refresh(sub_task)
+            return sub_task
+        else:
+            raise HTTPException(status_code=400, detail="Sub-task not found")
+    
+    except Exception as e:
+        logger.error(f"Error completing sub task: {e}")
         raise HTTPException(status_code=500, detail=str(e))
     
 
