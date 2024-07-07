@@ -3,9 +3,10 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 import { MdDelete } from "react-icons/md";
-import AddSubTask from "./add-sub-task-button";
 import SubTaskCompletionButton from "./subtask-completion-button";
 import { SubTasks } from "@/types/interface";
+import { useToast } from "@/components/ui/use-toast";
+import { deleteSubtask } from "@/actions/subtask_actions/delete_subtask";
 
 type Props = {
 	subTask: SubTasks;
@@ -14,7 +15,23 @@ type Props = {
 };
 
 const SubTaskCard = ({ subTask, userId, getSubTaskList }: Props) => {
-	console.log(subTask);
+	const { toast } = useToast();
+
+	const handleOnClick = async () => {
+		const response = await deleteSubtask(subTask.id, userId);
+		if (response?.status == 200) {
+			toast({
+				title: "Subtask deleted successfully",
+			});
+			getSubTaskList();
+		} else {
+			toast({
+				variant: "destructive",
+				description: "Failed to delete subtask",
+				title: "Something went wrong",
+			});
+		}
+	};
 
 	return (
 		<div className="flex items-center justify-between w-60 py-1 px-3 bg-white dark:bg-muted rounded-lg">
@@ -49,7 +66,10 @@ const SubTaskCard = ({ subTask, userId, getSubTaskList }: Props) => {
 				</p>
 			</div>
 
-			<button className="text-gray-500 dark:text-gray-400">
+			<button
+				onClick={handleOnClick}
+				className="text-gray-500 dark:text-gray-400"
+			>
 				<MdDelete />
 			</button>
 		</div>

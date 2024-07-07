@@ -595,7 +595,7 @@ async def task_completion(task_id: str, recieved_data: TaskComplete ,session: Se
     
 
 # task delete api
-@app.delete('/task/delete/{task_id}')
+@app.delete('/task/delete/{task_id}', response_model=Task)
 async def delete_task(task_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task = session.exec(select(Task).where((Task.id == task_id)&(Task.creator_id == x_user_id))).first()
@@ -671,5 +671,21 @@ async def subtask_completion(subtask_id: str, recieved_data: SubTaskComplete, se
     except Exception as e:
         logger.error(f"Error completing sub task: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-    
+
+
+# sub task delete
+@app.delete('/subtask/delete/{subtask_id}', response_model=SubTask)
+async def delete_subtask(subtask_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        sub_task = session.exec(select(SubTask).where((SubTask.id == subtask_id)&(SubTask.creator_id == x_user_id))).first()
+        if sub_task:
+            session.delete(sub_task)
+            session.commit()
+            return sub_task
+        else:
+            raise HTTPException(status_code=400, detail="Sub-task not found")
+    except Exception as e:
+        logger.error(f"Error deleting sub task: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
