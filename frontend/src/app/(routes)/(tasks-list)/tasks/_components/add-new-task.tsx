@@ -48,6 +48,7 @@ import { addTask } from "@/actions/task-actions/add-task";
 
 type Props = {
 	userId: string;
+	getTaskList: () => void;
 };
 
 const formSchema = z.object({
@@ -60,7 +61,7 @@ const formSchema = z.object({
 	}),
 });
 
-const AddNewTask = ({ userId }: Props) => {
+const AddNewTask = ({ userId, getTaskList }: Props) => {
 	const { toast } = useToast();
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -77,6 +78,7 @@ const AddNewTask = ({ userId }: Props) => {
 			toast({
 				title: "Task Added",
 			});
+			getTaskList();
 		} else {
 			toast({
 				title: "Something went wrong",

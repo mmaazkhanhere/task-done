@@ -49,8 +49,8 @@ export interface Task {
 
 	creator_id: string;
 	creator: User;
-	project_id: string;
-	project: Project;
+	project_id?: string;
+	project?: Project;
 
 	sub_tasks: SubTasks[];
 }

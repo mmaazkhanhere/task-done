@@ -138,12 +138,25 @@ class SubTaskResponse(BaseModel):
     task_id: str
     creator_id: str
     creator: 'UserResponse'
+
+class TaskResponse(BaseModel):
+    id: str
+    title: str
+    priority: str
+    due_date: datetime
+    is_completed: bool
     
+    created_at: datetime
+
+    creator_id: str
+    creator: UserResponse
+
+    sub_tasks: List['SubTaskResponse']
 
 class SubTaskComplete(BaseModel):
     is_complete: bool
 
-class TaskResponse(BaseModel):
+class ProjectTaskResponse(BaseModel):
     id: str
     title: str
     priority: str
@@ -197,7 +210,7 @@ class ProjectResponse(BaseModel):
 
     category_id: str
 
-    tasks: List['TaskResponse']
+    tasks: List['ProjectTaskResponse']
 
 class  CreateCategory(BaseModel):
     id: str
@@ -216,7 +229,7 @@ class EditCategory(BaseModel):
     title: str
 
 ProjectResponse.model_rebuild()  # Update forward references
-TaskResponse.model_rebuild()  # Update forward references
+ProjectTaskResponse.model_rebuild()  # Update forward references
 SubTaskResponse.model_rebuild()  # Update forward references
 
 logging.basicConfig(level=logging.INFO)
@@ -543,6 +556,21 @@ async def create_task(task_data: TaskData, session: Annotated[Session, Depends(g
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# get all tasks
+@app.get('/task/all', response_model=List[TaskResponse])
+async def get_all_tasks(session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        tasks_list = session.exec(select(Task).where((Task.creator_id == x_user_id) & (Task.project_id == None)))
+        if tasks_list:
+            return tasks_list
+        else:
+            return []
+    except Exception as e:
+        logger.error(f"Error getting task list: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+
 # create project task
 @app.post('/project/task', response_model=Task)
 async def create_project_task(task_data: ProjectTaskData, session: Annotated[Session, Depends(get_session)]):
@@ -567,7 +595,7 @@ async def create_project_task(task_data: ProjectTaskData, session: Annotated[Ses
     
 
 # get all tasks
-@app.get('/project/task/all/{project_id}', response_model=List[TaskResponse])
+@app.get('/project/task/all/{project_id}', response_model=List[ProjectTaskResponse])
 async def get_all_project_tasks(project_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         if not project_id or not x_user_id:
