@@ -43,7 +43,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { IoAdd } from "react-icons/io5";
 import { useToast } from "@/components/ui/use-toast";
-import { addTask } from "@/actions/task-actions/add-task";
+import { addProjectTask } from "@/actions/project-task-actions/add-project-task";
 
 type Props = {
 	projectId: string;
@@ -80,7 +80,7 @@ const AddProjectTask = ({
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		try {
-			const response = await addTask(values, projectId, userId);
+			const response = await addProjectTask(values, projectId, userId);
 			if (response?.status === 200) {
 				toast({
 					title: "Task Added",

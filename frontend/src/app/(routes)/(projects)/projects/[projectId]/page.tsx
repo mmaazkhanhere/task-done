@@ -9,7 +9,7 @@ import { Project, Task } from "@/types/interface";
 import { useAuth } from "@clerk/nextjs";
 import { getProject } from "@/actions/project-actions/get-project";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getAllTasks } from "@/actions/task-actions/get-all-tasks";
+import { getAllProjectTasks } from "@/actions/project-task-actions/get-all-project-tasks";
 
 type Props = {
 	params: {
@@ -39,7 +39,7 @@ const ProjectDetailPage = ({ params }: Props) => {
 	/*This data fetching can be skipped because the task data also comes with the project data. I included it because I want to create a separate endpoint to fetch tasks related to project */
 	const getTaskList = useCallback(async () => {
 		try {
-			const response = await getAllTasks(params.projectId, userId);
+			const response = await getAllProjectTasks(params.projectId, userId);
 			setTaskList(response);
 		} catch (error) {}
 	}, [params.projectId, userId]);

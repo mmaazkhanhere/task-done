@@ -3,7 +3,7 @@ import { AddTaskData } from "@/types/interface";
 import axios from "axios";
 import { uuid } from "uuidv4";
 
-export async function addTask(
+export async function addProjectTask(
 	values: AddTaskData,
 	project_id: string,
 	creator_id: string
@@ -13,14 +13,17 @@ export async function addTask(
 	const due_date = formatTimezone(values.due_date);
 	console.log({ id, title, due_date, priority, project_id, creator_id });
 	try {
-		const response = await axios.post("http://localhost:8000/task", {
-			id,
-			title,
-			due_date,
-			priority,
-			project_id,
-			creator_id,
-		});
+		const response = await axios.post(
+			"http://localhost:8000/project/task",
+			{
+				id,
+				title,
+				due_date,
+				priority,
+				project_id,
+				creator_id,
+			}
+		);
 		if (response?.status == 200) {
 			return { status: 200, message: "Task Created" };
 		}

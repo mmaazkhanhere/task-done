@@ -1,5 +1,4 @@
 import { subTaskCompletion } from "@/actions/subtask_actions/subtask-completion";
-import { taskCompletion } from "@/actions/task-actions/task_completion";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import React from "react";
@@ -20,7 +19,6 @@ const SubTaskCompletionButton = ({
 	const { toast } = useToast();
 
 	const handleOnClick = async () => {
-		console.log(isCompleted);
 		const response = await subTaskCompletion(
 			subTaskId,
 			userId,

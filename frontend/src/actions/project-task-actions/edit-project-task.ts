@@ -2,7 +2,7 @@ import { formatTimezone } from "@/helper/format-timezone";
 import { EditTaskData } from "@/types/interface";
 import axios from "axios";
 
-export async function editTask(
+export async function editProjectTask(
 	task_id: string,
 	creator_id: string,
 	editData: EditTaskData
@@ -11,7 +11,7 @@ export async function editTask(
 	const due_date = formatTimezone(editData.due_date);
 	try {
 		const response = await axios.patch(
-			`http://localhost:8000/task/edit/${task_id}`,
+			`http://localhost:8000/project/task/edit/${task_id}`,
 			{
 				title,
 				priority,

@@ -514,8 +514,13 @@ async def handle_delete_project(project_id: str, session:Session = Depends(get_s
         raise HTTPException(status_code=500, detail=str(e))
     
 
+
 # create task
-@app.post('/task', response_model=Task)
+@app.post('/')
+
+
+# create project task
+@app.post('/project/task', response_model=Task)
 async def create_task(task_data: TaskData, session: Annotated[Session, Depends(get_session)]):
     try:
         task = Task(
@@ -538,7 +543,7 @@ async def create_task(task_data: TaskData, session: Annotated[Session, Depends(g
     
 
 # get all tasks
-@app.get('/task/all/{project_id}', response_model=List[TaskResponse])
+@app.get('/project/task/all/{project_id}', response_model=List[TaskResponse])
 async def get_all_tasks(project_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         if not project_id or not x_user_id:
@@ -556,7 +561,7 @@ async def get_all_tasks(project_id: str, session: Session = Depends(get_session)
         raise HTTPException(status_code=500, detail=str(e))
 
 #edit tasks
-@app.patch('/task/edit/{task_id}', response_model=Task)
+@app.patch('/project/task/edit/{task_id}', response_model=Task)
 async def edit_task(task_id: str, task_data: TaskEditData,session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id))).first()
@@ -574,7 +579,7 @@ async def edit_task(task_id: str, task_data: TaskEditData,session: Session = Dep
     
 
 # task complete api
-@app.patch('/task/complete/{task_id}')
+@app.patch('/project/task/complete/{task_id}')
 async def task_completion(task_id: str, recieved_data: TaskComplete ,session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id))).first()
@@ -595,7 +600,7 @@ async def task_completion(task_id: str, recieved_data: TaskComplete ,session: Se
     
 
 # task delete api
-@app.delete('/task/delete/{task_id}', response_model=Task)
+@app.delete('/project/task/delete/{task_id}', response_model=Task)
 async def delete_task(task_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task = session.exec(select(Task).where((Task.id == task_id)&(Task.creator_id == x_user_id))).first()

@@ -11,8 +11,8 @@ import {
 import { MdDelete } from "react-icons/md";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/button";
-import { deleteTask } from "@/actions/task-actions/delete_task";
 import { useToast } from "@/components/ui/use-toast";
+import { deleteProjectTask } from "@/actions/project-task-actions/delete-project-task";
 
 type Props = {
 	taskId: string;
@@ -24,7 +24,7 @@ const ProjectTaskDeletion = ({ taskId, userId, getTaskList }: Props) => {
 	const { toast } = useToast();
 
 	const handleOnClick = async () => {
-		const response = await deleteTask(taskId, userId);
+		const response = await deleteProjectTask(taskId, userId);
 		if (response?.status === 200) {
 			toast({
 				title: "Task Deleted",

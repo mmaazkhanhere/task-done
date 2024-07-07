@@ -1,9 +1,12 @@
 import axios from "axios";
 
-export async function getAllTasks(project_id: string, creator_id: string) {
+export async function getAllProjectTasks(
+	project_id: string,
+	creator_id: string
+) {
 	try {
 		const response = await axios.get(
-			`http://localhost:8000/task/all/${project_id}`,
+			`http://localhost:8000/project/task/all/${project_id}`,
 			{
 				headers: {
 					"X-User-Id": creator_id,

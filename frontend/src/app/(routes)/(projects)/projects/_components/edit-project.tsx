@@ -330,7 +330,7 @@ const EditProject = ({ project, userId, fetchProjectList }: Props) => {
 								name="due_date"
 								render={({ field }) => (
 									<FormItem className="flex flex-col">
-										<FormLabel>Date of birth</FormLabel>
+										<FormLabel>Due Date</FormLabel>
 										<Popover modal={true}>
 											<PopoverTrigger asChild>
 												<FormControl>

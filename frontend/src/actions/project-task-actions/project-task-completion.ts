@@ -1,13 +1,13 @@
 import axios from "axios";
 
-export async function taskCompletion(
+export async function projectTaskCompletion(
 	task_id: string,
 	creator_id: string,
 	is_complete: boolean
 ) {
 	try {
 		const response = await axios.patch(
-			`http://localhost:8000/task/complete/${task_id}`,
+			`http://localhost:8000/project/task/complete/${task_id}`,
 			{ is_complete },
 			{
 				headers: {

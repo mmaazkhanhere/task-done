@@ -24,7 +24,7 @@ const ProjectTasksList = ({
 	}
 
 	return (
-		<section className="flex flex-col gap-y-2">
+		<section className="grid grid-cols-1 lg:grid-cols-2 gap-5">
 			{taskList.map((task) => (
 				<ProjectTaskCard
 					key={task.id}

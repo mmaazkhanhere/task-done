@@ -1,4 +1,4 @@
-import { taskCompletion } from "@/actions/task-actions/task_completion";
+import { projectTaskCompletion } from "@/actions/project-task-actions/project-task-completion";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import React from "react";
@@ -19,9 +19,11 @@ const TaskCompletionButton = ({
 	const { toast } = useToast();
 
 	const handleOnClick = async () => {
-		const response = await taskCompletion(taskId, userId, !isCompleted);
-		console.log(response?.state);
-		console.log(response?.message);
+		const response = await projectTaskCompletion(
+			taskId,
+			userId,
+			!isCompleted
+		);
 		if (response?.state == 200) {
 			toast({
 				title: "Task Completed",

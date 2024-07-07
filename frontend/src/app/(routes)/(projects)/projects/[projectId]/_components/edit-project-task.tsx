@@ -41,7 +41,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Task } from "@/types/interface";
 import { MdEdit } from "react-icons/md";
-import { editTask } from "@/actions/task-actions/edit-task";
+import { editProjectTask } from "@/actions/project-task-actions/edit-project-task";
 
 type Props = {
 	userId: string;
@@ -79,7 +79,7 @@ const EditProjectTask = ({
 	const { isSubmitting, isValid } = form.formState;
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		const response = await editTask(task.id, userId, values);
+		const response = await editProjectTask(task.id, userId, values);
 		if (response?.status == 200) {
 			toast({
 				title: "Task updated successfully",
