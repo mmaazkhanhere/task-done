@@ -4,7 +4,6 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -12,13 +11,15 @@ import {
 import { BsThreeDots } from "react-icons/bs";
 
 import { Task } from "@/types/interface";
+import EditTask from "./edit-task";
 
 type Props = {
 	userId: string;
 	task: Task;
+	getTaskList: () => void;
 };
 
-const TaskDropdownMenu = ({ userId, task }: Props) => {
+const TaskDropdownMenu = ({ userId, task, getTaskList }: Props) => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className="text-gray-500 dark:text-gray-200 w-5 h-5 hover:opacity-70 transition duration-300">
@@ -26,13 +27,13 @@ const TaskDropdownMenu = ({ userId, task }: Props) => {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
 				<DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-					{/* <EditProjectTask
+					<EditTask
 						userId={userId}
 						task={task}
-						getProjectData={getProjectData}
 						getTaskList={getTaskList}
-					/> */}
+					/>
 				</DropdownMenuItem>
+				<DropdownMenuSeparator />
 				<DropdownMenuItem onSelect={(e) => e.preventDefault()}>
 					{/* <ProjectTaskDeletion
 						userId={userId}

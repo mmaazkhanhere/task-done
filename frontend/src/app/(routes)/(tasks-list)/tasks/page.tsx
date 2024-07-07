@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useId, useState } from "react";
 import TaskListNavbar from "./_components/tasklist-navbar";
 import { useAuth } from "@clerk/nextjs";
 import { Task } from "@/types/interface";
@@ -36,7 +36,11 @@ const TasksList = (props: Props) => {
 				getTaskList={getTaskList}
 				userId={userId}
 			/>
-			<TaskList taskList={taskList} />
+			<TaskList
+				userId={userId}
+				taskList={taskList}
+				getTaskList={getTaskList}
+			/>
 		</div>
 	);
 };

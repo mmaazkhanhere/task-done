@@ -570,6 +570,23 @@ async def get_all_tasks(session: Session = Depends(get_session), x_user_id: str 
         raise HTTPException(status_code=500, detail=str(e))
     
 
+# edit task
+@app.patch('/task/edit/{task_id}', response_model=Task)
+async def edit_task(task_id: str, task_data: TaskEditData, session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
+        task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id) & (Task.project_id == None))).first()
+        if task:
+            task.title  = task_data.title
+            task.priority = task_data.priority
+            task.due_date = task_data.due_date
+            session.commit()
+            session.refresh(task)
+            return task
+        else:
+            raise HTTPException(status_code=400, detail="Task not found")
+    except Exception as e:
+        logger.error(f"Error getting task: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 # create project task
 @app.post('/project/task', response_model=Task)

@@ -11,9 +11,10 @@ import TaskDropdownMenu from "./task-dropdown-menu";
 type Props = {
 	userId: string;
 	task: Task;
+	getTaskList: () => void;
 };
 
-const TaskCard = ({ task, userId }: Props) => {
+const TaskCard = ({ task, userId, getTaskList }: Props) => {
 	const [showSubTask, setShowSubTask] = useState<boolean>(false);
 	const [subTaskList, setSubTaskList] = useState<SubTasks[]>([]);
 
@@ -76,7 +77,11 @@ const TaskCard = ({ task, userId }: Props) => {
 						</div>
 					)}
 				</div>
-				<TaskDropdownMenu task={task} userId={userId} />
+				<TaskDropdownMenu
+					task={task}
+					userId={userId}
+					getTaskList={getTaskList}
+				/>
 			</div>
 			<p
 				className={cn(
