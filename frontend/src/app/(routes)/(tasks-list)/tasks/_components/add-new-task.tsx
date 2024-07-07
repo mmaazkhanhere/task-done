@@ -44,12 +44,10 @@ import { Input } from "@/components/ui/input";
 import { IoAdd } from "react-icons/io5";
 import { useToast } from "@/components/ui/use-toast";
 import { addProjectTask } from "@/actions/project-task-actions/add-project-task";
+import { addTask } from "@/actions/task-actions/add-task";
 
 type Props = {
-	projectId: string;
 	userId: string;
-	getProjectData: () => void;
-	getTaskList: () => void;
 };
 
 const formSchema = z.object({
@@ -62,12 +60,7 @@ const formSchema = z.object({
 	}),
 });
 
-const AddProjectTask = ({
-	projectId,
-	userId,
-	getProjectData,
-	getTaskList,
-}: Props) => {
+const AddNewTask = ({ userId }: Props) => {
 	const { toast } = useToast();
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -79,17 +72,12 @@ const AddProjectTask = ({
 	});
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-		try {
-			const response = await addProjectTask(values, projectId, userId);
-			if (response?.status === 200) {
-				toast({
-					title: "Task Added",
-				});
-				getTaskList();
-				getProjectData();
-			}
-		} catch (error) {
-			console.log("[ERROR_TASK_SUBMIT]: ", error);
+		const response = await addTask(values, userId);
+		if (response?.status === 200) {
+			toast({
+				title: "Task Added",
+			});
+		} else {
 			toast({
 				title: "Something went wrong",
 				description: "Task not created",
@@ -111,7 +99,7 @@ const AddProjectTask = ({
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>Add New Project Task</AlertDialogTitle>
+					<AlertDialogTitle>Add New Task</AlertDialogTitle>
 				</AlertDialogHeader>
 				<Form {...form}>
 					<form
@@ -201,4 +189,4 @@ const AddProjectTask = ({
 	);
 };
 
-export default AddProjectTask;
+export default AddNewTask;

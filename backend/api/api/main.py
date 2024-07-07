@@ -43,7 +43,7 @@ class Task(SQLModel, table=True):
     creator_id: str = Field(foreign_key="user.id", nullable=False)
     creator: "User" = Relationship(back_populates="tasks")
     
-    project_id: str = Field(default=None, foreign_key="project.id")
+    project_id: Optional[str] = Field(default=None, foreign_key="project.id")
     project: Optional["Project"] = Relationship(back_populates="tasks")
     
     sub_tasks: List["SubTask"] = Relationship(back_populates="task", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
@@ -159,8 +159,14 @@ class TaskResponse(BaseModel):
 
     sub_tasks: List['SubTaskResponse']
 
-
 class TaskData(BaseModel):
+    id: str
+    title: str
+    due_date: datetime
+    priority: str
+    creator_id:str
+
+class ProjectTaskData(BaseModel):
     id: str
     title: str
     priority: str
@@ -516,12 +522,30 @@ async def handle_delete_project(project_id: str, session:Session = Depends(get_s
 
 
 # create task
-@app.post('/')
+@app.post('/task', response_model=Task)
+async def create_task(task_data: TaskData, session: Annotated[Session, Depends(get_session)]):
+    try:
+        task = Task(
+            id = task_data.id,
+            title = task_data.title,
+            priority= task_data.priority,
+            due_date = task_data.due_date,
+            creator_id = task_data.creator_id,
+            created_at= datetime.now()
+        )
+        session.add(task)
+        session.commit()
+        session.refresh(task)
+        return task
+
+    except Exception as e:
+        logger.error(f"Error creating task: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # create project task
 @app.post('/project/task', response_model=Task)
-async def create_task(task_data: TaskData, session: Annotated[Session, Depends(get_session)]):
+async def create_project_task(task_data: ProjectTaskData, session: Annotated[Session, Depends(get_session)]):
     try:
         task = Task(
             id = task_data.id,
@@ -544,7 +568,7 @@ async def create_task(task_data: TaskData, session: Annotated[Session, Depends(g
 
 # get all tasks
 @app.get('/project/task/all/{project_id}', response_model=List[TaskResponse])
-async def get_all_tasks(project_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
+async def get_all_project_tasks(project_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         if not project_id or not x_user_id:
             raise HTTPException(status_code=400, detail="Project and User ID are required")
@@ -562,7 +586,7 @@ async def get_all_tasks(project_id: str, session: Session = Depends(get_session)
 
 #edit tasks
 @app.patch('/project/task/edit/{task_id}', response_model=Task)
-async def edit_task(task_id: str, task_data: TaskEditData,session: Session = Depends(get_session), x_user_id: str = Header(...)):
+async def edit_project_task(task_id: str, task_data: TaskEditData,session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id))).first()
         if task:
@@ -580,7 +604,7 @@ async def edit_task(task_id: str, task_data: TaskEditData,session: Session = Dep
 
 # task complete api
 @app.patch('/project/task/complete/{task_id}')
-async def task_completion(task_id: str, recieved_data: TaskComplete ,session: Session = Depends(get_session), x_user_id: str = Header(...)):
+async def project_task_completion(task_id: str, recieved_data: TaskComplete ,session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id))).first()
         if task:
@@ -601,7 +625,7 @@ async def task_completion(task_id: str, recieved_data: TaskComplete ,session: Se
 
 # task delete api
 @app.delete('/project/task/delete/{task_id}', response_model=Task)
-async def delete_task(task_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
+async def delete_project_task(task_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task = session.exec(select(Task).where((Task.id == task_id)&(Task.creator_id == x_user_id))).first()
         if task:

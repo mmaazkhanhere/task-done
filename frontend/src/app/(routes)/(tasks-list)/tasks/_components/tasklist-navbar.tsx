@@ -1,12 +1,14 @@
 import MobileSidebar from "@/app/(routes)/_components/mobile-sidebar";
-import { Button } from "@/components/ui/button";
+
 import React from "react";
 
-import { IoAdd } from "react-icons/io5";
+import AddNewTask from "./add-new-task";
 
-type Props = {};
+type Props = {
+	userId: string;
+};
 
-const TaskListNavbar = (props: Props) => {
+const TaskListNavbar = ({ userId }: Props) => {
 	return (
 		<header className="sticky top-0 left-0 w-full flex items-center gap-4 md:gap-0 justify-between z-50 bg-white dark:bg-muted py-3 md:py-4 px-4 shadow-sm">
 			<div className="md:hidden">
@@ -19,13 +21,7 @@ const TaskListNavbar = (props: Props) => {
 						3 Projects
 					</p>
 				</div>
-				<Button
-					size="sm"
-					className="flex items-center justify-center gap-1 text-xs md:text-sm dark:text-white"
-				>
-					<IoAdd size={24} className="hidden md:block" />
-					Add Task
-				</Button>
+				<AddNewTask userId={userId} />
 			</div>
 		</header>
 	);
