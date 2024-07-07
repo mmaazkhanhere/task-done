@@ -4,44 +4,15 @@ import { cn } from "@/lib/utils";
 import React from "react";
 
 type Props = {
-	taskId: string;
 	isCompleted: boolean;
 	userId: string;
-	getTaskList: () => void;
 };
 
-const TaskCompletionButton = ({
-	taskId,
-	userId,
-	isCompleted,
-	getTaskList,
-}: Props) => {
+const TaskCompletionButton = ({ userId, isCompleted }: Props) => {
 	const { toast } = useToast();
 
 	const handleOnClick = async () => {
-		const response = await projectTaskCompletion(
-			taskId,
-			userId,
-			!isCompleted
-		);
-		if (response?.state == 200) {
-			toast({
-				title: "Task Completed",
-			});
-			getTaskList();
-		} else if (response?.message.includes("409")) {
-			toast({
-				variant: "destructive",
-				title: "Subtasks are not completed yet",
-				description: "Complete the subtasks",
-			});
-		} else {
-			toast({
-				variant: "destructive",
-				title: "Something went wrong",
-				description: "Cannot update task completion state",
-			});
-		}
+		console.log("button");
 	};
 
 	return (

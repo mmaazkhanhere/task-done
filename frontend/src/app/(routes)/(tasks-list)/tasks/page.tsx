@@ -5,6 +5,7 @@ import TaskListNavbar from "./_components/tasklist-navbar";
 import { useAuth } from "@clerk/nextjs";
 import { Task } from "@/types/interface";
 import { getAllTasks } from "@/actions/task-actions/get-all-tasks";
+import TaskList from "./_components/tasklist";
 
 type Props = {};
 
@@ -29,12 +30,13 @@ const TasksList = (props: Props) => {
 	console.log(taskList);
 
 	return (
-		<div>
+		<div className="w-full">
 			<TaskListNavbar
 				totalTasks={taskList.length}
 				getTaskList={getTaskList}
 				userId={userId}
 			/>
+			<TaskList taskList={taskList} />
 		</div>
 	);
 };

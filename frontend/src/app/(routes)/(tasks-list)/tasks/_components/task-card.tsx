@@ -1,42 +1,21 @@
-"use client";
-
-import React, { useCallback, useEffect, useState } from "react";
-
+import { SubTasks, Task } from "@/types/interface";
+import React, { useState } from "react";
+import TaskCompletionButton from "./task-completion-button";
+import TaskDueDateCountdown from "@/components/task-duedate-countdown";
 import { cn } from "@/lib/utils";
 
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import SubTaskCard from "./sub-task-card";
-import AddSubTask from "./add-sub-task-button";
-import { SubTasks, Task } from "@/types/interface";
-import ProjectTaskDropdownMenu from "./project-task-dropdown-menu";
-import { getAllSubTasks } from "@/actions/subtask_actions/get-all-subtasks";
-import ProjectTaskCompletionButton from "./project-task-completion-button";
-import TaskDueDateCountdown from "@/components/task-duedate-countdown";
-
+import SubTaskCard from "@/app/(routes)/(projects)/projects/[projectId]/_components/sub-task-card";
+import AddSubTask from "@/app/(routes)/(projects)/projects/[projectId]/_components/add-sub-task-button";
+import TaskDropdownMenu from "./task-dropdown-menu";
 type Props = {
 	userId: string;
 	task: Task;
-	getProjectData: () => void;
-	getTaskList: () => void;
 };
 
-const ProjectTaskCard = ({
-	task,
-	userId,
-	getProjectData,
-	getTaskList,
-}: Props) => {
+const TaskCard = ({ task, userId }: Props) => {
 	const [showSubTask, setShowSubTask] = useState<boolean>(false);
 	const [subTaskList, setSubTaskList] = useState<SubTasks[]>([]);
-
-	const getSubTaskList = useCallback(async () => {
-		const response = await getAllSubTasks(task.id, userId);
-		setSubTaskList(response);
-	}, [task.id, userId]);
-
-	useEffect(() => {
-		getSubTaskList();
-	}, [getSubTaskList]);
 
 	const handleShowSubTask = () => {
 		setShowSubTask(!showSubTask);
@@ -47,11 +26,9 @@ const ProjectTaskCard = ({
 			<div className="flex items-center justify-between w-full">
 				<div className="flex flex-col items-start">
 					<div className="items-center flex gap-4">
-						<ProjectTaskCompletionButton
-							taskId={task.id}
-							isCompleted={task.is_completed}
+						<TaskCompletionButton
 							userId={userId}
-							getTaskList={getTaskList}
+							isCompleted={task.is_completed}
 						/>
 						<div className="flex flex-col items-start">
 							<p
@@ -67,7 +44,6 @@ const ProjectTaskCard = ({
 								<TaskDueDateCountdown dueDate={task.due_date} />
 							</div>
 						</div>
-
 						<button onClick={handleShowSubTask}>
 							{showSubTask ? (
 								<IoIosArrowUp />
@@ -100,13 +76,7 @@ const ProjectTaskCard = ({
 						</div>
 					)}
 				</div>
-
-				<ProjectTaskDropdownMenu
-					task={task}
-					userId={userId}
-					getProjectData={getProjectData}
-					getTaskList={getTaskList}
-				/>
+				<TaskDropdownMenu task={task} userId={userId} />
 			</div>
 			<p
 				className={cn(
@@ -123,4 +93,4 @@ const ProjectTaskCard = ({
 	);
 };
 
-export default ProjectTaskCard;
+export default TaskCard;
