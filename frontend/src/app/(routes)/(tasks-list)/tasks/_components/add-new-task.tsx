@@ -72,6 +72,8 @@ const AddNewTask = ({ userId, getTaskList }: Props) => {
 		},
 	});
 
+	const { isSubmitting, isValid } = form.formState;
+
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		const response = await addTask(values, userId);
 		if (response?.status === 200) {
@@ -180,6 +182,7 @@ const AddNewTask = ({ userId, getTaskList }: Props) => {
 								aria-label="Add Task button"
 								type="submit"
 								className="w-full dark:text-white"
+								disabled={isSubmitting || !isValid}
 							>
 								Add Task
 							</AlertDialogAction>

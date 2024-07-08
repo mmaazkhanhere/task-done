@@ -1,5 +1,5 @@
 
-from typing import Annotated, List, Optional, Any
+from typing import Annotated, List, Optional, Union
 
 import logging
 import uuid
@@ -38,6 +38,7 @@ class Task(SQLModel, table=True):
     priority: str = Field(nullable=False)
     due_date: datetime = Field(nullable=False)
     is_completed: bool = Field(default=False, nullable=False)
+    completion_date: Union[datetime, None] = Field(default=None, nullable=True)
     created_at: datetime = Field(default=datetime.now, nullable=False)
     
     creator_id: str = Field(foreign_key="user.id", nullable=False)
@@ -55,6 +56,7 @@ class SubTask(SQLModel, table=True):
     priority: str = Field(nullable=False)
     due_date: datetime = Field(nullable=False)
     is_completed: bool = Field(default=False, nullable=False)
+    completion_date: Union[datetime, None] = Field(default=None, nullable=True)
     created_at: datetime = Field(default=datetime.now, nullable=False)
     
     task_id: str = Field(foreign_key="task.id", nullable=False)
@@ -70,6 +72,7 @@ class Project(SQLModel, table=True):
     description: str = Field(nullable=False)
     due_date: datetime = Field(nullable=False)
     is_completed: bool = Field(default=False)
+    completion_date: Union[datetime, None] = Field(default=None, nullable=True)
     icon: str = Field(default="")
     created_at: datetime = Field(default=datetime.now, nullable=False)
     
@@ -133,6 +136,7 @@ class SubTaskResponse(BaseModel):
     title: str
     priority: str
     due_date: datetime
+    completion_date: Union[datetime | None]
     is_completed: bool
     created_at: datetime
     task_id: str
@@ -144,6 +148,7 @@ class TaskResponse(BaseModel):
     title: str
     priority: str
     due_date: datetime
+    completion_date: Union[datetime | None]
     is_completed: bool
     
     created_at: datetime
@@ -162,6 +167,7 @@ class ProjectTaskResponse(BaseModel):
     priority: str
     due_date: datetime
     is_completed: bool
+    completion_date: Union[datetime | None]
     
     created_at: datetime
 
@@ -201,6 +207,7 @@ class ProjectResponse(BaseModel):
     description: str
     icon: str
     due_date: datetime
+    completion_date: Union[datetime, None]
     is_completed: bool
     
     created_at: datetime
@@ -544,7 +551,6 @@ async def handle_delete_project(project_id: str, session:Session = Depends(get_s
     except Exception as e:
         logger.error(f"Error deleting project: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-    
 
 
 # create task
@@ -578,6 +584,7 @@ async def get_all_tasks(session: Session = Depends(get_session), x_user_id: str 
     except Exception as e:
         logger.error(f"Error getting task list: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 # get all simple tasks
 @app.get('/task/simple/all', response_model=List[TaskResponse])
@@ -634,7 +641,12 @@ async def task_completion(task_id: str, recieved_date: TaskComplete, session: Se
     try:
         task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id) & (Task.project_id == None))).first()
         if task:
+            if task.is_completed:
+                completion_date_value = None
+            else:
+                completion_date_value = datetime.now()
             task.is_completed = recieved_date.is_complete
+            task.completion_date = completion_date_value
             session.commit()
             session.refresh(task)
             return task
@@ -667,7 +679,7 @@ async def create_project_task(task_data: ProjectTaskData, session: Annotated[Ses
         raise HTTPException(status_code=500, detail=str(e))
     
 
-# get all tasks
+# get all project tasks
 @app.get('/project/task/all/{project_id}', response_model=List[ProjectTaskResponse])
 async def get_all_project_tasks(project_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
@@ -685,7 +697,7 @@ async def get_all_project_tasks(project_id: str, session: Session = Depends(get_
         logger.error(f"Error getting project list: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-#edit tasks
+#edit project tasks
 @app.patch('/project/task/edit/{task_id}', response_model=Task)
 async def edit_project_task(task_id: str, task_data: TaskEditData,session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
@@ -703,17 +715,22 @@ async def edit_project_task(task_id: str, task_data: TaskEditData,session: Sessi
         raise HTTPException(status_code=500, detail=str(e))
     
 
-# task complete api
+# project task complete api
 @app.patch('/project/task/complete/{task_id}')
 async def project_task_completion(task_id: str, recieved_data: TaskComplete ,session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id))).first()
         if task:
             incomplete_sub_tasks = session.exec(select(SubTask).where((SubTask.task_id == task.id) & (SubTask.is_completed == False))).all()
+            if task.is_completed:
+                completion_date_value = None
+            else:
+                completion_date_value = datetime.now()
             if incomplete_sub_tasks:
                 raise HTTPException(status_code=409, detail="Sub-tasks are not completed")
             else:
                 task.is_completed = recieved_data.is_complete
+                task.completion_date = completion_date_value
                 session.commit()
                 session.refresh(task)
                 return task
@@ -799,7 +816,12 @@ async def subtask_completion(subtask_id: str, recieved_data: SubTaskComplete, se
             select(SubTask).where((SubTask.id == subtask_id)&(SubTask.creator_id == x_user_id))
         ).first()
         if sub_task:
+            if sub_task.is_completed:
+                completion_date_value = None
+            else:
+                completion_date_value = datetime.now()
             sub_task.is_completed = recieved_data.is_complete
+            sub_task.completion_date = completion_date_value
             session.commit()
             session.refresh(sub_task)
             return sub_task

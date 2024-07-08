@@ -16,7 +16,6 @@ export async function projectTaskCompletion(
 				},
 			}
 		);
-		console.log(response.status);
 
 		if (response.status == 200) {
 			return { state: 200, message: "Task completed successfully" };

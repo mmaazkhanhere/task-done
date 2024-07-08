@@ -19,15 +19,11 @@ const Projects = (props: Props) => {
 	}
 
 	const fetchProjectList = useCallback(async () => {
-		try {
-			const response = await getAllProject(userId as string);
-			if (response.status == 500) {
-				setProjectList(null);
-			} else {
-				setProjectList(response);
-			}
-		} catch (error) {
-			console.error(`[FETCH_PRJECT_LIST_CALLBACK_ERROR]: `, error);
+		const response = await getAllProject(userId as string);
+		if (response.status == 500) {
+			setProjectList(null);
+		} else {
+			setProjectList(response);
 		}
 	}, [userId]);
 

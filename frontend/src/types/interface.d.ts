@@ -18,6 +18,7 @@ export interface Project {
 	title: string;
 	description: string;
 	is_completed: Boolean;
+	completion_date: Date;
 	icon: string;
 	created_at: Date;
 	creator_id: string;
@@ -45,6 +46,7 @@ export interface Task {
 	priority: string;
 	due_date: Date;
 	is_completed: boolean;
+	completion_date: Date;
 	created_at: Date;
 
 	creator_id: string;
@@ -61,6 +63,7 @@ export interface SubTasks {
 	priority: string;
 	due_date: Date;
 	is_completed: boolean;
+	completion_date: Date;
 	created_at: Date;
 
 	task_id: string;

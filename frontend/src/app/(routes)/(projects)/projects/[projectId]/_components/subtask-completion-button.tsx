@@ -42,7 +42,7 @@ const SubTaskCompletionButton = ({
 		<button
 			onClick={handleOnClick}
 			className={cn(
-				"flex items-center justify-center w-6 h-6 bg-white rounded-full",
+				"flex items-center justify-center w-6 h-6 bg-white border rounded-full",
 				isCompleted && "border border-gray-300"
 			)}
 		>

@@ -59,7 +59,6 @@ const ProjectDetailsTopBar = ({
 					<AddProjectTask
 						projectId={projectId}
 						userId={userId}
-						getProjectData={getProjectData}
 						getTaskList={getTaskList}
 					/>
 				</div>

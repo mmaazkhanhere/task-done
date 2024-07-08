@@ -165,22 +165,18 @@ const AddProject = ({ fetchProjectList }: Props) => {
 	};
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-		try {
-			const response = await addProject(values, userId as string);
-			if (response?.status == 200) {
-				toast({
-					title: "Project created",
-				});
-			} else {
-				toast({
-					variant: "destructive",
-					description: "Cannot create project",
-					title: "Something went wrong",
-				});
-			}
+		const response = await addProject(values, userId as string);
+		if (response?.status == 200) {
+			toast({
+				title: "Project created",
+			});
 			fetchProjectList();
-		} catch (error) {
-			console.error("[ADD_PROJECT_FORM_SUBMIT_ERROR]:", error);
+		} else {
+			toast({
+				variant: "destructive",
+				description: "Cannot create project",
+				title: "Something went wrong",
+			});
 		}
 	}
 

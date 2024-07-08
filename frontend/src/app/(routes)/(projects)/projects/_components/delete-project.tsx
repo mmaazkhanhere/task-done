@@ -38,25 +38,21 @@ const DeleteProject = ({
 	}
 
 	const handleOnClick = async () => {
-		try {
-			const response = await deleteProject(projectId, userId);
+		const response = await deleteProject(projectId, userId);
 
-			console.log(response);
+		console.log(response);
 
-			if (response?.status == 200) {
-				toast({
-					title: "Category deleted",
-				});
-				fetchProjectList();
-			} else {
-				toast({
-					title: "Something went wrong",
-					description: "Failed to delete category",
-					variant: "destructive",
-				});
-			}
-		} catch (error) {
-			console.error("[DELETE_PROJECT_API_ERROR]: ", error);
+		if (response?.status == 200) {
+			toast({
+				title: "Category deleted",
+			});
+			fetchProjectList();
+		} else {
+			toast({
+				title: "Something went wrong",
+				description: "Failed to delete category",
+				variant: "destructive",
+			});
 		}
 	};
 

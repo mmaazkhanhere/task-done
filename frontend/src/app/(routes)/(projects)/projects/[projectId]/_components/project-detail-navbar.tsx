@@ -8,7 +8,6 @@ import { Project, Task } from "@/types/interface";
 import { IconBaseProps } from "react-icons";
 
 import {
-	IoAdd,
 	IoAirplane,
 	IoCafe,
 	IoCar,

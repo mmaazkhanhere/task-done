@@ -177,19 +177,18 @@ const EditProject = ({ project, userId, fetchProjectList }: Props) => {
 	};
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-		try {
-			const response = await editProject(
-				values,
-				project.id,
-				userId as string
-			);
-			if (response?.status == 200) {
-				toast({
-					title: "Project Edited Successfully",
-				});
-				fetchProjectList();
-			}
-		} catch (error) {
+		const response = await editProject(
+			values,
+			project.id,
+			userId as string
+		);
+
+		if (response?.status == 200) {
+			toast({
+				title: "Project Edited Successfully",
+			});
+			fetchProjectList();
+		} else {
 			toast({
 				title: "Something went wrong",
 				variant: "destructive",

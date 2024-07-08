@@ -48,7 +48,6 @@ import { addProjectTask } from "@/actions/project-task-actions/add-project-task"
 type Props = {
 	projectId: string;
 	userId: string;
-	getProjectData: () => void;
 	getTaskList: () => void;
 };
 
@@ -62,12 +61,7 @@ const formSchema = z.object({
 	}),
 });
 
-const AddProjectTask = ({
-	projectId,
-	userId,
-	getProjectData,
-	getTaskList,
-}: Props) => {
+const AddProjectTask = ({ projectId, userId, getTaskList }: Props) => {
 	const { toast } = useToast();
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -79,17 +73,13 @@ const AddProjectTask = ({
 	});
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-		try {
-			const response = await addProjectTask(values, projectId, userId);
-			if (response?.status === 200) {
-				toast({
-					title: "Task Added",
-				});
-				getTaskList();
-				getProjectData();
-			}
-		} catch (error) {
-			console.log("[ERROR_TASK_SUBMIT]: ", error);
+		const response = await addProjectTask(values, projectId, userId);
+		if (response?.status === 200) {
+			toast({
+				title: "Task Added",
+			});
+			getTaskList();
+		} else {
 			toast({
 				title: "Something went wrong",
 				description: "Task not created",
