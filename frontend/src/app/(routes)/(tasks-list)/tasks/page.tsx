@@ -4,8 +4,8 @@ import React, { useCallback, useEffect, useId, useState } from "react";
 import TaskListNavbar from "./_components/tasklist-navbar";
 import { useAuth } from "@clerk/nextjs";
 import { Task } from "@/types/interface";
-import { getAllTasks } from "@/actions/task-actions/get-all-tasks";
 import TaskList from "./_components/tasklist";
+import { getAllSimpleTasks } from "@/actions/task-actions/get-all-simple-task";
 
 type Props = {};
 
@@ -19,7 +19,7 @@ const TasksList = (props: Props) => {
 	}
 
 	const getTaskList = useCallback(async () => {
-		const response = await getAllTasks(userId);
+		const response = await getAllSimpleTasks(userId);
 		setTaskList(response);
 	}, [userId]);
 

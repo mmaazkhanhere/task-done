@@ -35,8 +35,6 @@ const Projects = (props: Props) => {
 		fetchProjectList();
 	}, [fetchProjectList]);
 
-	console.log(projectList);
-
 	return (
 		<div className="relative w-full">
 			<ProjectNavbar

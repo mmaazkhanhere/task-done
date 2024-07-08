@@ -10,10 +10,9 @@ export async function getAllTasks(creator_id: string) {
 		console.log(response);
 		if (response.status == 200) {
 			return response.data;
-		} else {
-			return { status: 500, message: "Something went wrong" };
 		}
 	} catch (error) {
 		console.log(`[GET_ALL_TASKS_ACTION_ERROR]: ${error}`);
+		return { status: 500, message: "Something went wrong" };
 	}
 }

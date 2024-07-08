@@ -560,6 +560,16 @@ async def create_task(task_data: TaskData, session: Annotated[Session, Depends(g
 @app.get('/task/all', response_model=List[TaskResponse])
 async def get_all_tasks(session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
+        task_list = session.exec(select(Task).where(Task.creator_id == x_user_id)).all()
+        return task_list
+    except Exception as e:
+        logger.error(f"Error getting task list: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# get all simple tasks
+@app.get('/task/simple/all', response_model=List[TaskResponse])
+async def get_all_simple_tasks(session: Session = Depends(get_session), x_user_id: str = Header(...)):
+    try:
         tasks_list = session.exec(select(Task).where((Task.creator_id == x_user_id) & (Task.project_id == None)))
         if tasks_list:
             return tasks_list
