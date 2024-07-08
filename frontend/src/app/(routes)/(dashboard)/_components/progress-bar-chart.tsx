@@ -1,4 +1,6 @@
 "use client";
+import { getTasksCompletedByDay } from "@/helper/get-task-completed-by-day";
+import { Task, TaskDone } from "@/types/interface";
 import React, { useEffect, useState } from "react";
 import {
 	BarChart,
@@ -12,34 +14,18 @@ import {
 	ResponsiveContainer,
 } from "recharts";
 
-interface TaskDone {
-	day: string;
-	tasksDone: number;
-}
+type Props = {
+	tasksData: Task[];
+};
 
-type Props = {};
-
-const data: TaskDone[] = [
-	{ day: "Monday", tasksDone: 20 },
-	{ day: "Tuesday", tasksDone: 10 },
-	{ day: "Wednesday", tasksDone: 15 },
-	{ day: "Thursday", tasksDone: 25 },
-	{ day: "Friday", tasksDone: 18 },
-	{ day: "Saturday", tasksDone: 12 },
-	{ day: "Sunday", tasksDone: 8 },
-];
-
-const ProgressBarChart = (props: Props) => {
-	const [mockData, setMockData] = useState<TaskDone[]>([]);
-
-	useEffect(() => {
-		setMockData(data);
-	}, []);
+const ProgressBarChart = ({ tasksData }: Props) => {
+	const tasksDoneData: TaskDone[] = getTasksCompletedByDay(tasksData);
+	console.log(tasksDoneData);
 
 	return (
 		<div>
 			<ResponsiveContainer width={"99%"} height={500}>
-				<BarChart data={mockData}>
+				<BarChart data={tasksDoneData}>
 					<XAxis dataKey="day" />
 					<YAxis />
 					<Tooltip />

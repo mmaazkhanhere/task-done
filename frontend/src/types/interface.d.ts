@@ -103,3 +103,8 @@ export interface AddSubtaskData {
 	priority: string;
 	due_date: Date;
 }
+
+export interface TaskDone {
+	day: string;
+	tasksDone: number;
+}
