@@ -7,14 +7,16 @@ import Statistics from "./_components/statistics";
 import RightSideBar from "./_components/right-sidebar/right-sidebar";
 import ProgressBarChart from "./_components/progress-bar-chart";
 import RecentTasks from "./_components/recent-tasks";
-import { Project, Task } from "@/types/interface";
+import { Project, Task, User } from "@/types/interface";
 import { getAllProject } from "@/actions/project-actions/get-all-project";
 import { useAuth } from "@clerk/nextjs";
 import { getAllTasks } from "@/actions/task-actions/get-all-tasks";
+import { getUsersData } from "@/actions/user-actions/get-user-data";
 
 type Props = {};
 
 const MainPage = (props: Props) => {
+	const [userData, setUserData] = useState<User | null>(null);
 	const [projectsData, setProjectsData] = useState<Project[]>([]);
 	const [tasksData, setTasksData] = useState<Task[]>([]);
 	const { userId } = useAuth();
@@ -22,6 +24,11 @@ const MainPage = (props: Props) => {
 	if (!userId) {
 		throw new Error("Not authorized");
 	}
+
+	const getUserData = useCallback(async () => {
+		const response = await getUsersData(userId as string);
+		setUserData(response);
+	}, [userId]);
 
 	const getProjectsData = useCallback(async () => {
 		const response = await getAllProject(userId as string);
@@ -34,16 +41,18 @@ const MainPage = (props: Props) => {
 	}, [userId]);
 
 	useEffect(() => {
+		getUserData();
 		getProjectsData();
 		getTasksData();
-	}, [getProjectsData, getTasksData]);
+	}, [getProjectsData, getTasksData, getUserData]);
 
 	console.log(projectsData);
 	console.log(tasksData);
+	console.log(userData);
 	return (
 		<section className="w-full relatives">
 			<header className="w-full sticky z-50 top-0 left-0 bg-white dark:bg-muted">
-				<Navbar />
+				<Navbar userData={userData!} />
 			</header>
 
 			<div className="flex flex-col items-center lg:item-start gap-y-4 w-full py-4">

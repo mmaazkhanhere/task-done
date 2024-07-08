@@ -290,6 +290,19 @@ async def handle_user_signup(
     except ValidationError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
+# get user data
+@app.get('/user/{user_id}', response_model=UserResponse)
+async def get_user_data(user_id: str, session: Session = Depends(get_session)):
+    try:
+        user = session.exec(select(User).where(User.id == user_id)).first()
+        if user:
+            return user
+        else:
+            logger.error("User not found")
+            raise HTTPException(status_code=404, detail="User not found")
+    except Exception as e:
+        logger.error(f"Error getting user data: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 #User update api endpoint
 @app.patch('/user/update/{user_id}', response_model=User)
