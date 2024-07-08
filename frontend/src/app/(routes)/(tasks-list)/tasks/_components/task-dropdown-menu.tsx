@@ -12,6 +12,7 @@ import { BsThreeDots } from "react-icons/bs";
 
 import { Task } from "@/types/interface";
 import EditTask from "./edit-task";
+import DeleteTask from "./delete-task";
 
 type Props = {
 	userId: string;
@@ -35,11 +36,11 @@ const TaskDropdownMenu = ({ userId, task, getTaskList }: Props) => {
 				</DropdownMenuItem>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-					{/* <ProjectTaskDeletion
+					<DeleteTask
 						userId={userId}
 						taskId={task.id}
 						getTaskList={getTaskList}
-					/> */}
+					/>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
