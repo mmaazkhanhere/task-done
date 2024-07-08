@@ -720,21 +720,29 @@ async def delete_project_task(task_id: str, session: Session = Depends(get_sessi
 # add sub task
 @app.post('/subtask', response_model=SubTask)
 async def create_subtask(task_data: SubTaskData, session : Annotated[Session, Depends(get_session)]):
+    
+    parent_task = session.exec(select(Task).where((Task.id == task_data.task_id) & (Task.creator_id == task_data.creator_id))).first()
     try:
-        sub_task = SubTask(
-            id = task_data.id,
-            title = task_data.title,\
-            priority = task_data.priority,
-            due_date = task_data.due_date,
-            created_at = datetime.now(),
-            task_id = task_data.task_id,
-            creator_id = task_data.creator_id
-        )
+        if parent_task is None:
+            raise HTTPException(status_code=400, detail="Parent task not found")
+        else:
+            if parent_task.is_completed:
+                parent_task.is_completed = False
 
-        session.add(sub_task)
-        session.commit()
-        session.refresh(sub_task)
-        return sub_task
+            sub_task = SubTask(
+                id = task_data.id,
+                title = task_data.title,\
+                priority = task_data.priority,
+                due_date = task_data.due_date,
+                created_at = datetime.now(),
+                task_id = task_data.task_id,
+                creator_id = task_data.creator_id
+            )
+
+            session.add(sub_task)
+            session.commit()
+            session.refresh(sub_task)
+            return sub_task
     
     except Exception as e:
         logger.error(f"Error creating sub task: {e}")

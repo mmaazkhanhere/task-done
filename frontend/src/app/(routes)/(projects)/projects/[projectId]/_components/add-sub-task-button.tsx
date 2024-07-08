@@ -47,6 +47,7 @@ type Props = {
 	taskId: string;
 	userId: string;
 	getSubTaskList: () => void;
+	getTaskList: () => void;
 };
 
 const formSchema = z.object({
@@ -59,7 +60,7 @@ const formSchema = z.object({
 	}),
 });
 
-const AddSubTask = ({ taskId, userId, getSubTaskList }: Props) => {
+const AddSubTask = ({ taskId, userId, getSubTaskList, getTaskList }: Props) => {
 	const { toast } = useToast();
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -79,6 +80,7 @@ const AddSubTask = ({ taskId, userId, getSubTaskList }: Props) => {
 				title: "Sub task added successfully",
 			});
 			getSubTaskList();
+			getTaskList();
 		} else {
 			toast({
 				variant: "destructive",

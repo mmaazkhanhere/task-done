@@ -1,5 +1,5 @@
 import { SubTasks, Task } from "@/types/interface";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import TaskDueDateCountdown from "@/components/task-duedate-countdown";
 import { cn } from "@/lib/utils";
 
@@ -8,6 +8,7 @@ import SubTaskCard from "@/app/(routes)/(projects)/projects/[projectId]/_compone
 import AddSubTask from "@/app/(routes)/(projects)/projects/[projectId]/_components/add-sub-task-button";
 import TaskDropdownMenu from "./task-dropdown-menu";
 import TaskCompletionButton from "./task-completion-button";
+import { getAllSubTasks } from "@/actions/subtask_actions/get-all-subtasks";
 type Props = {
 	userId: string;
 	task: Task;
@@ -17,6 +18,15 @@ type Props = {
 const TaskCard = ({ task, userId, getTaskList }: Props) => {
 	const [showSubTask, setShowSubTask] = useState<boolean>(false);
 	const [subTaskList, setSubTaskList] = useState<SubTasks[]>([]);
+
+	const getSubTaskList = useCallback(async () => {
+		const response = await getAllSubTasks(task.id, userId);
+		setSubTaskList(response);
+	}, [task.id, userId]);
+
+	useEffect(() => {
+		getSubTaskList();
+	}, [getSubTaskList]);
 
 	const handleShowSubTask = () => {
 		setShowSubTask(!showSubTask);
@@ -74,6 +84,7 @@ const TaskCard = ({ task, userId, getTaskList }: Props) => {
 							<AddSubTask
 								taskId={task.id}
 								userId={userId}
+								getTaskList={getTaskList}
 								getSubTaskList={getSubTaskList}
 							/>
 						</div>

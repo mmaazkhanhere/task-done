@@ -95,6 +95,7 @@ const ProjectTaskCard = ({
 							<AddSubTask
 								taskId={task.id}
 								userId={userId}
+								getTaskList={getTaskList}
 								getSubTaskList={getSubTaskList}
 							/>
 						</div>
