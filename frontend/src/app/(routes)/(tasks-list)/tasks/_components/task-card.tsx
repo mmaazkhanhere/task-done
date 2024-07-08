@@ -1,6 +1,5 @@
 import { SubTasks, Task } from "@/types/interface";
 import React, { useState } from "react";
-import TaskCompletionButton from "./task-completion-button";
 import TaskDueDateCountdown from "@/components/task-duedate-countdown";
 import { cn } from "@/lib/utils";
 
@@ -8,6 +7,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import SubTaskCard from "@/app/(routes)/(projects)/projects/[projectId]/_components/sub-task-card";
 import AddSubTask from "@/app/(routes)/(projects)/projects/[projectId]/_components/add-sub-task-button";
 import TaskDropdownMenu from "./task-dropdown-menu";
+import TaskCompletionButton from "./task-completion-button";
 type Props = {
 	userId: string;
 	task: Task;
@@ -28,8 +28,10 @@ const TaskCard = ({ task, userId, getTaskList }: Props) => {
 				<div className="flex flex-col items-start">
 					<div className="items-center flex gap-4">
 						<TaskCompletionButton
-							userId={userId}
 							isCompleted={task.is_completed}
+							userId={userId}
+							taskId={task.id}
+							getTaskList={getTaskList}
 						/>
 						<div className="flex flex-col items-start">
 							<p
