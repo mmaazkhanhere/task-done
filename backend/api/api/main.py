@@ -641,15 +641,19 @@ async def task_completion(task_id: str, recieved_date: TaskComplete, session: Se
     try:
         task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id) & (Task.project_id == None))).first()
         if task:
-            if task.is_completed:
-                completion_date_value = None
+            incomplete_sub_tasks = session.exec(select(SubTask).where((SubTask.task_id == task.id) & (SubTask.is_completed == False))).all()
+            if incomplete_sub_tasks:
+                raise HTTPException(status_code=409, detail="Sub-tasks are not completed")
             else:
-                completion_date_value = datetime.now()
-            task.is_completed = recieved_date.is_complete
-            task.completion_date = completion_date_value
-            session.commit()
-            session.refresh(task)
-            return task
+                task.is_completed = recieved_date.is_complete
+                if task.is_completed:
+                    completion_date_value = datetime.now()
+                else:
+                    completion_date_value = None
+                task.completion_date = completion_date_value
+                session.commit()
+                session.refresh(task)
+                return task
         else:
             raise HTTPException(status_code=400, detail="Task not found")
     except Exception as e:
@@ -722,14 +726,14 @@ async def project_task_completion(task_id: str, recieved_data: TaskComplete ,ses
         task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id))).first()
         if task:
             incomplete_sub_tasks = session.exec(select(SubTask).where((SubTask.task_id == task.id) & (SubTask.is_completed == False))).all()
-            if task.is_completed:
-                completion_date_value = None
-            else:
-                completion_date_value = datetime.now()
             if incomplete_sub_tasks:
                 raise HTTPException(status_code=409, detail="Sub-tasks are not completed")
             else:
                 task.is_completed = recieved_data.is_complete
+                if task.is_completed:
+                    completion_date_value = datetime.now()
+                else:
+                    completion_date_value = None
                 task.completion_date = completion_date_value
                 session.commit()
                 session.refresh(task)
@@ -787,7 +791,6 @@ async def create_subtask(task_data: SubTaskData, session : Annotated[Session, De
     except Exception as e:
         logger.error(f"Error creating sub task: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-    
 
 
 # get all sub tasks
@@ -816,12 +819,12 @@ async def subtask_completion(subtask_id: str, recieved_data: SubTaskComplete, se
             select(SubTask).where((SubTask.id == subtask_id)&(SubTask.creator_id == x_user_id))
         ).first()
         if sub_task:
-            if sub_task.is_completed:
-                completion_date_value = None
-            else:
-                completion_date_value = datetime.now()
             sub_task.is_completed = recieved_data.is_complete
-            sub_task.completion_date = completion_date_value
+            if recieved_data.is_complete:
+                sub_task.completion_date = datetime.now()
+            else:
+                sub_task.completion_date = None
+
             session.commit()
             session.refresh(sub_task)
             return sub_task

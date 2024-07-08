@@ -21,19 +21,11 @@ export const getTasksCompletedByDay = (tasks: Task[]): TaskDone[] => {
 	};
 
 	tasks.forEach((task) => {
-		if (task.is_completed) {
-			const completionDay = new Date(task.due_date).getDay();
+		if (task.completion_date !== null) {
+			const completionDay = new Date(task.completion_date).getDay();
 			const dayName = daysOfWeek[completionDay];
 			tasksCompleted[dayName]++;
 		}
-
-		task.sub_tasks.forEach((subTask) => {
-			if (subTask.is_completed) {
-				const completionDay = new Date(subTask.due_date).getDay();
-				const dayName = daysOfWeek[completionDay];
-				tasksCompleted[dayName]++;
-			}
-		});
 	});
 
 	return daysOfWeek.map((day) => ({ day, tasksDone: tasksCompleted[day] }));

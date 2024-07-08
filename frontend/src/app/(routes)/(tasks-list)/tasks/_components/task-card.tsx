@@ -31,7 +31,7 @@ const TaskCard = ({ task, userId, getTaskList }: Props) => {
 	const handleShowSubTask = () => {
 		setShowSubTask(!showSubTask);
 	};
-
+	console.log(task);
 	return (
 		<article className="flex flex-col items-start bg-gray-100 dark:bg-muted-foreground/30 p-4 m-4 gap-4 rounded-lg">
 			<div className="flex items-center justify-between w-full">

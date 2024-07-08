@@ -19,6 +19,7 @@ const TaskCompletionButton = ({
 	const { toast } = useToast();
 
 	const handleOnClick = async () => {
+		console.log(isCompleted);
 		const response = await taskCompletion(taskId, userId, !isCompleted);
 		if (response?.state == 200) {
 			toast({
