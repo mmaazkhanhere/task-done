@@ -1,4 +1,5 @@
 import { calculateTimeLeft } from "@/helper/calculate-time-left";
+import { cn } from "@/lib/utils";
 import React, { useEffect, useState, useMemo } from "react";
 
 type Props = {
@@ -24,7 +25,16 @@ const TaskDueDateCountdown = ({ dueDate }: Props) => {
 		return () => clearInterval(timer);
 	}, [dueDate, timeLeftMemoized]);
 
-	return <div>{<p>{timeLeft || "Overdue!"}</p>}</div>;
+	return (
+		<div
+			className={cn(
+				"text-lg md:text-xl animate-pulse",
+				timeLeft == "" && "text-red-500 font-bold"
+			)}
+		>
+			{<p>{timeLeft || "Overdue!"}</p>}
+		</div>
+	);
 };
 
 export default TaskDueDateCountdown;

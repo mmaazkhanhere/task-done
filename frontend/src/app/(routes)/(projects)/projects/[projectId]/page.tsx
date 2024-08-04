@@ -51,20 +51,22 @@ const ProjectDetailPage = ({ params }: Props) => {
 
 	if (projectData === null) {
 		return (
-			<div className="flex flex-col gap-2">
-				<Skeleton className="w-52 h-4" />
-				<Skeleton className="w-52 h-4" />
-				<Skeleton className="w-52 h-4" />
+			<div className="flex flex-col gap-5 mt-8 m-4 p-4 md:p-6">
+				<div className="w-24 h-24 rounded-full bg-slate-100" />
+				<Skeleton className="h-10 w-full md:w-[650px] bg-gray-100" />
+				<Skeleton className="h-10 w-full md:w-[650px] bg-gray-100" />
+				<Skeleton className="h-10 w-full md:w-[650px] bg-gray-100" />
 			</div>
 		);
 	}
 
 	if (taskList === null) {
 		return (
-			<div className="flex flex-col gap-2">
-				<Skeleton className="w-52 h-4" />
-				<Skeleton className="w-52 h-4" />
-				<Skeleton className="w-52 h-4" />
+			<div className="flex flex-col gap-5 mt-8 m-4 p-4 md:p-6">
+				<div className="w-24 h-24 rounded-full bg-slate-100" />
+				<Skeleton className="h-10 w-full md:w-[650px] bg-gray-100" />
+				<Skeleton className="h-10 w-full md:w-[650px] bg-gray-100" />
+				<Skeleton className="h-10 w-full md:w-[650px] bg-gray-100" />
 			</div>
 		);
 	}

@@ -15,7 +15,7 @@ const RecentTaskCard = ({ task }: Props) => {
 
 	return (
 		<div className="flex items-center justify-around gap-x-5 w-full bg-white dark:bg-muted-foreground/30 rounded-md py-1">
-			<p className="font-bold text-sm md:text-base">{task.title}</p>
+			<p className="font-medium text-lg md:text-xl">{task.title}</p>
 			<div className="hidden md:flex flex-col text-xs md:text-sm">
 				<p className="font-light">Created At</p>
 				<p className="text-green-500">{formattedDate}</p>
@@ -24,7 +24,7 @@ const RecentTaskCard = ({ task }: Props) => {
 				<p className="font-light">Time Remaining</p>
 				<TaskDueDateCountdown dueDate={task.due_date} />
 			</div>
-			<div className="flex flex-col text-xs md:text-sm">
+			<div className="hidden md:flex flex-col text-xs md:text-sm">
 				<p className="font-light">Status</p>
 				{task.completion_date ? (
 					<div className="p-1">
@@ -35,7 +35,6 @@ const RecentTaskCard = ({ task }: Props) => {
 						<IoMdCloseCircle className="text-red-500 rounded-full w-7 h-7" />
 					</div>
 				)}
-				<p className="text-green-500">{task.is_completed}</p>
 			</div>
 		</div>
 	);

@@ -2,13 +2,10 @@
 
 import React, { useState } from "react";
 
-import { Button } from "@/components/ui/button";
-
-import { IoMdAdd, IoMdArrowBack } from "react-icons/io";
+import { IoMdArrowBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import AddProjectTask from "./add-project-task";
 import { Project } from "@/types/interface";
-import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
 	projectData: Project;
@@ -22,7 +19,6 @@ const ProjectDetailsTopBar = ({
 	projectData,
 	projectId,
 	userId,
-	getProjectData,
 	getTaskList,
 }: Props) => {
 	const [sortValue, setSortValue] = useState<string>("name");

@@ -12,13 +12,12 @@ type Props = {
 
 const CategoriesList = ({ categoryList, fetchCategoriesList }: Props) => {
 	if (categoryList === null) {
-		return (
-			<div className="flex flex-col gap-5">
-				<Skeleton className="h-10 w-64" />
-				<Skeleton className="h-10 w-64" />
-				<Skeleton className="h-10 w-64" />
-			</div>
-		);
+		<div className="flex flex-col gap-5 mt-8 m-4 p-4 md:p-6">
+			<div className="w-24 h-24 rounded-full bg-slate-100" />
+			<Skeleton className="h-10 w-full md:w-[650px] bg-gray-100" />
+			<Skeleton className="h-10 w-full md:w-[650px] bg-gray-100" />
+			<Skeleton className="h-10 w-full md:w-[650px] bg-gray-100" />
+		</div>;
 	}
 
 	if (categoryList.length === 0 || categoryList === null) {

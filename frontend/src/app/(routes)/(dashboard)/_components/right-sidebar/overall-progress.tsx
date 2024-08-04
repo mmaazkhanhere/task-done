@@ -13,6 +13,7 @@ const OverallProgress = ({ percentage }: Props) => {
             transparent ${percentage}%
         )`,
 	};
+
 	return (
 		<div className="p-4 h-63 flex flex-col items-center justify-center rounded-md bg-gray-100/50 dark:bg-muted gap-y-4">
 			<span>Overall Progress</span>
@@ -26,7 +27,7 @@ const OverallProgress = ({ percentage }: Props) => {
 						percentage >= 69 ? "text-white" : "text-black"
 					)}
 				>
-					{percentage}%
+					{Number.isNaN(percentage) ? 0 : percentage}%
 				</span>
 				<span
 					className={cn(
