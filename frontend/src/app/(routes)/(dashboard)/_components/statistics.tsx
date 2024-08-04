@@ -1,9 +1,11 @@
 import React from "react";
-import { BiTaskX, BiTask } from "react-icons/bi";
-import { FaProjectDiagram } from "react-icons/fa";
 
 import StatisticsCard from "./statisitics-card";
-import { Project, Task } from "@/types/interface";
+
+import { Task } from "@/types/interface";
+
+import { BiTaskX, BiTask } from "react-icons/bi";
+import { FaProjectDiagram } from "react-icons/fa";
 
 type Props = {
 	totalProjects: number;

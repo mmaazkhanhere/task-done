@@ -4,8 +4,6 @@ import { uuid } from "uuidv4";
 export async function add_category(title: string, userId: string) {
 	const id = uuid();
 	try {
-		console.log({ id, title, userId });
-
 		const response = await axios.post("http://localhost:8000/category", {
 			id,
 			title,

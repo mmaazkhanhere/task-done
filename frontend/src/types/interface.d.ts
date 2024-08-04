@@ -5,6 +5,12 @@ export interface Option {
 	label: string;
 }
 
+export interface Routes {
+	title: string;
+	href: string;
+	icon: ReactIcon;
+}
+
 export interface User {
 	id: string;
 	name: string;

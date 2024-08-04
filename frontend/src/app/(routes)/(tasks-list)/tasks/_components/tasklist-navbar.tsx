@@ -1,6 +1,6 @@
-import MobileSidebar from "@/app/(routes)/_components/mobile-sidebar";
-
 import React from "react";
+
+import MobileSidebar from "@/app/(routes)/_components/mobile-sidebar";
 
 import AddNewTask from "./add-new-task";
 

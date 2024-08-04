@@ -1,7 +1,8 @@
-import { Task } from "@/types/interface";
 import React from "react";
+
 import TaskCard from "./task-card";
 
+import { Task } from "@/types/interface";
 type Props = {
 	taskList: Task[];
 	userId: string;

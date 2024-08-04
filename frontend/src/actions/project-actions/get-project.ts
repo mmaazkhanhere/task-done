@@ -13,7 +13,6 @@ export async function getProject(project_id: string, creator_id: string) {
 		);
 
 		const projectData = response.data;
-		console.log(projectData);
 		return projectData;
 	} catch (error) {
 		console.log("GET_PROJECT_ACTION_ERROR: ", error);

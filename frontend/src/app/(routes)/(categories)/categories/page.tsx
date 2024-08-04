@@ -21,16 +21,12 @@ const CategoriesPage = (props: Props) => {
 	}
 
 	const fetchCategoriesList = useCallback(async () => {
-		try {
-			const cateogriesData = await getCategoriesList(userId as string);
+		const cateogriesData = await getCategoriesList(userId as string);
 
-			if (cateogriesData.status === 500) {
-				setCategoryList(null);
-			} else {
-				setCategoryList(cateogriesData);
-			}
-		} catch (error) {
-			console.error(`[CATEGORIES_FETCH_CALLBACK_ERROR]: `, error);
+		if (cateogriesData.status === 500) {
+			setCategoryList(null);
+		} else {
+			setCategoryList(cateogriesData);
 		}
 	}, [userId]);
 

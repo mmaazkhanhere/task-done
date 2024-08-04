@@ -1,5 +1,6 @@
-import Logo from "@/components/logo";
 import React from "react";
+
+import Logo from "@/components/logo";
 import SidebarRoutes from "./sidebar-route";
 import { ModeToggle } from "@/components/mode-toggle";
 

@@ -7,13 +7,15 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	DialogDescription,
 } from "@/components/ui/dialog";
-import { MdDelete } from "react-icons/md";
-import { DialogDescription } from "@radix-ui/react-dialog";
+
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { deleteProjectTask } from "@/actions/project-task-actions/delete-project-task";
+
 import { deleteTask } from "@/actions/task-actions/delete-task";
+
+import { MdDelete } from "react-icons/md";
 
 type Props = {
 	taskId: string;

@@ -1,14 +1,20 @@
-import { SubTasks, Task } from "@/types/interface";
 import React, { useCallback, useEffect, useState } from "react";
-import TaskDueDateCountdown from "@/components/task-duedate-countdown";
-import { cn } from "@/lib/utils";
 
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import SubTaskCard from "@/app/(routes)/(projects)/projects/[projectId]/_components/sub-task-card";
-import AddSubTask from "@/app/(routes)/(projects)/projects/[projectId]/_components/add-sub-task-button";
 import TaskDropdownMenu from "./task-dropdown-menu";
 import TaskCompletionButton from "./task-completion-button";
+import SubTaskCard from "@/app/(routes)/(projects)/projects/[projectId]/_components/sub-task-card";
+import AddSubTask from "@/app/(routes)/(projects)/projects/[projectId]/_components/add-sub-task-button";
+
+import TaskDueDateCountdown from "@/components/task-duedate-countdown";
+
 import { getAllSubTasks } from "@/actions/subtask_actions/get-all-subtasks";
+
+import { cn } from "@/lib/utils";
+
+import { SubTasks, Task } from "@/types/interface";
+
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+
 type Props = {
 	userId: string;
 	task: Task;
@@ -31,7 +37,7 @@ const TaskCard = ({ task, userId, getTaskList }: Props) => {
 	const handleShowSubTask = () => {
 		setShowSubTask(!showSubTask);
 	};
-	console.log(task);
+
 	return (
 		<article className="flex flex-col items-start bg-gray-100 dark:bg-muted-foreground/30 p-4 m-4 gap-4 rounded-lg">
 			<div className="flex items-center justify-between w-full">

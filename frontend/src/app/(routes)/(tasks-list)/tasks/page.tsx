@@ -1,11 +1,14 @@
 "use client";
 
-import React, { useCallback, useEffect, useId, useState } from "react";
-import TaskListNavbar from "./_components/tasklist-navbar";
+import React, { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
-import { Task } from "@/types/interface";
+
+import TaskListNavbar from "./_components/tasklist-navbar";
 import TaskList from "./_components/tasklist";
+
 import { getAllSimpleTasks } from "@/actions/task-actions/get-all-simple-task";
+
+import { Task } from "@/types/interface";
 
 type Props = {};
 
@@ -26,8 +29,6 @@ const TasksList = (props: Props) => {
 	useEffect(() => {
 		getTaskList();
 	}, [getTaskList]);
-
-	console.log(taskList);
 
 	return (
 		<div className="w-full">

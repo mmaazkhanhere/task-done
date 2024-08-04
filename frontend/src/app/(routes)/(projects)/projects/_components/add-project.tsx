@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useAuth } from "@clerk/nextjs";
 import { format } from "date-fns";
 
 import {
@@ -41,8 +42,17 @@ import {
 } from "@/components/ui/popover";
 
 import { Calendar } from "@/components/ui/calendar";
-
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+
+import { getCategoriesList } from "@/actions/category-actions/get-categories-list";
+import { addProject } from "@/actions/project-actions/add-project";
+
+import { cn } from "@/lib/utils";
+
+import { Category } from "@/types/interface";
 
 import {
 	IoAdd,
@@ -64,16 +74,6 @@ import {
 	IoGameController,
 	IoCalendar,
 } from "react-icons/io5";
-
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-
-import { Textarea } from "@/components/ui/textarea";
-import { Category } from "@/types/interface";
-import { useAuth } from "@clerk/nextjs";
-import { getCategoriesList } from "@/actions/category-actions/get-categories-list";
-import { addProject } from "@/actions/project-actions/add-project";
-import { useToast } from "@/components/ui/use-toast";
 
 type Props = {
 	fetchProjectList: () => void;
@@ -136,12 +136,8 @@ const AddProject = ({ fetchProjectList }: Props) => {
 	const { toast } = useToast();
 
 	const getCategories = useCallback(async () => {
-		try {
-			const responseData = await getCategoriesList(userId as string);
-			setCategories(responseData);
-		} catch (error) {
-			console.error(`[CATEGORIES_FETCH_CALLBACK_ERROR]: `, error);
-		}
+		const responseData = await getCategoriesList(userId as string);
+		setCategories(responseData);
 	}, [userId]);
 
 	useEffect(() => {

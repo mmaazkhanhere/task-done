@@ -2,6 +2,7 @@ import React from "react";
 
 import MobileSidebar from "@/app/(routes)/_components/mobile-sidebar";
 import AddProject from "./add-project";
+
 import { Project } from "@/types/interface";
 
 type Props = {

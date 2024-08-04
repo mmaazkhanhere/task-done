@@ -39,12 +39,12 @@ import {
 } from "@/components/ui/select";
 
 import { Button } from "@/components/ui/button";
-
 import { Input } from "@/components/ui/input";
-import { IoAdd } from "react-icons/io5";
 import { useToast } from "@/components/ui/use-toast";
-import { addProjectTask } from "@/actions/project-task-actions/add-project-task";
+
 import { addTask } from "@/actions/task-actions/add-task";
+
+import { IoAdd } from "react-icons/io5";
 
 type Props = {
 	userId: string;

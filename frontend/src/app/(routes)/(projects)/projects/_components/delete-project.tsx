@@ -1,7 +1,6 @@
 "use client";
 
-import { deleteCategory } from "@/actions/category-actions/delete-category";
-import { useToast } from "@/components/ui/use-toast";
+import React from "react";
 
 import {
 	Dialog,
@@ -13,10 +12,12 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 
-import React from "react";
-import { MdDelete } from "react-icons/md";
+import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
+
 import { deleteProject } from "@/actions/project-actions/delete_project";
+
+import { MdDelete } from "react-icons/md";
 
 type Props = {
 	projectId: string;

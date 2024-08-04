@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -25,12 +27,11 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MdEdit } from "react-icons/md";
-import axios from "axios";
-import { editCategory } from "@/actions/category-actions/edit-category";
-import { useAuth } from "@clerk/nextjs";
 import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
+
+import { editCategory } from "@/actions/category-actions/edit-category";
+
+import { MdEdit } from "react-icons/md";
 
 type Props = {
 	categoryId: string;

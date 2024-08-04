@@ -1,10 +1,9 @@
 import React from "react";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
-import { RiMenu2Fill } from "react-icons/ri";
 import Sidebar from "./sidebar";
 
+import { RiMenu2Fill } from "react-icons/ri";
 type Props = {};
 
 const MobileSidebar = (props: Props) => {

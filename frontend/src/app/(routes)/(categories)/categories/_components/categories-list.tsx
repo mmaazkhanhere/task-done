@@ -1,9 +1,9 @@
 import React from "react";
 
 import CategoriesCard from "./categories-card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { Category } from "@/types/interface";
-import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
 	categoryList: Category[];

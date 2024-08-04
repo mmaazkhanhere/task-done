@@ -1,13 +1,13 @@
 import React from "react";
+import Link from "next/link";
 
 import { Progress } from "@/components/ui/progress";
 
-import { FaProjectDiagram } from "react-icons/fa";
-import { FaBarsProgress } from "react-icons/fa6";
 import { Project } from "@/types/interface";
 
+import { FaProjectDiagram } from "react-icons/fa";
+import { FaBarsProgress } from "react-icons/fa6";
 import { IconBaseProps } from "react-icons";
-
 import {
 	IoAirplane,
 	IoCafe,
@@ -26,7 +26,6 @@ import {
 	IoCode,
 	IoGameController,
 } from "react-icons/io5";
-import Link from "next/link";
 
 type Props = {
 	project: Project;

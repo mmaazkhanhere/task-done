@@ -1,17 +1,19 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 
 import Navbar from "./_components/navbar/navbar";
 import Statistics from "./_components/statistics";
 import RightSideBar from "./_components/right-sidebar/right-sidebar";
 import ProgressBarChart from "./_components/progress-bar-chart";
 import RecentTasks from "./_components/recent-tasks";
-import { Project, Task, User } from "@/types/interface";
+
 import { getAllProject } from "@/actions/project-actions/get-all-project";
-import { useAuth } from "@clerk/nextjs";
 import { getAllTasks } from "@/actions/task-actions/get-all-tasks";
 import { getUsersData } from "@/actions/user-actions/get-user-data";
+
+import { Project, Task, User } from "@/types/interface";
 
 type Props = {};
 

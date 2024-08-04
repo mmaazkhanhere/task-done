@@ -8,8 +8,6 @@ export async function getAllProject(creator_id: string) {
 			},
 		});
 
-		console.log(response.data);
-
 		if (response?.status == 200) {
 			return response.data;
 		} else {

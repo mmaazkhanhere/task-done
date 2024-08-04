@@ -1,10 +1,11 @@
 import React from "react";
+import { UserButton } from "@clerk/nextjs";
 
 import MobileSidebar from "@/app/(routes)/_components/mobile-sidebar";
 import UserGreeting from "./user-greeting";
 
-import { UserButton } from "@clerk/nextjs";
 import { User } from "@/types/interface";
+
 type Props = {
 	userData: User;
 };

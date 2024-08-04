@@ -1,7 +1,10 @@
 import React from "react";
+
 import ProjectCard from "./project-card";
-import { Project } from "@/types/interface";
+
 import { Skeleton } from "@/components/ui/skeleton";
+
+import { Project } from "@/types/interface";
 
 type Props = {
 	projectList: Project[];

@@ -50,8 +50,17 @@ import {
 } from "@/components/ui/popover";
 
 import { Calendar } from "@/components/ui/calendar";
-
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import { Textarea } from "@/components/ui/textarea";
+
+import { cn } from "@/lib/utils";
+
+import { getCategoriesList } from "@/actions/category-actions/get-categories-list";
+import { editProject } from "@/actions/project-actions/edit-project";
+
+import { Category, Project } from "@/types/interface";
 
 import {
 	IoAirplane,
@@ -72,17 +81,7 @@ import {
 	IoGameController,
 	IoCalendar,
 } from "react-icons/io5";
-
-import { Input } from "@/components/ui/input";
 import { MdEdit } from "react-icons/md";
-
-import { useToast } from "@/components/ui/use-toast";
-
-import { Category, Project } from "@/types/interface";
-import { cn } from "@/lib/utils";
-import { Textarea } from "@/components/ui/textarea";
-import { getCategoriesList } from "@/actions/category-actions/get-categories-list";
-import { editProject } from "@/actions/project-actions/edit-project";
 
 type Props = {
 	project: Project;
@@ -146,12 +145,8 @@ const EditProject = ({ project, userId, fetchProjectList }: Props) => {
 	const { toast } = useToast();
 
 	const getCategories = useCallback(async () => {
-		try {
-			const responseData = await getCategoriesList(userId as string);
-			setCategories(responseData);
-		} catch (error) {
-			console.error(`[CATEGORIES_FETCH_CALLBACK_ERROR]: `, error);
-		}
+		const responseData = await getCategoriesList(userId as string);
+		setCategories(responseData);
 	}, [userId]);
 
 	useEffect(() => {

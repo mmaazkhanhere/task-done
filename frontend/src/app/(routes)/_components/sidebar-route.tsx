@@ -4,11 +4,11 @@ import React from "react";
 
 import SidebarItem from "./sidebar-item";
 
-import { Routes } from "@/types/interface";
-
 import { MdDashboard } from "react-icons/md";
 import { FaTasks, FaProjectDiagram } from "react-icons/fa";
 import { RiStackFill } from "react-icons/ri";
+
+import { Routes } from "@/types/interface";
 
 type Props = {};
 

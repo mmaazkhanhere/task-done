@@ -1,5 +1,8 @@
 import React from "react";
 
+import EditTask from "./edit-task";
+import DeleteTask from "./delete-task";
+
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -8,11 +11,9 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { BsThreeDots } from "react-icons/bs";
-
 import { Task } from "@/types/interface";
-import EditTask from "./edit-task";
-import DeleteTask from "./delete-task";
+
+import { BsThreeDots } from "react-icons/bs";
 
 type Props = {
 	userId: string;

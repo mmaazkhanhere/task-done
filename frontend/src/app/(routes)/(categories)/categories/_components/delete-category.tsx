@@ -1,10 +1,12 @@
 "use client";
 
-import { deleteCategory } from "@/actions/category-actions/delete-category";
-import { useToast } from "@/components/ui/use-toast";
+import React from "react";
 import { useAuth } from "@clerk/nextjs";
 
-import React from "react";
+import { useToast } from "@/components/ui/use-toast";
+
+import { deleteCategory } from "@/actions/category-actions/delete-category";
+
 import { MdDelete } from "react-icons/md";
 
 type Props = {

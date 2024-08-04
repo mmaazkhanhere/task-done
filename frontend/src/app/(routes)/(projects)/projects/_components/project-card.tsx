@@ -1,16 +1,17 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 
+import ProjectDropdownMenu from "./project-dropdown-menu";
 import { Progress } from "@/components/ui/progress";
+
+import { getSpecificCategory } from "@/actions/category-actions/get-specific-category";
+
+import { Category, Project } from "@/types/interface";
 
 import { FaProjectDiagram } from "react-icons/fa";
 import { FaBarsProgress } from "react-icons/fa6";
-import ProjectDropdownMenu from "./project-dropdown-menu";
-import Link from "next/link";
-import { Category, Project } from "@/types/interface";
-import { getSpecificCategory } from "@/actions/category-actions/get-specific-category";
-
 import { IconBaseProps } from "react-icons";
 
 import {

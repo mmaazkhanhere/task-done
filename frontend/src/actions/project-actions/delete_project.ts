@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export async function deleteProject(project_id: string, creator_id: string) {
-	console.log(project_id, creator_id);
 	try {
 		const response = await axios.delete(
 			`http://localhost:8000/project/delete/${project_id}`,

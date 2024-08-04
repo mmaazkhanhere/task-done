@@ -10,7 +10,7 @@ export async function getAllSimpleTasks(creator_id: string) {
 				},
 			}
 		);
-		console.log(response);
+
 		if (response.status == 200) {
 			return response.data;
 		} else {

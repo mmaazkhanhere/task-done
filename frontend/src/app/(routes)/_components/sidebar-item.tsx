@@ -1,8 +1,10 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { usePathname, useRouter } from "next/navigation";
 import React from "react";
+import { usePathname, useRouter } from "next/navigation";
+
+import { cn } from "@/lib/utils";
+
 import { IconType } from "react-icons";
 
 type Props = {

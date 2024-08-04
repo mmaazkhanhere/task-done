@@ -1,8 +1,9 @@
 import React from "react";
-import LatestProjectCard from "./latest-project-card";
-
 import Image from "next/image";
+
+import LatestProjectCard from "./latest-project-card";
 import { Button } from "@/components/ui/button";
+
 import { Project } from "@/types/interface";
 
 type Props = {
@@ -10,8 +11,6 @@ type Props = {
 };
 
 const LatestProjects = ({ projects }: Props) => {
-	console.log(projects);
-
 	if (projects.length == 0) {
 		return (
 			<div className="dark:bg-muted bg-gray-100/50 p-4 flex flex-col gap-4 rounded-md py-8 items-center">

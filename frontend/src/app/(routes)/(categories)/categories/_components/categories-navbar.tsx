@@ -3,9 +3,6 @@ import React from "react";
 import AddCategory from "./add-category";
 import MobileSidebar from "@/app/(routes)/_components/mobile-sidebar";
 
-import { Button } from "@/components/ui/button";
-
-import { IoAdd } from "react-icons/io5";
 import { Category } from "@/types/interface";
 
 type Props = {

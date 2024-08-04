@@ -1,5 +1,8 @@
 import React from "react";
 
+import EditProject from "./edit-project";
+import DeleteProject from "./delete-project";
+
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -7,11 +10,9 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { BsThreeDots } from "react-icons/bs";
-import { MdDelete } from "react-icons/md";
 import { Project } from "@/types/interface";
-import EditProject from "./edit-project";
-import DeleteProject from "./delete-project";
+
+import { BsThreeDots } from "react-icons/bs";
 
 type Props = {
 	project: Project;

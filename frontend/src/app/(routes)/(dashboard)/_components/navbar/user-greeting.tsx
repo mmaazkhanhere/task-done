@@ -1,5 +1,6 @@
-import { User } from "@/types/interface";
 import React from "react";
+
+import { User } from "@/types/interface";
 
 type Props = {
 	userData: User;

@@ -1,7 +1,10 @@
-import { taskCompletion } from "@/actions/task-actions/task-completion";
-import { useToast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
 import React from "react";
+
+import { taskCompletion } from "@/actions/task-actions/task-completion";
+
+import { useToast } from "@/components/ui/use-toast";
+
+import { cn } from "@/lib/utils";
 
 type Props = {
 	taskId: string;

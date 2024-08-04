@@ -2,6 +2,7 @@
 import React from "react";
 
 import EditCategory from "./edit-category";
+import DeleteCategory from "./delete-category";
 
 import {
 	DropdownMenu,
@@ -12,7 +13,7 @@ import {
 
 import { BsThreeDots } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
-import DeleteCategory from "./delete-category";
+
 
 type Props = {
 	categoryId: string;

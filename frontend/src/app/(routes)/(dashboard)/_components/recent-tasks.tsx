@@ -1,5 +1,7 @@
 import React from "react";
+
 import RecentTaskCard from "./recent-task-card";
+
 import { Task } from "@/types/interface";
 
 type Props = {

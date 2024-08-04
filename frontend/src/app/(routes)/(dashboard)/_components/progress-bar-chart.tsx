@@ -1,7 +1,10 @@
 "use client";
+import React from "react";
+
 import { getTasksCompletedByDay } from "@/helper/get-task-completed-by-day";
+
 import { Task, TaskDone } from "@/types/interface";
-import React, { useEffect, useState } from "react";
+
 import {
 	BarChart,
 	Bar,

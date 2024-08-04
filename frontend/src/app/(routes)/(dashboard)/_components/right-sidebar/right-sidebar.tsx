@@ -1,6 +1,8 @@
 import React from "react";
+
 import OverallProgress from "./overall-progress";
 import LatestProjects from "./latest-projects";
+
 import { Project, Task } from "@/types/interface";
 
 type Props = {
