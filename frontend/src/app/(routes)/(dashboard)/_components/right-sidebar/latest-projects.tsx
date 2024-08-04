@@ -1,30 +1,17 @@
 import React from "react";
 import LatestProjectCard from "./latest-project-card";
-import { title } from "process";
+
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Project } from "@/types/interface";
 
-type Props = {};
+type Props = {
+	projects: Project[];
+};
 
-const projects: any = [
-	// {
-	// 	title: "Project 1",
-	// 	totalTasks: 12,
-	// 	tasksCompleted: 9,
-	// },
-	// {
-	// 	title: "Project 2",
-	// 	totalTasks: 10,
-	// 	tasksCompleted: 4,
-	// },
-	// {
-	// 	title: "Project 3",
-	// 	totalTasks: 6,
-	// 	tasksCompleted: 5,
-	// },
-];
+const LatestProjects = ({ projects }: Props) => {
+	console.log(projects);
 
-const LatestProjects = (props: Props) => {
 	if (projects.length == 0) {
 		return (
 			<div className="dark:bg-muted bg-gray-100/50 p-4 flex flex-col gap-4 rounded-md py-8 items-center">
@@ -54,12 +41,7 @@ const LatestProjects = (props: Props) => {
 			<h1 className="font-black text-lg">Latest Projects</h1>
 			<div className="flex flex-col gap-4">
 				{projects.map((project: any) => (
-					<LatestProjectCard
-						key={project.title}
-						title={project.title}
-						tasksCompleted={project.tasksCompleted}
-						totalTasks={project.totalTasks}
-					/>
+					<LatestProjectCard key={project.title} project={project} />
 				))}
 			</div>
 		</div>

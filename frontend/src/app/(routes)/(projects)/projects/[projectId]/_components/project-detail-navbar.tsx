@@ -3,7 +3,7 @@ import React from "react";
 import CircularProgressBar from "./circular-progress-bar";
 
 import { FaProjectDiagram } from "react-icons/fa";
-import { Project, Task } from "@/types/interface";
+import { Task } from "@/types/interface";
 
 import { IconBaseProps } from "react-icons";
 
