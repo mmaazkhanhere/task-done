@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import {
 	BarChart,
 	Bar,
-	Rectangle,
 	XAxis,
 	YAxis,
 	CartesianGrid,
@@ -20,6 +19,7 @@ type Props = {
 
 const ProgressBarChart = ({ tasksData }: Props) => {
 	const tasksDoneData: TaskDone[] = getTasksCompletedByDay(tasksData);
+
 	console.log(tasksDoneData);
 
 	return (

@@ -46,9 +46,6 @@ const MainPage = (props: Props) => {
 		getTasksData();
 	}, [getProjectsData, getTasksData, getUserData]);
 
-	console.log(projectsData);
-	console.log(tasksData);
-	console.log(userData);
 	return (
 		<section className="w-full relatives">
 			<header className="w-full sticky z-50 top-0 left-0 bg-white dark:bg-muted">
@@ -63,7 +60,7 @@ const MainPage = (props: Props) => {
 							tasksData={tasksData}
 						/>
 						<ProgressBarChart tasksData={tasksData} />
-						<RecentTasks />
+						<RecentTasks tasksData={tasksData} />
 					</div>
 					<RightSideBar />
 				</div>

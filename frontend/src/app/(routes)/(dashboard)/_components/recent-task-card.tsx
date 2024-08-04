@@ -1,33 +1,41 @@
+import TaskDueDateCountdown from "@/components/task-duedate-countdown";
+import { formatDateTime } from "@/helper/format-date-time";
+import { Task } from "@/types/interface";
 import React from "react";
+import { IoMdCloseCircle } from "react-icons/io";
+
+import { TiTick } from "react-icons/ti";
 
 type Props = {
-	_id: number;
-	taskName: string;
-	createdAt: string;
-	projectName: string;
-	status: string;
+	task: Task;
 };
 
-const RecentTaskCard = ({
-	taskName,
-	createdAt,
-	projectName,
-	status,
-}: Props) => {
+const RecentTaskCard = ({ task }: Props) => {
+	const formattedDate = formatDateTime(task.created_at);
+
 	return (
 		<div className="flex items-center justify-around gap-x-5 w-full bg-white dark:bg-muted-foreground/30 rounded-md py-1">
-			<p className="font-bold text-sm md:text-base">{taskName}</p>
+			<p className="font-bold text-sm md:text-base">{task.title}</p>
 			<div className="hidden md:flex flex-col text-xs md:text-sm">
 				<p className="font-light">Created At</p>
-				<p className="text-green-500">{createdAt}</p>
+				<p className="text-green-500">{formattedDate}</p>
 			</div>
 			<div className="flex flex-col text-xs md:text-sm">
-				<p className="font-light">Project In</p>
-				<p className="text-green-500">{projectName}</p>
+				<p className="font-light">Time Remaining</p>
+				<TaskDueDateCountdown dueDate={task.due_date} />
 			</div>
 			<div className="flex flex-col text-xs md:text-sm">
 				<p className="font-light">Status</p>
-				<p className="text-green-500">{status}</p>
+				{task.completion_date ? (
+					<div className="p-1">
+						<TiTick className="bg-teal-500 rounded-full text-white w-6 h-6" />
+					</div>
+				) : (
+					<div className="p-1 ">
+						<IoMdCloseCircle className="text-red-500 rounded-full w-7 h-7" />
+					</div>
+				)}
+				<p className="text-green-500">{task.is_completed}</p>
 			</div>
 		</div>
 	);

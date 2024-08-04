@@ -26,7 +26,7 @@ const ProjectTaskCompletionButton = ({
 		);
 		if (response?.state == 200) {
 			toast({
-				title: "Task Completed",
+				title: "Task Status Updated",
 			});
 			getTaskList();
 		} else if (response?.message.includes("409")) {

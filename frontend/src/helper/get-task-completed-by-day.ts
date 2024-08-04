@@ -10,6 +10,7 @@ export const getTasksCompletedByDay = (tasks: Task[]): TaskDone[] => {
 		"Friday",
 		"Saturday",
 	];
+
 	const tasksCompleted: { [key: string]: number } = {
 		Sunday: 0,
 		Monday: 0,
@@ -20,11 +21,38 @@ export const getTasksCompletedByDay = (tasks: Task[]): TaskDone[] => {
 		Saturday: 0,
 	};
 
+	const getStartOfWeek = (date: Date): Date => {
+		const start = new Date(date);
+		const day = start.getDay();
+		const diff = start.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+		start.setDate(diff);
+		start.setHours(0, 0, 0, 0);
+		return start;
+	};
+
+	const getEndOfWeek = (date: Date): Date => {
+		const end = new Date(date);
+		const day = end.getDay();
+		const diff = end.getDate() + (7 - day); // Adjust when day is Sunday
+		end.setDate(diff);
+		end.setHours(23, 59, 59, 999);
+		return end;
+	};
+
+	const currentDate = new Date();
+	const startWeek = getStartOfWeek(currentDate);
+	const endWeek = getEndOfWeek(currentDate);
+
 	tasks.forEach((task) => {
 		if (task.completion_date !== null) {
-			const completionDay = new Date(task.completion_date).getDay();
-			const dayName = daysOfWeek[completionDay];
-			tasksCompleted[dayName]++;
+			const completionDate = new Date(task.completion_date);
+
+			// Check if the task was completed in the current week
+			if (completionDate >= startWeek && completionDate <= endWeek) {
+				const completionDay = completionDate.getDay();
+				const dayName = daysOfWeek[completionDay];
+				tasksCompleted[dayName]++;
+			}
 		}
 	});
 
