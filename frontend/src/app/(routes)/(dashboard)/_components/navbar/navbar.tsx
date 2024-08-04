@@ -12,14 +12,18 @@ type Props = {
 const Navbar = ({ userData }: Props) => {
 	return (
 		<React.Fragment>
-			<nav className="flex items-center justify-between h-full p-4 gap-x-4 bg-white dark:bg-muted">
+			<nav className="hidden md:flex items-center justify-between h-full p-4 gap-x-4 bg-white dark:bg-muted">
 				<UserGreeting userData={userData} />
 
 				<UserButton />
 			</nav>
-			<nav className="flex items-center gap-5 md:hidden py-4 px-4 bg-white dark:bg-muted">
-				<MobileSidebar />
-				<UserGreeting userData={userData} />
+			<nav className="flex items-center  justify-between md:hidden py-4 px-4 bg-white dark:bg-muted">
+				<div className="flex items-center gap-5">
+					<MobileSidebar />
+					<UserGreeting userData={userData} />
+				</div>
+
+				<UserButton />
 			</nav>
 		</React.Fragment>
 	);

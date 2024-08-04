@@ -9,7 +9,7 @@ type Props = {
 const RecentTasks = ({ tasksData }: Props) => {
 	if (tasksData.length == 0) {
 		return (
-			<div className="p-4 rounded-md py-8 bg-gray-100/50 dark:bg-muted">
+			<div className="p-4 rounded-md py-8 bg-gray-100/50 dark:bg-muted order-1 md:order-2">
 				<h2 className="font-semibold text-lg ">Recent Tasks</h2>
 				<div className="flex items-center justify-center h-full w-full p-4">
 					<p className="text-gray-400 text-sm">
@@ -20,10 +20,13 @@ const RecentTasks = ({ tasksData }: Props) => {
 		);
 	}
 
-	const recentTasks = [...tasksData].reverse().slice(0, 2);
+	const recentTasks = [...tasksData]
+		.reverse()
+		.filter((field) => !Boolean(field.is_completed))
+		.slice(0, 2);
 
 	return (
-		<div className="p-4 rounded-md py-8 m-5 bg-gray-100/50 dark:bg-muted">
+		<div className="p-4 rounded-md py-8 m-5 bg-gray-100/50 dark:bg-muted order-1 md:order-2">
 			<h2 className="font-semibold text-lg mb-4">Recent Tasks</h2>
 			<div className="flex flex-col items-start gap-5">
 				{recentTasks.map((task) => (

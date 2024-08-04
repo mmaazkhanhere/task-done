@@ -20,10 +20,8 @@ type Props = {
 const ProgressBarChart = ({ tasksData }: Props) => {
 	const tasksDoneData: TaskDone[] = getTasksCompletedByDay(tasksData);
 
-	console.log(tasksDoneData);
-
 	return (
-		<div>
+		<div className="order-3">
 			<ResponsiveContainer width={"99%"} height={500}>
 				<BarChart data={tasksDoneData}>
 					<XAxis dataKey="day" />
