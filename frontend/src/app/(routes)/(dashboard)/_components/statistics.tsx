@@ -15,8 +15,6 @@ const Statistics = ({ totalProjects, tasksData }: Props) => {
 		Boolean(field.is_completed)
 	);
 
-	console.log(totalTasksCompleted);
-
 	const statisticsData = [
 		{
 			title: "Total Projects",

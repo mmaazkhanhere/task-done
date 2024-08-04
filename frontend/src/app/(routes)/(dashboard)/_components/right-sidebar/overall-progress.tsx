@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import React from "react";
 
 type Props = {
@@ -19,8 +20,22 @@ const OverallProgress = ({ percentage }: Props) => {
 				className="w-32 h-32 rounded-full flex flex-col justify-center items-center border dark:border-gray-600 text-black dark:text-white"
 				style={progressStyle}
 			>
-				<span className="font-bold text-3xl ">{percentage}%</span>
-				<span className="font-light">Progress</span>
+				<span
+					className={cn(
+						"font-bold text-3xl ",
+						percentage >= 69 ? "text-white" : "text-black"
+					)}
+				>
+					{percentage}%
+				</span>
+				<span
+					className={cn(
+						"font-light",
+						percentage >= 41 ? "text-white" : "text-black"
+					)}
+				>
+					percentage
+				</span>
 			</div>
 		</div>
 	);

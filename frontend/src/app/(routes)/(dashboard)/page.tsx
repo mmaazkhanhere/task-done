@@ -62,7 +62,7 @@ const MainPage = (props: Props) => {
 						<ProgressBarChart tasksData={tasksData} />
 						<RecentTasks tasksData={tasksData} />
 					</div>
-					<RightSideBar />
+					<RightSideBar totalTasks={tasksData} />
 				</div>
 			</div>
 		</section>
