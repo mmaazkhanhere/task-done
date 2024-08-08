@@ -6,7 +6,7 @@ export async function addProject(values: AddProjectData, creator_id: string) {
 	const id = uuid();
 	const { title, description, category_id, icon, due_date } = values;
 	try {
-		const response = await axios.post("http://localhost:8000/project", {
+		const response = await axios.post("http://localhost:8000/api/project", {
 			id,
 			title,
 			description,

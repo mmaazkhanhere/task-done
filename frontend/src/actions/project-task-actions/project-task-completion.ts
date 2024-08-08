@@ -7,7 +7,7 @@ export async function projectTaskCompletion(
 ) {
 	try {
 		const response = await axios.patch(
-			`http://localhost:8000/project/task/complete/${task_id}`,
+			`http://localhost:8000/api/project/task/complete/${task_id}`,
 			{ is_complete },
 			{
 				headers: {

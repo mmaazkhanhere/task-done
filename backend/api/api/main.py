@@ -269,12 +269,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get('/')
+@app.get('/api')
 async def root():
     return {'message': 'Hello World'}
 
 # User sign up endpoint
-@app.post("/sign-up", response_model=User)
+@app.post("/api/sign-up", response_model=User)
 async def handle_user_signup(
     user_data: User,
     session: Annotated[Session, Depends(get_session)]
@@ -298,7 +298,7 @@ async def handle_user_signup(
         raise HTTPException(status_code=404, detail=str(e))
 
 # get user data
-@app.get('/user/{user_id}', response_model=UserResponse)
+@app.get('/api/user/{user_id}', response_model=UserResponse)
 async def get_user_data(user_id: str, session: Session = Depends(get_session)):
     try:
         user = session.exec(select(User).where(User.id == user_id)).first()
@@ -312,7 +312,7 @@ async def get_user_data(user_id: str, session: Session = Depends(get_session)):
         raise HTTPException(status_code=500, detail=str(e))
 
 #User update api endpoint
-@app.patch('/user/update/{user_id}', response_model=User)
+@app.patch('/api/user/update/{user_id}', response_model=User)
 async def handle_user_update(user_id: str, user_data: UserUpdate, session: Annotated[Session, Depends(get_session)]):
     try:
         user = session.exec(select(User).where(User.id == user_id)).first()
@@ -336,7 +336,7 @@ async def handle_user_update(user_id: str, user_data: UserUpdate, session: Annot
 
 
 #User delete api endpoint
-@app.delete('/user/delete/{user_id}', response_model=User)
+@app.delete('/api/user/delete/{user_id}', response_model=User)
 async def handle_delete_user(user_id: str, session: Annotated[Session, Depends(get_session)]):
     try:
         user = session.exec(select(User).where(User.id == user_id)).first()
@@ -353,7 +353,7 @@ async def handle_delete_user(user_id: str, session: Annotated[Session, Depends(g
     
 
 # Create a category api endpoint
-@app.post('/category', response_model=Category)
+@app.post('/api/category', response_model=Category)
 async def handle_create_category(category_data: CreateCategory, session: Annotated[Session, Depends(get_session)]):
     try:
         existing_category = session.exec(select(Category).where(Category.title == category_data.title)).first()
@@ -377,7 +377,7 @@ async def handle_create_category(category_data: CreateCategory, session: Annotat
     
 
 # Get the list of all categories
-@app.get('/category/all', response_model=List[CategoryResponse])
+@app.get('/api/category/all', response_model=List[CategoryResponse])
 async def get_all_categories(session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         category_list = session.exec(select(Category).where(Category.creator_id == x_user_id)).all()
@@ -388,7 +388,7 @@ async def get_all_categories(session: Session = Depends(get_session), x_user_id:
     
 
 # Get specific category data
-@app.get('/category/{category_id}', response_model=CategoryResponse)
+@app.get('/api/category/{category_id}', response_model=CategoryResponse)
 async def get_category(category_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         category = session.exec(
@@ -404,7 +404,7 @@ async def get_category(category_id: str, session: Session = Depends(get_session)
 
 
 # Edit category api endpoint
-@app.patch('/category/edit/{category_id}', response_model=Category)
+@app.patch('/api/category/edit/{category_id}', response_model=Category)
 async def handle_edit_category(
     category_id: str, 
     category_data: EditCategory,
@@ -442,7 +442,7 @@ async def handle_edit_category(
         raise HTTPException(status_code=500, detail=str(e))
 
 # delete category api endpoint 
-@app.delete("/category/delete/{category_id}", response_model = Category)
+@app.delete("/api/category/delete/{category_id}", response_model = Category)
 async def handle_delete_category(category_id: str, session:Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         category = session.exec(
@@ -461,7 +461,7 @@ async def handle_delete_category(category_id: str, session:Session = Depends(get
 
 
 # create project api endpoint
-@app.post('/project', response_model=Project)
+@app.post('/api/project', response_model=Project)
 async def handle_create_project(project_data: ProjectData, session: Annotated[Session, Depends(get_session)]):
     try:
         logger.info(f"Received project data: {project_data.model_dump_json()}")
@@ -486,7 +486,7 @@ async def handle_create_project(project_data: ProjectData, session: Annotated[Se
 
 
 # get all projects
-@app.get('/project/all', response_model=List[ProjectResponse])
+@app.get('/api/project/all', response_model=List[ProjectResponse])
 async def get_all_projects(session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         project_list = session.exec(select(Project).where(Project.creator_id == x_user_id)).all()
@@ -497,7 +497,7 @@ async def get_all_projects(session: Session = Depends(get_session), x_user_id: s
     
 
 # get project
-@app.get('/project/{project_id}', response_model=ProjectResponse)
+@app.get('/api/project/{project_id}', response_model=ProjectResponse)
 async def get_project(project_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         project = session.exec(
@@ -512,7 +512,7 @@ async def get_project(project_id: str, session: Session = Depends(get_session), 
         raise HTTPException(status_code=500, detail=str(e))
 
 # edit project
-@app.patch('/project/edit/{project_id}', response_model=Project)
+@app.patch('/api/project/edit/{project_id}', response_model=Project)
 async def edit_project(project_id: str, project_data:EditProject, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         project = session.exec(
@@ -535,7 +535,7 @@ async def edit_project(project_id: str, project_data:EditProject, session: Sessi
 
 
 # delete project
-@app.delete("/project/delete/{project_id}", response_model = Project)
+@app.delete("/api/project/delete/{project_id}", response_model = Project)
 async def handle_delete_project(project_id: str, session:Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         project = session.exec(
@@ -554,7 +554,7 @@ async def handle_delete_project(project_id: str, session:Session = Depends(get_s
 
 
 # create task
-@app.post('/task', response_model=Task)
+@app.post('/api/task', response_model=Task)
 async def create_task(task_data: TaskData, session: Annotated[Session, Depends(get_session)]):
     try:
         task = Task(
@@ -576,7 +576,7 @@ async def create_task(task_data: TaskData, session: Annotated[Session, Depends(g
 
 
 # get all tasks
-@app.get('/task/all', response_model=List[TaskResponse])
+@app.get('/api/task/all', response_model=List[TaskResponse])
 async def get_all_tasks(session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task_list = session.exec(select(Task).where(Task.creator_id == x_user_id)).all()
@@ -587,7 +587,7 @@ async def get_all_tasks(session: Session = Depends(get_session), x_user_id: str 
 
 
 # get all simple tasks
-@app.get('/task/simple/all', response_model=List[TaskResponse])
+@app.get('/api/task/simple/all', response_model=List[TaskResponse])
 async def get_all_simple_tasks(session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         tasks_list = session.exec(select(Task).where((Task.creator_id == x_user_id) & (Task.project_id == None)))
@@ -601,7 +601,7 @@ async def get_all_simple_tasks(session: Session = Depends(get_session), x_user_i
     
 
 # edit task
-@app.patch('/task/edit/{task_id}', response_model=Task)
+@app.patch('/api/task/edit/{task_id}', response_model=Task)
 async def edit_task(task_id: str, task_data: TaskEditData, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id) & (Task.project_id == None))).first()
@@ -620,7 +620,7 @@ async def edit_task(task_id: str, task_data: TaskEditData, session: Session = De
 
 
 # delete task
-@app.delete('/task/delete/{task_id}', response_model=Task)
+@app.delete('/api/task/delete/{task_id}', response_model=Task)
 async def delete_task(task_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id) & (Task.project_id == None))).first()
@@ -636,7 +636,7 @@ async def delete_task(task_id: str, session: Session = Depends(get_session), x_u
 
 
 # task completion
-@app.patch('/task/complete/{task_id}')
+@app.patch('/api/task/complete/{task_id}')
 async def task_completion(task_id: str, recieved_date: TaskComplete, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id) & (Task.project_id == None))).first()
@@ -661,7 +661,7 @@ async def task_completion(task_id: str, recieved_date: TaskComplete, session: Se
         raise HTTPException(status_code=500, detail=str(e))
 
 # create project task
-@app.post('/project/task', response_model=Task)
+@app.post('/api/project/task', response_model=Task)
 async def create_project_task(task_data: ProjectTaskData, session: Annotated[Session, Depends(get_session)]):
     try:
         task = Task(
@@ -684,7 +684,7 @@ async def create_project_task(task_data: ProjectTaskData, session: Annotated[Ses
     
 
 # get all project tasks
-@app.get('/project/task/all/{project_id}', response_model=List[ProjectTaskResponse])
+@app.get('/api/project/task/all/{project_id}', response_model=List[ProjectTaskResponse])
 async def get_all_project_tasks(project_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         if not project_id or not x_user_id:
@@ -702,7 +702,7 @@ async def get_all_project_tasks(project_id: str, session: Session = Depends(get_
         raise HTTPException(status_code=500, detail=str(e))
 
 #edit project tasks
-@app.patch('/project/task/edit/{task_id}', response_model=Task)
+@app.patch('/api/project/task/edit/{task_id}', response_model=Task)
 async def edit_project_task(task_id: str, task_data: TaskEditData,session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id))).first()
@@ -720,7 +720,7 @@ async def edit_project_task(task_id: str, task_data: TaskEditData,session: Sessi
     
 
 # project task complete api
-@app.patch('/project/task/complete/{task_id}')
+@app.patch('/api/project/task/complete/{task_id}')
 async def project_task_completion(task_id: str, recieved_data: TaskComplete ,session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task = session.exec(select(Task).where((Task.id == task_id) & (Task.creator_id == x_user_id))).first()
@@ -746,7 +746,7 @@ async def project_task_completion(task_id: str, recieved_data: TaskComplete ,ses
     
 
 # task delete api
-@app.delete('/project/task/delete/{task_id}', response_model=Task)
+@app.delete('/api/project/task/delete/{task_id}', response_model=Task)
 async def delete_project_task(task_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         task = session.exec(select(Task).where((Task.id == task_id)&(Task.creator_id == x_user_id))).first()
@@ -762,7 +762,7 @@ async def delete_project_task(task_id: str, session: Session = Depends(get_sessi
     
 
 # add sub task
-@app.post('/subtask', response_model=SubTask)
+@app.post('/api/subtask', response_model=SubTask)
 async def create_subtask(task_data: SubTaskData, session : Annotated[Session, Depends(get_session)]):
     
     parent_task = session.exec(select(Task).where((Task.id == task_data.task_id) & (Task.creator_id == task_data.creator_id))).first()
@@ -794,7 +794,7 @@ async def create_subtask(task_data: SubTaskData, session : Annotated[Session, De
 
 
 # get all sub tasks
-@app.get('/subtask/all/{task_id}', response_model=List[SubTaskResponse])
+@app.get('/api/subtask/all/{task_id}', response_model=List[SubTaskResponse])
 async def get_all_subtasks(task_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         sub_task_list = session.exec(
@@ -812,7 +812,7 @@ async def get_all_subtasks(task_id: str, session: Session = Depends(get_session)
 
 
 # sub task completion
-@app.patch('/subtask/complete/{subtask_id}')
+@app.patch('/api/subtask/complete/{subtask_id}')
 async def subtask_completion(subtask_id: str, recieved_data: SubTaskComplete, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         sub_task = session.exec(
@@ -837,7 +837,7 @@ async def subtask_completion(subtask_id: str, recieved_data: SubTaskComplete, se
 
 
 # sub task delete
-@app.delete('/subtask/delete/{subtask_id}', response_model=SubTask)
+@app.delete('/api/subtask/delete/{subtask_id}', response_model=SubTask)
 async def delete_subtask(subtask_id: str, session: Session = Depends(get_session), x_user_id: str = Header(...)):
     try:
         sub_task = session.exec(select(SubTask).where((SubTask.id == subtask_id)&(SubTask.creator_id == x_user_id))).first()

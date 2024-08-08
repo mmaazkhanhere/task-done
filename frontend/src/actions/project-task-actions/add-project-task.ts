@@ -14,7 +14,7 @@ export async function addProjectTask(
 	console.log({ id, title, due_date, priority, project_id, creator_id });
 	try {
 		const response = await axios.post(
-			"http://localhost:8000/project/task",
+			"http://localhost:8000/api/project/task",
 			{
 				id,
 				title,

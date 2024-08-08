@@ -7,7 +7,7 @@ export async function subTaskCompletion(
 ) {
 	try {
 		const response = await axios.patch(
-			`http://localhost:8000/subtask/complete/${subtask_id}`,
+			`http://localhost:8000/api/subtask/complete/${subtask_id}`,
 			{ is_complete },
 			{
 				headers: {

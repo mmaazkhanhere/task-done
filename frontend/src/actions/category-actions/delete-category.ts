@@ -3,7 +3,7 @@ import axios from "axios";
 export async function deleteCategory(userId: string, categoryId: string) {
 	try {
 		const response = await axios.delete(
-			`http://localhost:8000/category/delete/${categoryId}`,
+			`http://localhost:8000/api/category/delete/${categoryId}`,
 			{
 				headers: {
 					"X-User-Id": userId,

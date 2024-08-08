@@ -3,7 +3,7 @@ import axios from "axios";
 export async function getAllSimpleTasks(creator_id: string) {
 	try {
 		const response = await axios.get(
-			`http://localhost:8000/task/simple/all`,
+			`http://localhost:8000/api/task/simple/all`,
 			{
 				headers: {
 					"X-User-Id": creator_id,

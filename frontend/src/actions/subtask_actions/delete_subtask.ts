@@ -3,7 +3,7 @@ import axios from "axios";
 export async function deleteSubtask(subtask_id: string, creator_id: string) {
 	try {
 		const response = await axios.delete(
-			`http://localhost:8000/subtask/delete/${subtask_id}`,
+			`http://localhost:8000/api/subtask/delete/${subtask_id}`,
 			{
 				headers: {
 					"X-User-Id": creator_id,

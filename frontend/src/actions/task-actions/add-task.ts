@@ -8,7 +8,7 @@ export async function addTask(values: AddTaskData, creator_id: string) {
 	const { title, priority } = values;
 	const due_date = formatTimezone(values.due_date);
 	try {
-		const response = await axios.post("http://localhost:8000/task", {
+		const response = await axios.post("http://localhost:8000/api/task", {
 			id,
 			title,
 			due_date,

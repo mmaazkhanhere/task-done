@@ -8,7 +8,7 @@ export async function editProject(
 ) {
 	try {
 		const response = await axios.patch(
-			`http://localhost:8000/project/edit/${project_id}`,
+			`http://localhost:8000/api/project/edit/${project_id}`,
 			values,
 			{
 				headers: {

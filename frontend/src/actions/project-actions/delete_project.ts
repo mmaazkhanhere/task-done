@@ -3,7 +3,7 @@ import axios from "axios";
 export async function deleteProject(project_id: string, creator_id: string) {
 	try {
 		const response = await axios.delete(
-			`http://localhost:8000/project/delete/${project_id}`,
+			`http://localhost:8000/api/project/delete/${project_id}`,
 			{
 				headers: {
 					"X-User-Id": creator_id,

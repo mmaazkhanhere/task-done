@@ -12,7 +12,7 @@ export async function addSubTask(
 	const { title, priority } = values;
 	const due_date = formatTimezone(values.due_date);
 	try {
-		const response = await axios.post("http://localhost:8000/subtask", {
+		const response = await axios.post("http://localhost:8000/api/subtask", {
 			id,
 			title,
 			priority,

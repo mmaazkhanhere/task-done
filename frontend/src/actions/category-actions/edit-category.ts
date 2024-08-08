@@ -7,7 +7,7 @@ export async function editCategory(
 ) {
 	try {
 		const response = await axios.patch(
-			`http://localhost:8000/category/edit/${categoryId}`,
+			`http://localhost:8000/api/category/edit/${categoryId}`,
 			{ title }, // Request body
 			{
 				headers: {

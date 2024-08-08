@@ -6,7 +6,7 @@ export async function getAllProjectTasks(
 ) {
 	try {
 		const response = await axios.get(
-			`http://localhost:8000/project/task/all/${project_id}`,
+			`http://localhost:8000/api/project/task/all/${project_id}`,
 			{
 				headers: {
 					"X-User-Id": creator_id,

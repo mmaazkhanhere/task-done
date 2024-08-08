@@ -3,7 +3,7 @@ import axios from "axios";
 export async function getUsersData(userId: string) {
 	try {
 		const response = await axios.get(
-			`http://localhost:8000/user/${userId}`
+			`http://localhost:8000/api/user/${userId}`
 		);
 		if (response?.status == 200) {
 			return response.data;

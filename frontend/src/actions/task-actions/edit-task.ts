@@ -11,7 +11,7 @@ export async function editTask(
 	const due_date = formatTimezone(editData.due_date);
 	try {
 		const response = await axios.patch(
-			`http://localhost:8000/task/edit/${task_id}`,
+			`http://localhost:8000/api/task/edit/${task_id}`,
 			{
 				title,
 				priority,

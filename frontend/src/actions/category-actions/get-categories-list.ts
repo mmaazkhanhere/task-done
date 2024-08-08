@@ -3,7 +3,7 @@ import axios from "axios";
 export const getCategoriesList = async (userId: string) => {
 	try {
 		const response = await axios.get(
-			`http://localhost:8000/category/all/`,
+			`http://localhost:8000/api/category/all/`,
 			{
 				headers: {
 					"X-User-Id": userId,
