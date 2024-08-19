@@ -27,12 +27,12 @@ const OverallProgress = ({ percentage }: Props) => {
 						percentage >= 69 ? "text-white" : "text-black"
 					)}
 				>
-					{Number.isNaN(percentage) ? 0 : percentage}%
+					{Number.isNaN(percentage) ? 0 : percentage.toFixed(1)}%
 				</span>
 				<span
 					className={cn(
 						"font-light",
-						percentage >= 41 ? "text-white" : "text-black"
+						percentage <= 41 ? "text-white" : "text-black"
 					)}
 				>
 					percentage
